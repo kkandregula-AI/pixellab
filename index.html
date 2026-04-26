@@ -14,167 +14,191 @@
   --bg:#060a10;--bg2:#0c1420;--bg3:#121d2c;--bg4:#0a1218;
   --border:#1a2e47;--accent:#00d4ff;--accent-dim:#0090b0;
   --accent2:#ff6030;--text:#90aac5;--text-bright:#d8eaf8;
-  --text-dim:#3d5a78;--ok:#00ff88;--warn:#ffd44d;
+  --text-dim:#3d5a78;--ok:#00ff88;
   --mono:'Space Mono',monospace;--ui:'Exo 2',sans-serif;
 }
 body{background:var(--bg);color:var(--text);font-family:var(--ui);min-height:100vh;overflow-x:hidden}
 
-/* ── HEADER ── */
+/* HEADER */
 header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 20px;
-  display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100}
-.logo{font-family:var(--mono);font-size:16px;color:var(--accent);letter-spacing:3px;text-transform:uppercase}
+  display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;height:49px}
+.logo{font-family:var(--mono);font-size:16px;color:var(--accent);letter-spacing:3px}
 .logo b{color:var(--accent2)}
 .tagline{font-size:9px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-top:2px}
 .badge{margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--text-dim);
-  border:1px solid var(--border);padding:3px 8px;border-radius:3px;letter-spacing:1px}
+  border:1px solid var(--border);padding:3px 8px;border-radius:3px}
 
-/* ── LAYOUT ── */
-.app{display:grid;grid-template-columns:290px 1fr;min-height:calc(100vh - 49px)}
+/* LAYOUT — sidebar + main */
+.app{display:grid;grid-template-columns:290px 1fr;height:calc(100vh - 49px)}
 
-/* ── SIDEBAR ── */
-.sidebar{background:var(--bg2);border-right:1px solid var(--border);
-  display:flex;flex-direction:column;gap:0;overflow-y:auto;max-height:calc(100vh - 49px)}
-.panel{padding:14px 16px;border-bottom:1px solid var(--border)}
-.panel:last-child{border-bottom:none}
+/* SIDEBAR — flex column, fixed height, sticky footer */
+.sidebar{
+  background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;height:100%;overflow:hidden;
+}
+/* Scrollable content area */
+.sidebar-scroll{
+  flex:1;overflow-y:auto;padding:0;
+  /* custom scrollbar */
+  scrollbar-width:thin;scrollbar-color:var(--border) var(--bg2);
+}
+.sidebar-scroll::-webkit-scrollbar{width:4px}
+.sidebar-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* Sticky action footer inside sidebar */
+.sidebar-footer{
+  border-top:1px solid var(--border);padding:12px 14px;
+  background:var(--bg2);flex-shrink:0;
+}
+
+.panel{padding:12px 14px;border-bottom:1px solid var(--border)}
 .section-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);
   font-family:var(--mono);display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
 
 /* Upload */
-.upload-zone{border:2px dashed var(--border);border-radius:6px;padding:16px 12px;
+.upload-zone{border:2px dashed var(--border);border-radius:6px;padding:14px 10px;
   text-align:center;cursor:pointer;transition:all .2s;position:relative;background:transparent}
 .upload-zone:hover,.upload-zone.drag-over{border-color:var(--accent);background:rgba(0,212,255,.04)}
 .upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.upload-icon{font-size:26px;display:block;margin-bottom:6px;opacity:.5}
-.upload-zone strong{color:var(--accent);font-size:11px;display:block;margin-bottom:3px}
+.upload-icon{font-size:24px;display:block;margin-bottom:5px;opacity:.45}
+.upload-zone strong{color:var(--accent);font-size:11px;display:block;margin-bottom:2px}
 .upload-zone p{font-size:10px;color:var(--text-dim);line-height:1.5}
-.img-badge{font-family:var(--mono);font-size:9px;color:var(--text-dim);text-align:center;margin-top:6px;min-height:13px}
+.img-badge{font-family:var(--mono);font-size:9px;color:var(--text-dim);text-align:center;margin-top:6px;min-height:12px}
 
-/* Analysis metrics */
-.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.metric-card{background:var(--bg4);border:1px solid var(--border);border-radius:5px;padding:8px}
+/* Collapsible — simple show/hide, no max-height clipping */
+.collapsible{display:none}
+.collapsible.open{display:block}
+
+/* Metrics */
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.metric-card{background:var(--bg4);border:1px solid var(--border);border-radius:5px;padding:7px 8px}
 .metric-card.full{grid-column:1/-1}
 .metric-name{font-family:var(--mono);font-size:8px;color:var(--text-dim);letter-spacing:2px;
   text-transform:uppercase;margin-bottom:5px}
 .metric-bar-wrap{height:2px;background:var(--border);border-radius:1px;margin-bottom:5px;overflow:hidden}
-.metric-bar-fill{height:100%;border-radius:1px;transition:width .6s ease;width:0}
+.metric-bar-fill{height:100%;border-radius:1px}
 .metric-row{display:flex;justify-content:space-between;align-items:center}
 .metric-num{font-family:var(--mono);font-size:10px;color:var(--text-bright)}
-.mtag{font-size:8px;padding:1px 5px;border-radius:2px;font-family:var(--mono);letter-spacing:.5px;white-space:nowrap}
+.mtag{font-size:8px;padding:1px 4px;border-radius:2px;font-family:var(--mono);white-space:nowrap}
 .mtag-warn{background:rgba(255,96,48,.12);color:var(--accent2);border:1px solid rgba(255,96,48,.25)}
 .mtag-ok  {background:rgba(0,212,255,.08);color:var(--accent);border:1px solid rgba(0,212,255,.2)}
 .mtag-good{background:rgba(0,255,136,.08);color:var(--ok);border:1px solid rgba(0,255,136,.2)}
 
-/* Pipeline steps */
-.pipeline-steps{display:flex;flex-direction:column;gap:6px}
+/* Pipeline */
+.pipeline-summary{background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.15);
+  border-radius:5px;padding:8px 10px;margin-bottom:8px;font-size:9px;color:var(--accent-dim);
+  font-family:var(--mono);letter-spacing:.5px;line-height:1.6}
+.pipeline-steps{display:flex;flex-direction:column;gap:5px}
 .step-card{display:flex;align-items:flex-start;gap:8px;background:var(--bg4);
-  border:1px solid var(--border);border-radius:5px;padding:9px 10px;transition:all .35s}
+  border:1px solid var(--border);border-radius:5px;padding:8px 10px;transition:all .3s}
 .step-card.s-active{border-color:var(--accent);background:rgba(0,212,255,.06);
-  box-shadow:0 0 12px rgba(0,212,255,.08)}
+  box-shadow:0 0 10px rgba(0,212,255,.08)}
 .step-card.s-done{border-color:var(--ok);background:rgba(0,255,136,.04)}
-.step-card.s-skip{opacity:.4}
 .step-num{width:18px;height:18px;border-radius:50%;background:var(--border);
   display:flex;align-items:center;justify-content:center;font-family:var(--mono);
-  font-size:8px;color:var(--text-dim);flex-shrink:0;margin-top:1px;transition:all .35s}
+  font-size:8px;color:var(--text-dim);flex-shrink:0;margin-top:1px;transition:all .3s}
 .step-card.s-active .step-num{background:var(--accent);color:var(--bg)}
 .step-card.s-done .step-num{background:var(--ok);color:var(--bg);font-size:10px}
-.step-info{flex:1;min-width:0}
-.step-name{font-family:var(--mono);font-size:11px;color:var(--text-bright);font-weight:700}
-.step-card.s-active .step-name{color:var(--accent)}
-.step-card.s-done .step-name{color:var(--ok)}
-.step-reason{font-size:9px;color:var(--text-dim);line-height:1.4;margin-top:2px}
-.step-params{font-family:var(--mono);font-size:8px;color:var(--text-dim);margin-top:3px;
-  opacity:.7;letter-spacing:.5px}
 .step-spinner{width:14px;height:14px;border:1.5px solid var(--border);border-top-color:var(--accent);
   border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;margin-top:2px;display:none}
 .step-card.s-active .step-spinner{display:block}
 .step-card.s-active .step-num{display:none}
+.step-name{font-family:var(--mono);font-size:11px;color:var(--text-bright);font-weight:700}
+.step-card.s-active .step-name{color:var(--accent)}
+.step-card.s-done .step-name{color:var(--ok)}
+.step-reason{font-size:9px;color:var(--text-dim);line-height:1.4;margin-top:2px}
+.step-params{font-family:var(--mono);font-size:8px;color:var(--text-dim);margin-top:3px;opacity:.6}
+.finish-note{margin-top:8px;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);
+  border-radius:5px;padding:7px 10px;font-family:var(--mono);font-size:9px;color:var(--ok);
+  letter-spacing:.5px;display:none;line-height:1.5}
+.finish-note.show{display:block}
 
-/* Pipeline summary */
-.pipeline-summary{background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.15);
-  border-radius:5px;padding:8px 10px;margin-bottom:10px;font-size:10px;color:var(--accent-dim);
-  font-family:var(--mono);letter-spacing:.5px;line-height:1.5}
-
-/* Buttons */
-.btn{padding:10px 14px;border-radius:5px;border:none;cursor:pointer;font-family:var(--mono);
+/* Sidebar footer buttons */
+.btn{padding:9px 12px;border-radius:5px;border:none;cursor:pointer;font-family:var(--mono);
   font-size:11px;letter-spacing:1px;text-transform:uppercase;transition:all .15s;width:100%}
-.btn-run{background:var(--accent);color:var(--bg);font-weight:700;font-size:12px}
-.btn-run:hover{background:#33ddff;box-shadow:0 0 16px rgba(0,212,255,.4)}
+.btn-run{background:var(--accent);color:var(--bg);font-weight:700;font-size:12px;padding:11px}
+.btn-run:hover{background:#33ddff;box-shadow:0 0 16px rgba(0,212,255,.35)}
 .btn-run:disabled{opacity:.3;cursor:not-allowed;box-shadow:none}
 .btn-sec{background:transparent;color:var(--text);border:1px solid var(--border)}
-.btn-sec:hover{border-color:var(--accent);color:var(--accent)}
+.btn-sec:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
 .btn-sec:disabled{opacity:.25;cursor:not-allowed}
-.btn-row{display:flex;gap:6px}.btn-row .btn{flex:1}
+.btn-dl{background:transparent;color:var(--ok);border:1px solid rgba(0,255,136,.3);font-size:10px;margin-top:6px}
+.btn-dl:hover:not(:disabled){background:rgba(0,255,136,.08);border-color:var(--ok)}
+.btn-dl:disabled{opacity:.2;cursor:not-allowed}
+.btn-row{display:flex;gap:6px;margin-top:6px}.btn-row .btn{flex:1}
+.dl-hint{font-size:9px;color:var(--text-dim);font-family:var(--mono);text-align:center;
+  margin-top:5px;opacity:.7;display:none}
+.dl-hint.show{display:block}
 
-/* ── MAIN ── */
-.main{display:flex;flex-direction:column;overflow:hidden}
+/* MAIN */
+.main{display:flex;flex-direction:column;overflow:hidden;height:100%}
 .canvas-area{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;
   background:radial-gradient(ellipse at 50% 50%,#0d1e30 0%,var(--bg) 70%);
-  position:relative;min-height:400px}
-.drop-hint{display:flex;flex-direction:column;align-items:center;gap:14px;color:var(--text-dim)}
-.drop-hint .big-icon{font-size:56px;opacity:.18}
+  position:relative;overflow:hidden}
+.drop-hint{display:flex;flex-direction:column;align-items:center;gap:12px;color:var(--text-dim)}
+.drop-hint .big-icon{font-size:52px;opacity:.16}
 .drop-hint p{font-size:12px;letter-spacing:2px;text-transform:uppercase;font-family:var(--mono)}
-.drop-hint small{font-size:10px;opacity:.5}
+.drop-hint small{font-size:10px;opacity:.45}
 
 /* Split viewer */
 .split-viewer{position:relative;display:none;max-width:100%;cursor:ew-resize;user-select:none}
 .split-viewer.visible{display:inline-block}
-.split-viewer canvas{display:block;max-width:100%;max-height:calc(100vh - 200px);border-radius:4px}
+.split-viewer canvas{display:block;max-width:100%;max-height:calc(100vh - 180px);border-radius:4px}
 .after-canvas{position:absolute;top:0;left:0;pointer-events:none}
 .split-divider{position:absolute;top:0;bottom:0;width:2px;background:var(--accent);
   box-shadow:0 0 12px rgba(0,212,255,.7);z-index:10;pointer-events:none}
 .split-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
   width:30px;height:30px;background:var(--accent);border-radius:50%;
   display:flex;align-items:center;justify-content:center;color:var(--bg);
-  font-size:13px;font-weight:700;box-shadow:0 0 14px rgba(0,212,255,.5)}
-.split-label{position:absolute;top:10px;background:rgba(6,10,16,.85);color:var(--text-dim);
+  font-size:12px;font-weight:700;box-shadow:0 0 14px rgba(0,212,255,.5)}
+.split-label{position:absolute;top:10px;background:rgba(6,10,16,.85);
   font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;
-  padding:3px 7px;border-radius:3px;border:1px solid var(--border);pointer-events:none}
-.label-before{left:10px}.label-after{right:10px}
+  padding:3px 8px;border-radius:3px;border:1px solid var(--border);pointer-events:none}
+.label-before{left:10px;color:var(--text-dim)}
+/* After label shows it's downloadable */
+.label-after{right:10px;color:var(--ok);border-color:rgba(0,255,136,.3);
+  background:rgba(0,255,136,.05)}
+
+/* Download CTA overlay — shows on canvas after pipeline done */
+.dl-overlay{position:absolute;bottom:14px;right:14px;z-index:20;
+  background:rgba(0,255,136,.12);border:1px solid rgba(0,255,136,.4);
+  border-radius:6px;padding:8px 12px;display:none;cursor:pointer;
+  font-family:var(--mono);font-size:10px;color:var(--ok);letter-spacing:1px;
+  text-transform:uppercase;transition:all .2s;backdrop-filter:blur(4px)}
+.dl-overlay:hover{background:rgba(0,255,136,.2);box-shadow:0 0 16px rgba(0,255,136,.2)}
+.dl-overlay.show{display:block}
 
 /* Stats bar */
-.stats-bar{background:var(--bg2);border-top:1px solid var(--border);padding:6px 16px;
+.stats-bar{background:var(--bg2);border-top:1px solid var(--border);padding:5px 16px;
   display:flex;gap:20px;align-items:center;font-family:var(--mono);font-size:10px;
-  color:var(--text-dim);flex-wrap:wrap;min-height:33px}
+  color:var(--text-dim);flex-wrap:wrap;min-height:31px;flex-shrink:0}
 .stat em{color:var(--accent);font-style:normal}
 
 /* Processing overlay */
 .proc-overlay{position:absolute;inset:0;background:rgba(6,10,16,.9);
   display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:50}
 .proc-overlay.active{display:flex}
-.spinner-lg{width:40px;height:40px;border:2px solid var(--border);border-top-color:var(--accent);
+.spinner-lg{width:38px;height:38px;border:2px solid var(--border);border-top-color:var(--accent);
   border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .proc-text{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:2px;text-transform:uppercase}
-.proc-sub{font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:1px;margin-top:-6px}
+.proc-sub{font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:.5px;margin-top:-6px;max-width:300px;text-align:center;line-height:1.4}
 
 /* Toast */
-.toast{position:fixed;bottom:18px;right:18px;background:var(--bg3);border:1px solid var(--accent-dim);
-  color:var(--accent);padding:8px 14px;border-radius:5px;font-family:var(--mono);font-size:11px;
-  letter-spacing:1px;z-index:1000;display:none;animation:toastIn .2s ease}
-@keyframes toastIn{from{transform:translateY(14px);opacity:0}to{transform:translateY(0);opacity:1}}
-
-/* Collapsed sections */
-.collapsible{overflow:hidden;transition:max-height .4s ease,opacity .4s ease;max-height:0;opacity:0}
-.collapsible.open{max-height:800px;opacity:1}
-
-/* Scrollbar */
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-track{background:var(--bg2)}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-
-/* Finish banner */
-.finish-banner{background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);
-  border-radius:5px;padding:8px 10px;font-family:var(--mono);font-size:10px;
-  color:var(--ok);letter-spacing:.5px;display:none;margin-top:8px}
-.finish-banner.show{display:block}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);
+  background:var(--bg3);border:1px solid var(--accent-dim);color:var(--accent);
+  padding:8px 16px;border-radius:5px;font-family:var(--mono);font-size:11px;
+  letter-spacing:1px;z-index:1000;display:none;white-space:nowrap}
 
 /* Mobile */
 @media(max-width:700px){
-  .app{grid-template-columns:1fr}
-  .sidebar{max-height:none;overflow-y:visible;border-right:none;border-bottom:1px solid var(--border)}
-  .split-viewer canvas{max-height:42vh}
-  .canvas-area{padding:12px;min-height:240px}
+  .app{grid-template-columns:1fr;grid-template-rows:auto 1fr;height:auto}
+  .sidebar{height:auto;overflow:visible}
+  .sidebar-scroll{overflow:visible;height:auto}
+  .main{height:calc(100vh - 49px - 20px)}
+  .split-viewer canvas{max-height:40vh}
+  .canvas-area{padding:12px}
   .badge{display:none}
 }
 </style>
@@ -190,52 +214,67 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
 </header>
 
 <div class="app">
+
+  <!-- ═══ SIDEBAR ═══ -->
   <aside class="sidebar">
 
-    <!-- UPLOAD -->
-    <div class="panel">
-      <div class="section-label">Image</div>
-      <div class="upload-zone" id="uploadZone">
-        <input type="file" id="fileInput" accept="image/*">
-        <span class="upload-icon">⬡</span>
-        <strong>Drop image here</strong>
-        <p>or click to browse · JPG · PNG · WEBP</p>
+    <!-- Scrollable top section -->
+    <div class="sidebar-scroll">
+
+      <!-- 1. UPLOAD -->
+      <div class="panel">
+        <div class="section-label">Image</div>
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="fileInput" accept="image/*">
+          <span class="upload-icon">⬡</span>
+          <strong>Drop image here</strong>
+          <p>or click to browse · JPG · PNG · WEBP</p>
+        </div>
+        <div class="img-badge" id="imgBadge"></div>
       </div>
-      <div class="img-badge" id="imgBadge"></div>
-    </div>
 
-    <!-- ANALYSIS (hidden until image loaded) -->
-    <div class="panel collapsible" id="analysisPanel">
-      <div class="section-label">Image Analysis</div>
-      <div class="metrics-grid" id="metricsGrid"></div>
-    </div>
+      <!-- 2. ANALYSIS (shown after upload) -->
+      <div class="panel collapsible" id="analysisPanel">
+        <div class="section-label">Image Analysis</div>
+        <div class="metrics-grid" id="metricsGrid"></div>
+      </div>
 
-    <!-- PIPELINE (hidden until analysis done) -->
-    <div class="panel collapsible" id="pipelinePanel">
-      <div class="section-label">Auto Pipeline</div>
-      <div class="pipeline-summary" id="pipelineSummary"></div>
-      <div class="pipeline-steps" id="pipelineSteps"></div>
-      <div class="finish-banner" id="finishBanner">✓ Pipeline complete — drag divider to compare</div>
-    </div>
+      <!-- 3. PIPELINE (shown after analysis) -->
+      <div class="panel collapsible" id="pipelinePanel">
+        <div class="section-label">Auto Pipeline</div>
+        <div class="pipeline-summary" id="pipelineSummary"></div>
+        <div class="pipeline-steps" id="pipelineSteps"></div>
+        <div class="finish-note" id="finishNote">
+          ✓ Done! The ENHANCED image (right side) is ready.<br>Click "Download Enhanced" below to save it.
+        </div>
+      </div>
 
-    <!-- ACTIONS -->
-    <div class="panel" id="actionsPanel" style="margin-top:auto">
+    </div><!-- /sidebar-scroll -->
+
+    <!-- ═══ STICKY FOOTER — always visible ═══ -->
+    <div class="sidebar-footer">
       <button class="btn btn-run" id="runBtn" disabled>▶ Run Pipeline</button>
-      <div class="btn-row" style="margin-top:6px">
+      <div class="btn-row">
         <button class="btn btn-sec" id="resetBtn" disabled>↺ Reset</button>
-        <button class="btn btn-sec" id="dlBtn" disabled>↓ Save PNG</button>
+        <button class="btn btn-sec" id="reloadBtn" disabled>⟳ New Image</button>
       </div>
+      <!-- Download button — prominent green, shown after pipeline -->
+      <button class="btn btn-dl" id="dlBtn" disabled>↓ Download Enhanced Image (Right Side)</button>
+      <div class="dl-hint" id="dlHint">⬆ This saves the ENHANCED right-side image as PNG</div>
     </div>
 
   </aside>
 
+  <!-- ═══ MAIN CANVAS ═══ -->
   <main class="main">
     <div class="canvas-area" id="canvasArea">
+
       <div class="drop-hint" id="dropHint">
         <div class="big-icon">⬡</div>
         <p>Upload an image to begin</p>
         <small>Auto-analysis runs instantly · No AI involved</small>
       </div>
+
       <div class="split-viewer" id="splitViewer">
         <canvas id="beforeCanvas"></canvas>
         <canvas id="afterCanvas" class="after-canvas"></canvas>
@@ -243,21 +282,28 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
           <div class="split-handle">⇔</div>
         </div>
         <div class="split-label label-before">ORIGINAL</div>
-        <div class="split-label label-after">ENHANCED</div>
+        <div class="split-label label-after">✓ ENHANCED — this downloads</div>
       </div>
+
+      <!-- Floating download CTA on canvas -->
+      <div class="dl-overlay" id="dlOverlay" title="Download enhanced image">↓ Save Enhanced PNG</div>
+
       <div class="proc-overlay" id="procOverlay">
         <div class="spinner-lg"></div>
         <div class="proc-text" id="procText">Running Pipeline…</div>
         <div class="proc-sub" id="procSub"></div>
       </div>
+
     </div>
+
     <div class="stats-bar">
       <div class="stat">SIZE <em id="sSize">—</em></div>
       <div class="stat">STEPS <em id="sSteps">—</em></div>
       <div class="stat">TIME <em id="sTime">—</em></div>
-      <div class="stat" style="margin-left:auto;font-size:9px;opacity:.4">⇔ Drag divider to compare</div>
+      <div class="stat" style="margin-left:auto;font-size:9px;opacity:.35">⇔ Drag divider to compare</div>
     </div>
   </main>
+
 </div>
 
 <div class="toast" id="toast"></div>
@@ -265,406 +311,121 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
 <script>
 'use strict';
 
-// ════════════════════════════════════════════════════════════
-//  FAST BLUR — O(n) 3-pass box blur approximating Gaussian
-// ════════════════════════════════════════════════════════════
-function boxH(s,W,H,r){
-  const d=new Float32Array(s.length),dm=2*r+1;
-  for(let y=0;y<H;y++){
-    const b=y*W; let v=(r+1)*s[b];
-    for(let x=1;x<=r;x++) v+=s[b+Math.min(W-1,x)];
-    for(let x=0;x<W;x++){d[b+x]=v/dm;v+=s[b+Math.min(W-1,x+r+1)];v-=s[b+Math.max(0,x-r)];}
-  }
-  return d;
-}
-function boxV(s,W,H,r){
-  const d=new Float32Array(s.length),dm=2*r+1;
-  for(let x=0;x<W;x++){
-    let v=(r+1)*s[x];
-    for(let y=1;y<=r;y++) v+=s[Math.min(H-1,y)*W+x];
-    for(let y=0;y<H;y++){d[y*W+x]=v/dm;v+=s[Math.min(H-1,y+r+1)*W+x];v-=s[Math.max(0,y-r)*W+x];}
-  }
-  return d;
-}
-function blurCh(s,W,H,sig){
-  const r=Math.max(0,Math.round(sig));
-  if(!r) return s instanceof Float32Array?s:new Float32Array(s);
-  let t=s instanceof Float32Array?s:new Float32Array(s);
-  for(let p=0;p<3;p++){t=boxH(t,W,H,r);t=boxV(t,W,H,r);}
-  return t;
-}
-function blurRGB(src,W,H,sig){
-  const n=W*H,chs=[new Float32Array(n),new Float32Array(n),new Float32Array(n)];
-  for(let i=0;i<n;i++){chs[0][i]=src[i*4];chs[1][i]=src[i*4+1];chs[2][i]=src[i*4+2];}
-  const b=chs.map(c=>blurCh(c,W,H,sig));
-  const d=new Uint8ClampedArray(src.length);
-  for(let i=0;i<n;i++){d[i*4]=b[0][i];d[i*4+1]=b[1][i];d[i*4+2]=b[2][i];d[i*4+3]=src[i*4+3];}
-  return d;
+/* ── FAST BOX BLUR (O(n), 3-pass ≈ Gaussian) ── */
+function boxH(s,W,H,r){const d=new Float32Array(s.length),dm=2*r+1;for(let y=0;y<H;y++){const b=y*W;let v=(r+1)*s[b];for(let x=1;x<=r;x++)v+=s[b+Math.min(W-1,x)];for(let x=0;x<W;x++){d[b+x]=v/dm;v+=s[b+Math.min(W-1,x+r+1)];v-=s[b+Math.max(0,x-r)];}}return d;}
+function boxV(s,W,H,r){const d=new Float32Array(s.length),dm=2*r+1;for(let x=0;x<W;x++){let v=(r+1)*s[x];for(let y=1;y<=r;y++)v+=s[Math.min(H-1,y)*W+x];for(let y=0;y<H;y++){d[y*W+x]=v/dm;v+=s[Math.min(H-1,y+r+1)*W+x];v-=s[Math.max(0,y-r)*W+x];}}return d;}
+function blurCh(s,W,H,sig){const r=Math.max(0,Math.round(sig));if(!r)return s instanceof Float32Array?s:new Float32Array(s);let t=s instanceof Float32Array?s:new Float32Array(s);for(let p=0;p<3;p++){t=boxH(t,W,H,r);t=boxV(t,W,H,r);}return t;}
+function blurRGB(src,W,H,sig){const n=W*H,chs=[new Float32Array(n),new Float32Array(n),new Float32Array(n)];for(let i=0;i<n;i++){chs[0][i]=src[i*4];chs[1][i]=src[i*4+1];chs[2][i]=src[i*4+2];}const b=chs.map(c=>blurCh(c,W,H,sig));const d=new Uint8ClampedArray(src.length);for(let i=0;i<n;i++){d[i*4]=b[0][i];d[i*4+1]=b[1][i];d[i*4+2]=b[2][i];d[i*4+3]=src[i*4+3];}return d;}
+
+/* ── ALGORITHMS ── */
+function doCLAHE(src,W,H,clip,tile){const d=new Uint8ClampedArray(src.length);const tX=Math.max(1,Math.ceil(W/tile)),tY=Math.max(1,Math.ceil(H/tile));const cl=Array.from({length:tY},()=>Array(tX));for(let ty=0;ty<tY;ty++)for(let tx=0;tx<tX;tx++){const x0=tx*tile,y0=ty*tile,x1=Math.min(x0+tile,W),y1=Math.min(y0+tile,H);const px=(x1-x0)*(y1-y0),hist=new Int32Array(256);for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){const i=(y*W+x)*4;hist[Math.round(.299*src[i]+.587*src[i+1]+.114*src[i+2])]++;}const lim=Math.max(1,Math.round(clip*px/256));let ex=0;for(let v=0;v<256;v++){if(hist[v]>lim){ex+=hist[v]-lim;hist[v]=lim;}}const add=Math.floor(ex/256);let rem=ex%256;for(let v=0;v<256;v++){hist[v]+=add;if(rem-->0)hist[v]++;}const lut=new Uint8ClampedArray(256);let cdf=0;for(let v=0;v<256;v++){cdf+=hist[v];lut[v]=Math.round(cdf*255/px);}cl[ty][tx]=lut;}for(let y=0;y<H;y++)for(let x=0;x<W;x++){const i=(y*W+x)*4,lum=Math.round(.299*src[i]+.587*src[i+1]+.114*src[i+2]);const fx=(x+.5)/tile-.5,fy=(y+.5)/tile-.5;const tx0=Math.max(0,Math.min(tX-2,Math.floor(fx))),ty0=Math.max(0,Math.min(tY-2,Math.floor(fy)));const tx1=Math.min(tX-1,tx0+1),ty1=Math.min(tY-1,ty0+1);const wx=Math.max(0,Math.min(1,fx-tx0)),wy=Math.max(0,Math.min(1,fy-ty0));const v=cl[ty0][tx0][lum]*(1-wx)*(1-wy)+cl[ty0][tx1][lum]*wx*(1-wy)+cl[ty1][tx0][lum]*(1-wx)*wy+cl[ty1][tx1][lum]*wx*wy;const sc=lum>0?v/lum:1;d[i]=Math.min(255,src[i]*sc|0);d[i+1]=Math.min(255,src[i+1]*sc|0);d[i+2]=Math.min(255,src[i+2]*sc|0);d[i+3]=src[i+3];}return d;}
+function doUnsharp(src,W,H,rad,amt,thr){const bl=blurRGB(src,W,H,rad),d=new Uint8ClampedArray(src.length);for(let i=0;i<src.length;i+=4){for(let c=0;c<3;c++){const df=src[i+c]-bl[i+c];d[i+c]=Math.max(0,Math.min(255,src[i+c]+(Math.abs(df)>thr?amt*df:0)));}d[i+3]=src[i+3];}return d;}
+function doBilateral(src,W,H,sS,rS){const d=new Uint8ClampedArray(src.length),r=Math.ceil(2*sS),ss=2*sS*sS,rs=2*rS*rS;for(let y=0;y<H;y++)for(let x=0;x<W;x++){const ci=(y*W+x)*4,cR=src[ci],cG=src[ci+1],cB=src[ci+2];let aR=0,aG=0,aB=0,aW=0;for(let dy=-r;dy<=r;dy++){const ny=Math.max(0,Math.min(H-1,y+dy));for(let dx=-r;dx<=r;dx++){const nx=Math.max(0,Math.min(W-1,x+dx));const ni=(ny*W+nx)*4,nR=src[ni],nG=src[ni+1],nB=src[ni+2];const w=Math.exp(-(dx*dx+dy*dy)/ss-((nR-cR)**2+(nG-cG)**2+(nB-cB)**2)/rs);aR+=w*nR;aG+=w*nG;aB+=w*nB;aW+=w;}}d[ci]=aR/aW|0;d[ci+1]=aG/aW|0;d[ci+2]=aB/aW|0;d[ci+3]=src[ci+3];}return d;}
+function doRetinex(src,W,H,scales){const n=W*H,wt=1/scales.length,d=new Uint8ClampedArray(src.length);for(let c=0;c<3;c++){const ch=new Float32Array(n);for(let i=0;i<n;i++)ch[i]=src[i*4+c]+1;const lc=ch.map(v=>Math.log(v)),out=new Float32Array(n);for(const sig of scales){const bl=blurCh(ch,W,H,sig);for(let i=0;i<n;i++)out[i]+=wt*(lc[i]-Math.log(Math.max(bl[i],1)));}let mn=Infinity,mx=-Infinity;for(let i=0;i<n;i++){if(out[i]<mn)mn=out[i];if(out[i]>mx)mx=out[i];}const rng=mx-mn||1;for(let i=0;i<n;i++)d[i*4+c]=(out[i]-mn)/rng*255|0;}for(let i=0;i<n;i++)d[i*4+3]=src[i*4+3];return d;}
+function doNLM(src,W,H,h,sR,pR){const d=new Uint8ClampedArray(src.length),h2=h*h,ps=(2*pR+1)**2;for(let y=0;y<H;y++)for(let x=0;x<W;x++){const ci=(y*W+x)*4;let sRc=0,sGc=0,sBc=0,sW=0;for(let sy=-sR;sy<=sR;sy++)for(let sx=-sR;sx<=sR;sx++){const ny=y+sy,nx=x+sx;if(ny<0||ny>=H||nx<0||nx>=W)continue;let dist=0;for(let py=-pR;py<=pR;py++)for(let px=-pR;px<=pR;px++){const ay=Math.max(0,Math.min(H-1,y+py)),ax=Math.max(0,Math.min(W-1,x+px));const by=Math.max(0,Math.min(H-1,ny+py)),bx=Math.max(0,Math.min(W-1,nx+px));const ai=(ay*W+ax)*4,bi=(by*W+bx)*4;for(let cv=0;cv<3;cv++){const dv=src[ai+cv]-src[bi+cv];dist+=dv*dv;}}const w=Math.exp(-dist/(3*ps*65025*h2));const ni=(ny*W+nx)*4;sRc+=w*src[ni];sGc+=w*src[ni+1];sBc+=w*src[ni+2];sW+=w;}d[ci]=sRc/sW|0;d[ci+1]=sGc/sW|0;d[ci+2]=sBc/sW|0;d[ci+3]=src[ci+3];}return d;}
+
+/* ── IMAGE ANALYSIS ── */
+function analyzeImage(data,W,H){
+  const n=W*H,lum=new Float32Array(n);
+  for(let i=0;i<n;i++)lum[i]=.299*data[i*4]+.587*data[i*4+1]+.114*data[i*4+2];
+  let sumL=0;for(let i=0;i<n;i++)sumL+=lum[i];
+  const brightness=sumL/n;
+  let sumSq=0;for(let i=0;i<n;i++)sumSq+=(lum[i]-brightness)**2;
+  const contrast=Math.sqrt(sumSq/n);
+  let lapSum=0,lapC=0;
+  for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){const i=y*W+x;lapSum+=Math.abs(4*lum[i]-lum[i-1]-lum[i+1]-lum[i-W]-lum[i+W]);lapC++;}
+  const sharpness=lapSum/lapC;
+  let nSum=0,nSq=0,nC=0;
+  for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){let m=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)m+=lum[(y+dy)*W+(x+dx)];m/=9;const df=lum[y*W+x]-m;nSum+=df;nSq+=df*df;nC++;}
+  const noise=Math.sqrt(nSq/nC-(nSum/nC)**2);
+  const qM=[0,0,0,0],qN=[0,0,0,0],hW=W/2,hH=H/2;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const q=(y>=hH?2:0)+(x>=hW?1:0);qM[q]+=lum[y*W+x];qN[q]++;}
+  for(let q=0;q<4;q++)qM[q]/=qN[q];
+  const qAvg=qM.reduce((a,b)=>a+b,0)/4;
+  const lightingVar=Math.sqrt(qM.reduce((a,b)=>a+(b-qAvg)**2,0)/4);
+  return{brightness,contrast,sharpness,noise,lightingVar};
 }
 
-// ════════════════════════════════════════════════════════════
-//  ALGORITHMS
-// ════════════════════════════════════════════════════════════
-function doCLAHE(src,W,H,clip,tile){
-  const d=new Uint8ClampedArray(src.length);
-  const tX=Math.max(1,Math.ceil(W/tile)),tY=Math.max(1,Math.ceil(H/tile));
-  const cl=Array.from({length:tY},()=>Array(tX));
-  for(let ty=0;ty<tY;ty++) for(let tx=0;tx<tX;tx++){
-    const x0=tx*tile,y0=ty*tile,x1=Math.min(x0+tile,W),y1=Math.min(y0+tile,H);
-    const px=(x1-x0)*(y1-y0),hist=new Int32Array(256);
-    for(let y=y0;y<y1;y++) for(let x=x0;x<x1;x++){
-      const i=(y*W+x)*4;hist[Math.round(.299*src[i]+.587*src[i+1]+.114*src[i+2])]++;
-    }
-    const lim=Math.max(1,Math.round(clip*px/256));
-    let ex=0; for(let v=0;v<256;v++){if(hist[v]>lim){ex+=hist[v]-lim;hist[v]=lim;}}
-    const add=Math.floor(ex/256); let rem=ex%256;
-    for(let v=0;v<256;v++){hist[v]+=add;if(rem-->0)hist[v]++;}
-    const lut=new Uint8ClampedArray(256); let cdf=0;
-    for(let v=0;v<256;v++){cdf+=hist[v];lut[v]=Math.round(cdf*255/px);}
-    cl[ty][tx]=lut;
-  }
-  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
-    const i=(y*W+x)*4,lum=Math.round(.299*src[i]+.587*src[i+1]+.114*src[i+2]);
-    const fx=(x+.5)/tile-.5,fy=(y+.5)/tile-.5;
-    const tx0=Math.max(0,Math.min(tX-2,Math.floor(fx))),ty0=Math.max(0,Math.min(tY-2,Math.floor(fy)));
-    const tx1=Math.min(tX-1,tx0+1),ty1=Math.min(tY-1,ty0+1);
-    const wx=Math.max(0,Math.min(1,fx-tx0)),wy=Math.max(0,Math.min(1,fy-ty0));
-    const v=cl[ty0][tx0][lum]*(1-wx)*(1-wy)+cl[ty0][tx1][lum]*wx*(1-wy)
-            +cl[ty1][tx0][lum]*(1-wx)*wy+cl[ty1][tx1][lum]*wx*wy;
-    const sc=lum>0?v/lum:1;
-    d[i]=Math.min(255,src[i]*sc|0);d[i+1]=Math.min(255,src[i+1]*sc|0);
-    d[i+2]=Math.min(255,src[i+2]*sc|0);d[i+3]=src[i+3];
-  }
-  return d;
-}
-function doUnsharp(src,W,H,rad,amt,thr){
-  const bl=blurRGB(src,W,H,rad),d=new Uint8ClampedArray(src.length);
-  for(let i=0;i<src.length;i+=4){
-    for(let c=0;c<3;c++){const df=src[i+c]-bl[i+c];d[i+c]=Math.max(0,Math.min(255,src[i+c]+(Math.abs(df)>thr?amt*df:0)));}
-    d[i+3]=src[i+3];
-  }
-  return d;
-}
-function doBilateral(src,W,H,sS,rS){
-  const d=new Uint8ClampedArray(src.length),r=Math.ceil(2*sS),ss=2*sS*sS,rs=2*rS*rS;
-  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
-    const ci=(y*W+x)*4,cR=src[ci],cG=src[ci+1],cB=src[ci+2];
-    let aR=0,aG=0,aB=0,aW=0;
-    for(let dy=-r;dy<=r;dy++){const ny=Math.max(0,Math.min(H-1,y+dy));
-      for(let dx=-r;dx<=r;dx++){const nx=Math.max(0,Math.min(W-1,x+dx));
-        const ni=(ny*W+nx)*4,nR=src[ni],nG=src[ni+1],nB=src[ni+2];
-        const w=Math.exp(-(dx*dx+dy*dy)/ss-((nR-cR)**2+(nG-cG)**2+(nB-cB)**2)/rs);
-        aR+=w*nR;aG+=w*nG;aB+=w*nB;aW+=w;
-      }
-    }
-    d[ci]=aR/aW|0;d[ci+1]=aG/aW|0;d[ci+2]=aB/aW|0;d[ci+3]=src[ci+3];
-  }
-  return d;
-}
-function doRetinex(src,W,H,scales){
-  const n=W*H,wt=1/scales.length,d=new Uint8ClampedArray(src.length);
-  for(let c=0;c<3;c++){
-    const ch=new Float32Array(n);
-    for(let i=0;i<n;i++) ch[i]=src[i*4+c]+1;
-    const lc=ch.map(v=>Math.log(v)),out=new Float32Array(n);
-    for(const sig of scales){const bl=blurCh(ch,W,H,sig);for(let i=0;i<n;i++) out[i]+=wt*(lc[i]-Math.log(Math.max(bl[i],1)));}
-    let mn=Infinity,mx=-Infinity;
-    for(let i=0;i<n;i++){if(out[i]<mn)mn=out[i];if(out[i]>mx)mx=out[i];}
-    const rng=mx-mn||1;
-    for(let i=0;i<n;i++) d[i*4+c]=(out[i]-mn)/rng*255|0;
-  }
-  for(let i=0;i<n;i++) d[i*4+3]=src[i*4+3];
-  return d;
-}
-function doLaplacian(src,W,H,str){
-  const d=new Uint8ClampedArray(src.length),k=[0,-1,0,-1,4,-1,0,-1,0];
-  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
-    const ci=(y*W+x)*4;let lR=0,lG=0,lB=0,ki=0;
-    for(let dy=-1;dy<=1;dy++){const ny=Math.max(0,Math.min(H-1,y+dy));
-      for(let dx=-1;dx<=1;dx++){const ni=(ny*W+Math.max(0,Math.min(W-1,x+dx)))*4;
-        lR+=k[ki]*src[ni];lG+=k[ki]*src[ni+1];lB+=k[ki]*src[ni+2];ki++;
-      }
-    }
-    d[ci]=Math.max(0,Math.min(255,src[ci]+str*lR|0));
-    d[ci+1]=Math.max(0,Math.min(255,src[ci+1]+str*lG|0));
-    d[ci+2]=Math.max(0,Math.min(255,src[ci+2]+str*lB|0));
-    d[ci+3]=src[ci+3];
-  }
-  return d;
-}
-function doNLM(src,W,H,h,sR,pR){
-  const d=new Uint8ClampedArray(src.length),h2=h*h,ps=(2*pR+1)**2;
-  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
-    const ci=(y*W+x)*4;let sRc=0,sGc=0,sBc=0,sW=0;
-    for(let sy=-sR;sy<=sR;sy++) for(let sx=-sR;sx<=sR;sx++){
-      const ny=y+sy,nx=x+sx;
-      if(ny<0||ny>=H||nx<0||nx>=W) continue;
-      let dist=0;
-      for(let py=-pR;py<=pR;py++) for(let px=-pR;px<=pR;px++){
-        const ay=Math.max(0,Math.min(H-1,y+py)),ax=Math.max(0,Math.min(W-1,x+px));
-        const by=Math.max(0,Math.min(H-1,ny+py)),bx=Math.max(0,Math.min(W-1,nx+px));
-        const ai=(ay*W+ax)*4,bi=(by*W+bx)*4;
-        for(let c=0;c<3;c++){const dv=src[ai+c]-src[bi+c];dist+=dv*dv;}
-      }
-      const w=Math.exp(-dist/(3*ps*65025*h2));
-      const ni=(ny*W+nx)*4;sRc+=w*src[ni];sGc+=w*src[ni+1];sBc+=w*src[ni+2];sW+=w;
-    }
-    d[ci]=sRc/sW|0;d[ci+1]=sGc/sW|0;d[ci+2]=sBc/sW|0;d[ci+3]=src[ci+3];
-  }
-  return d;
-}
+/* ── PIPELINE BUILDER ── */
+function buildPipeline(m){
+  const steps=[];
+  const isDark=m.brightness<80,isLowContr=m.contrast<38;
+  const isNoisy=m.noise>4.5,isVeryNoisy=m.noise>11;
+  const isBlurry=m.sharpness<10,isSoft=m.sharpness<22&&!isBlurry;
+  const isUneven=m.lightingVar>22;
 
-// ════════════════════════════════════════════════════════════
-//  IMAGE ANALYSIS — pure statistics, zero AI
-// ════════════════════════════════════════════════════════════
-function analyzeImage(data, W, H) {
-  const n = W * H;
-  // Luminance array
-  const lum = new Float32Array(n);
-  for (let i=0;i<n;i++) lum[i]=.299*data[i*4]+.587*data[i*4+1]+.114*data[i*4+2];
-
-  // Brightness = mean luminance
-  let sumL=0; for(let i=0;i<n;i++) sumL+=lum[i];
-  const brightness = sumL/n;
-
-  // Contrast = std-dev of luminance
-  let sumSq=0; for(let i=0;i<n;i++) sumSq+=(lum[i]-brightness)**2;
-  const contrast = Math.sqrt(sumSq/n);
-
-  // Sharpness = mean absolute Laplacian (focus measure)
-  let lapSum=0, lapCount=0;
-  for(let y=1;y<H-1;y++) for(let x=1;x<W-1;x++){
-    const i=y*W+x;
-    lapSum+=Math.abs(4*lum[i]-lum[i-1]-lum[i+1]-lum[i-W]-lum[i+W]);
-    lapCount++;
-  }
-  const sharpness = lapSum/lapCount;
-
-  // Noise = std-dev of residual after 3x3 mean subtraction
-  let nSum=0,nSq=0,nCount=0;
-  for(let y=1;y<H-1;y++) for(let x=1;x<W-1;x++){
-    let m=0; for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++) m+=lum[(y+dy)*W+(x+dx)];
-    m/=9; const diff=lum[y*W+x]-m; nSum+=diff; nSq+=diff*diff; nCount++;
-  }
-  const noiseMean=nSum/nCount;
-  const noise=Math.sqrt(nSq/nCount-noiseMean**2);
-
-  // Lighting uniformity — compare mean brightness of image quadrants
-  const qMeans=[0,0,0,0],qN=[0,0,0,0],hW=W/2,hH=H/2;
-  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
-    const q=(y>=hH?2:0)+(x>=hW?1:0);
-    qMeans[q]+=lum[y*W+x]; qN[q]++;
-  }
-  for(let q=0;q<4;q++) qMeans[q]/=qN[q];
-  const qM=qMeans.reduce((a,b)=>a+b,0)/4;
-  const lightingVar=Math.sqrt(qMeans.reduce((a,b)=>a+(b-qM)**2,0)/4);
-
-  return {brightness, contrast, sharpness, noise, lightingVar};
-}
-
-// ════════════════════════════════════════════════════════════
-//  PIPELINE BUILDER — rule-based decision tree
-// ════════════════════════════════════════════════════════════
-function buildPipeline(m) {
-  const steps = [];
-
-  // Classify each dimension
-  const isDark      = m.brightness < 80;
-  const isBright    = m.brightness > 185;
-  const isLowContr  = m.contrast < 38;
-  const isNoisy     = m.noise > 4.5;
-  const isVeryNoisy = m.noise > 11;
-  const isBlurry    = m.sharpness < 10;
-  const isSoft      = m.sharpness < 22 && !isBlurry;
-  const isUneven    = m.lightingVar > 22;
-
-  // ① Retinex — uneven / inconsistent illumination
-  if (isUneven) {
-    steps.push({
-      id:'retinex', name:'Multi-Scale Retinex',
-      reason:'Uneven lighting across frame → illumination normalization',
-      params:{s1:15,s2:60,s3:120},
-      paramsLabel:'σ = 15 · 60 · 120',
-      fn:(s,W,H,p)=>doRetinex(s,W,H,[p.s1,p.s2,p.s3])
-    });
-  }
-
-  // ② CLAHE — dark or low-contrast image
-  if (isDark || isLowContr) {
-    const clip = isDark ? 3.5 : 2.0;
-    steps.push({
-      id:'clahe', name:'CLAHE',
-      reason: isDark ? 'Dark image → adaptive contrast boost' : 'Flat / low-contrast → local histogram eq.',
-      params:{clip,tile:64},
-      paramsLabel:`clip=${clip} tile=64px`,
-      fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)
-    });
-  }
-
-  // ③ Denoising — before sharpening (critical ordering)
-  if (isNoisy) {
-    if (isVeryNoisy) {
-      steps.push({
-        id:'nlm', name:'Non-Local Means',
-        reason:'High noise floor → patch-similarity denoising',
-        params:{h:.08,sR:5,pR:2},
-        paramsLabel:'h=0.08 search=5 patch=2',
-        fn:(s,W,H,p)=>doNLM(s,W,H,p.h,p.sR,p.pR)
-      });
-    } else {
-      steps.push({
-        id:'bilateral', name:'Bilateral Filter',
-        reason:'Moderate noise → edge-preserving smoothing',
-        params:{sS:3,rS:40},
-        paramsLabel:'spatial σ=3 range σ=40',
-        fn:(s,W,H,p)=>doBilateral(s,W,H,p.sS,p.rS)
-      });
-    }
-  }
-
-  // ④ Sharpening — last step (never before denoising)
-  if (isBlurry) {
-    steps.push({
-      id:'unsharp', name:'Unsharp Mask',
-      reason:'Soft/blurry image → aggressive sharpening',
-      params:{rad:3,amt:1.8,thr:3},
-      paramsLabel:'radius=3 amount=1.8 thr=3',
-      fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)
-    });
-  } else if (isSoft || (!isNoisy && steps.length > 0)) {
-    steps.push({
-      id:'unsharp', name:'Unsharp Mask',
-      reason: isSoft ? 'Slightly soft → mild sharpening finish' : 'Final crispness pass',
-      params:{rad:1.5,amt:1.0,thr:4},
-      paramsLabel:'radius=1.5 amount=1.0 thr=4',
-      fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)
-    });
-  }
-
-  // ⑤ Fallback — well-balanced image: gentle all-round boost
-  if (steps.length === 0) {
-    steps.push({
-      id:'clahe', name:'CLAHE',
-      reason:'Well-balanced image → gentle local contrast polish',
-      params:{clip:1.5,tile:80},
-      paramsLabel:'clip=1.5 tile=80px',
-      fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)
-    });
-    steps.push({
-      id:'unsharp', name:'Unsharp Mask',
-      reason:'Mild sharpness enhancement',
-      params:{rad:1,amt:0.7,thr:5},
-      paramsLabel:'radius=1 amount=0.7 thr=5',
-      fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)
-    });
-  }
-
+  if(isUneven){steps.push({id:'retinex',name:'Multi-Scale Retinex',reason:'Uneven lighting detected → illumination normalization first',params:{s1:15,s2:60,s3:120},pl:'σ = 15 · 60 · 120',fn:(s,W,H,p)=>doRetinex(s,W,H,[p.s1,p.s2,p.s3])});}
+  if(isDark||isLowContr){const clip=isDark?3.5:2.0;steps.push({id:'clahe',name:'CLAHE',reason:isDark?'Dark image → boost local contrast':'Flat image → adaptive histogram equalization',params:{clip,tile:64},pl:'clip='+clip+' tile=64px',fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)});}
+  if(isNoisy){if(isVeryNoisy){steps.push({id:'nlm',name:'Non-Local Means',reason:'High noise → patch-similarity denoising (before sharpening)',params:{h:.08,sR:5,pR:2},pl:'h=0.08  search=5  patch=2',fn:(s,W,H,p)=>doNLM(s,W,H,p.h,p.sR,p.pR)});}else{steps.push({id:'bilateral',name:'Bilateral Filter',reason:'Moderate noise → edge-preserving smoothing',params:{sS:3,rS:40},pl:'spatial σ=3  range σ=40',fn:(s,W,H,p)=>doBilateral(s,W,H,p.sS,p.rS)});}}
+  if(isBlurry){steps.push({id:'unsharp',name:'Unsharp Mask',reason:'Blurry image → aggressive sharpening (always after denoising)',params:{rad:3,amt:1.8,thr:3},pl:'radius=3  amount=1.8  thr=3',fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});}
+  else if(isSoft||(!isNoisy&&steps.length>0)){steps.push({id:'unsharp',name:'Unsharp Mask',reason:isSoft?'Soft image → mild sharpening finish':'Final crispness pass',params:{rad:1.5,amt:1.0,thr:4},pl:'radius=1.5  amount=1.0  thr=4',fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});}
+  if(steps.length===0){steps.push({id:'clahe',name:'CLAHE',reason:'Balanced image → gentle local contrast polish',params:{clip:1.5,tile:80},pl:'clip=1.5  tile=80px',fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)});steps.push({id:'unsharp',name:'Unsharp Mask',reason:'Mild sharpness enhancement for final output',params:{rad:1,amt:0.7,thr:5},pl:'radius=1  amount=0.7  thr=5',fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});}
   return steps;
 }
 
-// ════════════════════════════════════════════════════════════
-//  STATE
-// ════════════════════════════════════════════════════════════
-let origData=null, enhData=null, imgW=0, imgH=0;
-let pipeline=[], metrics=null;
-let splitPos=.5, isDragging=false;
+/* ── STATE ── */
+let origData=null,enhData=null,imgW=0,imgH=0,pipeline=[],splitPos=.5,isDragging=false;
 
-// ════════════════════════════════════════════════════════════
-//  DOM
-// ════════════════════════════════════════════════════════════
+/* ── DOM ── */
 const $=id=>document.getElementById(id);
 const uploadZone=$('uploadZone'),fileInput=$('fileInput');
 const analysisPanel=$('analysisPanel'),pipelinePanel=$('pipelinePanel');
 const metricsGrid=$('metricsGrid'),pipelineSteps=$('pipelineSteps'),pipelineSummary=$('pipelineSummary');
-const runBtn=$('runBtn'),resetBtn=$('resetBtn'),dlBtn=$('dlBtn');
+const runBtn=$('runBtn'),resetBtn=$('resetBtn'),reloadBtn=$('reloadBtn'),dlBtn=$('dlBtn'),dlHint=$('dlHint');
 const splitViewer=$('splitViewer'),beforeCanvas=$('beforeCanvas'),afterCanvas=$('afterCanvas');
 const splitDivider=$('splitDivider'),dropHint=$('dropHint');
 const procOverlay=$('procOverlay'),procText=$('procText'),procSub=$('procSub');
 const imgBadge=$('imgBadge'),sSize=$('sSize'),sSteps=$('sSteps'),sTime=$('sTime');
-const toast=$('toast'),finishBanner=$('finishBanner');
+const toast=$('toast'),finishNote=$('finishNote'),dlOverlay=$('dlOverlay');
 
-// ════════════════════════════════════════════════════════════
-//  RENDER ANALYSIS
-// ════════════════════════════════════════════════════════════
-function renderAnalysis(m) {
+/* ── RENDER ANALYSIS ── */
+function renderAnalysis(m){
   metricsGrid.innerHTML='';
-
-  function metricCard(name, value, min, max, label, tagClass, tagText, full=false) {
-    const pct = Math.round(Math.max(0,Math.min(100,(value-min)/(max-min)*100)));
-    const colors={warn:'#ff6030',ok:'#00d4ff',good:'#00ff88'};
-    const fillColor=colors[tagClass.replace('mtag-','')]||'#00d4ff';
-    const card=document.createElement('div');
-    card.className='metric-card'+(full?' full':'');
-    card.innerHTML=`<div class="metric-name">${name}</div>
-      <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:${pct}%;background:${fillColor}"></div></div>
-      <div class="metric-row">
-        <span class="metric-num">${Math.round(value)}</span>
-        <span class="mtag ${tagClass}">${tagText}</span>
-      </div>`;
-    metricsGrid.appendChild(card);
+  function card(name,val,min,max,tagCls,tagTxt,full=false){
+    const pct=Math.round(Math.max(0,Math.min(100,(val-min)/(max-min)*100)));
+    const col={warn:'#ff6030',ok:'#00d4ff',good:'#00ff88'}[tagCls.replace('mtag-','')]||'#00d4ff';
+    const el=document.createElement('div');
+    el.className='metric-card'+(full?' full':'');
+    el.innerHTML=`<div class="metric-name">${name}</div>
+      <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:${pct}%;background:${col}"></div></div>
+      <div class="metric-row"><span class="metric-num">${Math.round(val)}</span><span class="mtag ${tagCls}">${tagTxt}</span></div>`;
+    metricsGrid.appendChild(el);
   }
-
-  // Brightness
-  const bTag = m.brightness<80?'mtag-warn':m.brightness>185?'mtag-warn':'mtag-good';
-  const bTxt = m.brightness<80?'DARK':m.brightness>185?'BRIGHT':'NORMAL';
-  metricCard('Brightness', m.brightness, 0, 255, '', bTag, bTxt);
-
-  // Contrast
-  const cTag = m.contrast<38?'mtag-warn':m.contrast>80?'mtag-ok':'mtag-good';
-  const cTxt = m.contrast<38?'LOW':m.contrast>80?'HIGH':'NORMAL';
-  metricCard('Contrast', m.contrast, 0, 100, '', cTag, cTxt);
-
-  // Sharpness
-  const shTag = m.sharpness<10?'mtag-warn':m.sharpness<22?'mtag-warn':'mtag-good';
-  const shTxt = m.sharpness<10?'BLURRY':m.sharpness<22?'SOFT':'SHARP';
-  metricCard('Sharpness', m.sharpness, 0, 60, '', shTag, shTxt);
-
-  // Noise
-  const nTag = m.noise>11?'mtag-warn':m.noise>4.5?'mtag-warn':'mtag-good';
-  const nTxt = m.noise>11?'NOISY':m.noise>4.5?'GRAINY':'CLEAN';
-  metricCard('Noise', m.noise, 0, 20, '', nTag, nTxt);
-
-  // Lighting uniformity (full width)
-  const lTag = m.lightingVar>22?'mtag-warn':'mtag-good';
-  const lTxt = m.lightingVar>22?'UNEVEN':'UNIFORM';
-  metricCard('Lighting Uniformity', m.lightingVar, 0, 60, '', lTag, lTxt, true);
-
+  card('Brightness',m.brightness,0,255,m.brightness<80?'mtag-warn':m.brightness>185?'mtag-warn':'mtag-good',m.brightness<80?'DARK':m.brightness>185?'BRIGHT':'NORMAL');
+  card('Contrast',m.contrast,0,100,m.contrast<38?'mtag-warn':m.contrast>80?'mtag-ok':'mtag-good',m.contrast<38?'LOW':m.contrast>80?'HIGH':'NORMAL');
+  card('Sharpness',m.sharpness,0,60,m.sharpness<10?'mtag-warn':m.sharpness<22?'mtag-warn':'mtag-good',m.sharpness<10?'BLURRY':m.sharpness<22?'SOFT':'SHARP');
+  card('Noise',m.noise,0,20,m.noise>11?'mtag-warn':m.noise>4.5?'mtag-warn':'mtag-good',m.noise>11?'NOISY':m.noise>4.5?'GRAINY':'CLEAN');
+  card('Lighting',m.lightingVar,0,60,m.lightingVar>22?'mtag-warn':'mtag-good',m.lightingVar>22?'UNEVEN':'UNIFORM',true);
   analysisPanel.classList.add('open');
 }
 
-// ════════════════════════════════════════════════════════════
-//  RENDER PIPELINE
-// ════════════════════════════════════════════════════════════
-function renderPipeline(steps) {
+/* ── RENDER PIPELINE ── */
+function renderPipeline(steps){
   pipelineSteps.innerHTML='';
-  finishBanner.classList.remove('show');
-
-  const names=steps.map(s=>s.name).join(' → ');
-  pipelineSummary.textContent=`${steps.length} step${steps.length>1?'s':''}: ${names}`;
+  finishNote.classList.remove('show');
+  dlOverlay.classList.remove('show');
+  pipelineSummary.textContent=steps.length+' step'+(steps.length>1?'s':'')+': '+steps.map(s=>s.name).join(' → ');
   sSteps.textContent=steps.length;
-
-  steps.forEach((step,i)=>{
-    const card=document.createElement('div');
-    card.className='step-card'; card.id='step-card-'+i;
-    card.innerHTML=`
-      <div class="step-num" id="step-num-${i}">${i+1}</div>
+  steps.forEach((s,i)=>{
+    const c=document.createElement('div');
+    c.className='step-card';c.id='sc'+i;
+    c.innerHTML=`<div class="step-num" id="sn${i}">${i+1}</div>
       <div class="step-spinner"></div>
       <div class="step-info">
-        <div class="step-name">${step.name}</div>
-        <div class="step-reason">${step.reason}</div>
-        <div class="step-params">${step.paramsLabel}</div>
+        <div class="step-name">${s.name}</div>
+        <div class="step-reason">${s.reason}</div>
+        <div class="step-params">${s.pl}</div>
       </div>`;
-    pipelineSteps.appendChild(card);
+    pipelineSteps.appendChild(c);
   });
-
   pipelinePanel.classList.add('open');
   runBtn.disabled=false;
+  // Scroll sidebar to show pipeline
+  setTimeout(()=>{ pipelinePanel.scrollIntoView({behavior:'smooth',block:'nearest'}); },150);
 }
 
-// ════════════════════════════════════════════════════════════
-//  IMAGE LOAD
-// ════════════════════════════════════════════════════════════
-function loadImage(file) {
+/* ── LOAD IMAGE ── */
+function loadImage(file){
   if(!file||!file.type.startsWith('image/')) return;
   const reader=new FileReader();
   reader.onload=e=>{
@@ -684,95 +445,84 @@ function loadImage(file) {
       updateSplit();
       dropHint.style.display='none';
       splitViewer.classList.add('visible');
-      resetBtn.disabled=false;
+      resetBtn.disabled=false;reloadBtn.disabled=false;
+      dlBtn.disabled=true;dlHint.classList.remove('show');
       imgBadge.textContent=img.width+'×'+img.height+' → '+w+'×'+h+' px';
       sSize.textContent=w+'×'+h;
-      // Run analysis
-      metrics=analyzeImage(origData.data,w,h);
+      const metrics=analyzeImage(origData.data,w,h);
       renderAnalysis(metrics);
       pipeline=buildPipeline(metrics);
       renderPipeline(pipeline);
-      showToast('Analysis complete ✓');
+      showToast('Analysis complete — '+pipeline.length+' steps selected ✓');
     };
     img.src=e.target.result;
   };
   reader.readAsDataURL(file);
 }
 
-// ════════════════════════════════════════════════════════════
-//  RUN PIPELINE
-// ════════════════════════════════════════════════════════════
-runBtn.addEventListener('click', async ()=>{
+/* ── RUN PIPELINE ── */
+runBtn.addEventListener('click',async()=>{
   if(!origData||!pipeline.length) return;
-  runBtn.disabled=true;
-  resetBtn.disabled=true;
-  dlBtn.disabled=true;
-  finishBanner.classList.remove('show');
+  runBtn.disabled=true;dlBtn.disabled=true;
+  finishNote.classList.remove('show');dlOverlay.classList.remove('show');
   procOverlay.classList.add('active');
-
-  let currentData=new Uint8ClampedArray(origData.data);
+  let cur=new Uint8ClampedArray(origData.data);
   const t0=performance.now();
-
   for(let i=0;i<pipeline.length;i++){
-    const step=pipeline[i];
-    const card=$('step-card-'+i);
-    card.className='step-card s-active';
-    procText.textContent='Step '+(i+1)+'/'+pipeline.length+': '+step.name;
-    procSub.textContent=step.reason;
+    const s=pipeline[i];
+    $('sc'+i).className='step-card s-active';
+    procText.textContent='Step '+(i+1)+'/'+pipeline.length+': '+s.name;
+    procSub.textContent=s.reason;
     await new Promise(r=>setTimeout(r,60));
-
-    currentData=step.fn(currentData,imgW,imgH,step.params);
-
-    card.className='step-card s-done';
-    $('step-num-'+i).textContent='✓';
+    cur=s.fn(cur,imgW,imgH,s.params);
+    $('sc'+i).className='step-card s-done';
+    $('sn'+i).textContent='✓';
   }
-
   const ms=Math.round(performance.now()-t0);
-  enhData=new ImageData(currentData,imgW,imgH);
+  enhData=new ImageData(cur,imgW,imgH);
   afterCanvas.getContext('2d').putImageData(enhData,0,0);
   updateSplit();
   sTime.textContent=ms+'ms';
   procOverlay.classList.remove('active');
   runBtn.disabled=false;
-  resetBtn.disabled=false;
   dlBtn.disabled=false;
-  finishBanner.classList.add('show');
-  showToast('Pipeline done in '+ms+'ms ✓');
+  dlHint.classList.add('show');
+  dlOverlay.classList.add('show');
+  finishNote.classList.add('show');
+  // Scroll to show finish note
+  setTimeout(()=>finishNote.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+  showToast('Done in '+ms+'ms — Enhanced image ready to download ✓');
 });
 
-// ════════════════════════════════════════════════════════════
-//  RESET & DOWNLOAD
-// ════════════════════════════════════════════════════════════
+/* ── DOWNLOAD (both button and canvas overlay) ── */
+function doDownload(){
+  if(!enhData) return;
+  const c=document.createElement('canvas');c.width=imgW;c.height=imgH;
+  c.getContext('2d').putImageData(enhData,0,0);
+  const a=document.createElement('a');a.href=c.toDataURL('image/png');
+  a.download='pixellab_enhanced_'+Date.now()+'.png';a.click();
+  showToast('Enhanced image saved as PNG ✓');
+}
+dlBtn.addEventListener('click',doDownload);
+dlOverlay.addEventListener('click',doDownload);
+
+/* ── RESET & RELOAD ── */
 resetBtn.addEventListener('click',()=>{
   if(!origData) return;
   enhData=null;
   afterCanvas.getContext('2d').putImageData(origData,0,0);
   updateSplit();
-  dlBtn.disabled=true;
+  dlBtn.disabled=true;dlHint.classList.remove('show');
+  dlOverlay.classList.remove('show');
+  finishNote.classList.remove('show');
   sTime.textContent='—';
-  finishBanner.classList.remove('show');
-  pipeline.forEach((_,i)=>{
-    const c=$('step-card-'+i);if(c)c.className='step-card';
-    const n=$('step-num-'+i);if(n)n.textContent=i+1;
-  });
+  pipeline.forEach((_,i)=>{const c=$('sc'+i);if(c)c.className='step-card';const n=$('sn'+i);if(n)n.textContent=i+1;});
   showToast('Reset to original');
 });
-dlBtn.addEventListener('click',()=>{
-  if(!enhData) return;
-  const c=document.createElement('canvas');c.width=imgW;c.height=imgH;
-  c.getContext('2d').putImageData(enhData,0,0);
-  const a=document.createElement('a');a.href=c.toDataURL('image/png');
-  a.download=`pixellab_auto_${Date.now()}.png`;a.click();
-  showToast('Saved ✓');
-});
+reloadBtn.addEventListener('click',()=>fileInput.click());
 
-// ════════════════════════════════════════════════════════════
-//  SPLIT VIEWER
-// ════════════════════════════════════════════════════════════
-function updateSplit(){
-  afterCanvas.style.clipPath=`inset(0 0 0 ${splitPos*100}%)`;
-  splitDivider.style.left=`${splitPos*100}%`;
-}
+/* ── SPLIT VIEWER ── */
+function updateSplit(){afterCanvas.style.clipPath=`inset(0 0 0 ${splitPos*100}%)`;splitDivider.style.left=`${splitPos*100}%`;}
 function gx(e,r){const cx=e.touches?e.touches[0].clientX:e.clientX;return Math.max(0,Math.min(1,(cx-r.left)/r.width));}
 splitViewer.addEventListener('mousedown',e=>{isDragging=true;splitPos=gx(e,splitViewer.getBoundingClientRect());updateSplit();});
 splitViewer.addEventListener('touchstart',e=>{isDragging=true;splitPos=gx(e,splitViewer.getBoundingClientRect());updateSplit();},{passive:true});
@@ -781,9 +531,7 @@ document.addEventListener('touchmove',e=>{if(isDragging){splitPos=gx(e,splitView
 document.addEventListener('mouseup',()=>isDragging=false);
 document.addEventListener('touchend',()=>isDragging=false);
 
-// ════════════════════════════════════════════════════════════
-//  UPLOAD
-// ════════════════════════════════════════════════════════════
+/* ── UPLOAD EVENTS ── */
 uploadZone.addEventListener('dragover',e=>{e.preventDefault();uploadZone.classList.add('drag-over');});
 uploadZone.addEventListener('dragleave',()=>uploadZone.classList.remove('drag-over'));
 uploadZone.addEventListener('drop',e=>{e.preventDefault();uploadZone.classList.remove('drag-over');loadImage(e.dataTransfer.files[0]);});
@@ -791,18 +539,11 @@ fileInput.addEventListener('change',()=>loadImage(fileInput.files[0]));
 $('canvasArea').addEventListener('dragover',e=>e.preventDefault());
 $('canvasArea').addEventListener('drop',e=>{e.preventDefault();loadImage(e.dataTransfer.files[0]);});
 
-// ════════════════════════════════════════════════════════════
-//  TOAST & SERVICE WORKER
-// ════════════════════════════════════════════════════════════
-let tt;
-function showToast(msg){toast.textContent=msg;toast.style.display='block';clearTimeout(tt);tt=setTimeout(()=>toast.style.display='none',2400);}
+/* ── TOAST ── */
+let tt;function showToast(msg){toast.textContent=msg;toast.style.display='block';clearTimeout(tt);tt=setTimeout(()=>toast.style.display='none',2600);}
 
-if('serviceWorker' in navigator){
-  const sw=`const C='pixellab-v2';self.addEventListener('install',()=>self.skipWaiting());
-  self.addEventListener('activate',e=>e.waitUntil(clients.claim()));
-  self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;
-  navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
-}
+/* ── SERVICE WORKER ── */
+if('serviceWorker' in navigator){const sw=`const C='plv3';self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});}
 </script>
 </body>
 </html>
