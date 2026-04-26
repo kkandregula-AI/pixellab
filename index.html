@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#060a10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="PixelLab">
-<title>PixelLab — Auto Smart Pipeline</title>
+<title>PixelLab — Smart Enhancement</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Exo+2:wght@300;500;700;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -14,7 +14,7 @@
   --bg:#060a10;--bg2:#0c1420;--bg3:#121d2c;--bg4:#080e18;
   --border:#1a2e47;--accent:#00d4ff;--accent-dim:#0090b0;
   --accent2:#ff6030;--text:#90aac5;--text-bright:#d8eaf8;
-  --text-dim:#3d5a78;--ok:#00ff88;
+  --text-dim:#3d5a78;--ok:#00ff88;--warn:#ffd44d;
   --mono:'Space Mono',monospace;--ui:'Exo 2',sans-serif;
 }
 body{background:var(--bg);color:var(--text);font-family:var(--ui);min-height:100vh;overflow:hidden}
@@ -25,7 +25,8 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
 .tagline{font-size:9px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-top:2px}
 .hbadge{margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--text-dim);border:1px solid var(--border);padding:3px 8px;border-radius:3px}
 
-.app{display:grid;grid-template-columns:288px 1fr;height:calc(100vh - 49px)}
+/* ── LAYOUT ── */
+.app{display:grid;grid-template-columns:300px 1fr;height:calc(100vh - 49px)}
 .sidebar{background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100%;overflow:hidden}
 .sidebar-scroll{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 .sidebar-scroll::-webkit-scrollbar{width:4px}
@@ -33,52 +34,57 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
 .sidebar-footer{border-top:1px solid var(--border);padding:12px 14px;background:var(--bg2);flex-shrink:0}
 .panel{padding:12px 14px;border-bottom:1px solid var(--border)}
 .sec-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);
-  font-family:var(--mono);display:flex;align-items:center;gap:8px;margin-bottom:10px;transition:color .3s}
+  font-family:var(--mono);display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
 .sec-label.done{color:var(--ok)}
 
 /* Upload */
-.upload-zone{border:2px dashed var(--border);border-radius:6px;padding:14px 10px;text-align:center;
+.upload-zone{border:2px dashed var(--border);border-radius:6px;padding:13px 10px;text-align:center;
   cursor:pointer;transition:all .2s;position:relative}
 .upload-zone:hover,.upload-zone.over{border-color:var(--accent);background:rgba(0,212,255,.04)}
 .upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.upload-icon{font-size:22px;display:block;margin-bottom:4px;opacity:.4}
-.upload-zone strong{color:var(--accent);font-size:11px;display:block;margin-bottom:2px}
-.upload-zone p{font-size:10px;color:var(--text-dim);line-height:1.5}
-.img-badge{font-family:var(--mono);font-size:9px;color:var(--text-dim);text-align:center;margin-top:5px;min-height:12px}
+.upload-icon{font-size:20px;display:block;margin-bottom:3px;opacity:.4}
+.upload-zone strong{color:var(--accent);font-size:11px;display:block;margin-bottom:1px}
+.upload-zone p{font-size:10px;color:var(--text-dim);line-height:1.4}
+.img-badge{font-family:var(--mono);font-size:9px;color:var(--text-dim);text-align:center;margin-top:4px;min-height:12px}
 
-/* ── PHOTO TYPE SELECTOR ── */
-.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
-.type-btn{background:var(--bg4);border:1px solid var(--border);border-radius:6px;
-  padding:10px 6px;cursor:pointer;text-align:center;transition:all .2s;
-  display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--text-dim)}
+/* ── MODE TABS ── */
+.mode-tabs{display:flex;gap:0;border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:0}
+.mode-tab{flex:1;padding:9px 6px;text-align:center;cursor:pointer;transition:all .2s;
+  font-family:var(--mono);font-size:10px;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--text-dim);background:var(--bg4);border:none;border-right:1px solid var(--border)}
+.mode-tab:last-child{border-right:none}
+.mode-tab:hover{color:var(--text);background:var(--bg3)}
+.mode-tab.active{background:rgba(0,212,255,.1);color:var(--accent);border-bottom:2px solid var(--accent)}
+.mode-tab .mi{display:block;font-size:14px;margin-bottom:2px}
+
+/* ── PHOTO TYPE ── */
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.type-btn{background:var(--bg4);border:1px solid var(--border);border-radius:5px;
+  padding:8px 5px;cursor:pointer;text-align:center;transition:all .2s;
+  display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--text-dim)}
 .type-btn:hover{border-color:var(--accent-dim);color:var(--text)}
 .type-btn.active{border-color:var(--accent);background:rgba(0,212,255,.08);color:var(--accent)}
-.type-btn .ti{font-size:20px;line-height:1}
-.type-btn .tl{font-size:10px;font-family:var(--mono);letter-spacing:.5px;text-transform:uppercase}
-.type-btn.active .tl{color:var(--accent)}
-.type-hint{font-size:9px;color:var(--text-dim);line-height:1.5;font-family:var(--mono);
-  background:var(--bg4);border:1px solid var(--border);border-radius:4px;padding:6px 8px;
-  min-height:36px;transition:all .2s}
+.type-btn .ti{font-size:18px;line-height:1}
+.type-btn .tl{font-size:9px;font-family:var(--mono);letter-spacing:.5px;text-transform:uppercase}
 
-/* Collapsible */
+/* ── COLLAPSIBLE ── */
 .collapsible{display:none}.collapsible.open{display:block}
 
-/* Metrics */
-.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.mc{background:var(--bg4);border:1px solid var(--border);border-radius:5px;padding:7px 8px}
+/* ── METRICS ── */
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.mc{background:var(--bg4);border:1px solid var(--border);border-radius:5px;padding:6px 8px}
 .mc.full{grid-column:1/-1}
-.mn{font-family:var(--mono);font-size:8px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
-.mb{height:2px;background:var(--border);border-radius:1px;margin-bottom:4px;overflow:hidden}
+.mn{font-family:var(--mono);font-size:8px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px}
+.mb{height:2px;background:var(--border);border-radius:1px;margin-bottom:3px;overflow:hidden}
 .mf{height:100%;border-radius:1px}
 .mr{display:flex;justify-content:space-between;align-items:center}
 .mv{font-family:var(--mono);font-size:10px;color:var(--text-bright)}
 .mtag{font-size:8px;padding:1px 4px;border-radius:2px;font-family:var(--mono);white-space:nowrap}
 .tw{background:rgba(255,96,48,.12);color:var(--accent2);border:1px solid rgba(255,96,48,.25)}
-.to{background:rgba(0,212,255,.08);color:var(--accent);border:1px solid rgba(0,212,255,.2)}
 .tg{background:rgba(0,255,136,.08);color:var(--ok);border:1px solid rgba(0,255,136,.2)}
 
-/* Pipeline */
+/* ── AUTO PIPELINE STEPS ── */
 .pipe-summary{background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.15);
   border-radius:5px;padding:7px 10px;margin-bottom:8px;font-size:9px;color:var(--accent-dim);
   font-family:var(--mono);line-height:1.6;transition:all .4s}
@@ -97,17 +103,65 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
   border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;margin-top:2px;display:none}
 .sc.active .sc-spin{display:block}.sc.active .sc-num{display:none}
 .sc-body{flex:1;min-width:0}
-.sc-head{display:flex;justify-content:space-between;align-items:center;gap:6px}
-.sc-name{font-family:var(--mono);font-size:11px;color:var(--text-bright);font-weight:700}
+.sc-head{display:flex;justify-content:space-between;align-items:center;gap:4px}
+.sc-name{font-family:var(--mono);font-size:10px;color:var(--text-bright);font-weight:700}
 .sc.active .sc-name{color:var(--accent)}.sc.done .sc-name{color:var(--ok)}
-.sc-time{font-family:var(--mono);font-size:9px;color:var(--ok);opacity:0;transition:opacity .3s;white-space:nowrap}
+.sc-time{font-family:var(--mono);font-size:9px;color:var(--ok);opacity:0;transition:opacity .3s}
 .sc.done .sc-time{opacity:1}
-.sc-reason{font-size:9px;color:var(--text-dim);line-height:1.4;margin-top:2px}
-.sc-params{font-family:var(--mono);font-size:8px;color:var(--text-dim);margin-top:3px;opacity:.55}
-.sc-result{font-size:9px;color:var(--ok);margin-top:3px;opacity:0;transition:opacity .3s;font-family:var(--mono)}
-.sc.done .sc-result{opacity:.75}
+.sc-reason{font-size:9px;color:var(--text-dim);line-height:1.3;margin-top:2px}
+.sc-params{font-family:var(--mono);font-size:8px;color:var(--text-dim);margin-top:2px;opacity:.5}
+.sc-result{font-size:9px;color:var(--ok);margin-top:2px;opacity:0;font-family:var(--mono);transition:opacity .3s}
+.sc.done .sc-result{opacity:.7}
 
-/* Buttons */
+/* ── INDIVIDUAL ALGO CARDS ── */
+.algo-cards{display:flex;flex-direction:column;gap:6px}
+.algo-card{background:var(--bg4);border:1px solid var(--border);border-radius:6px;
+  overflow:hidden;transition:border-color .2s}
+.algo-card.running{border-color:var(--accent)}
+.algo-card.applied{border-color:var(--ok)}
+.algo-card-header{display:flex;align-items:center;gap:8px;padding:9px 10px;cursor:pointer}
+.algo-card-header:hover{background:rgba(255,255,255,.02)}
+.algo-icon{font-size:14px;flex-shrink:0}
+.algo-info{flex:1;min-width:0}
+.algo-name{font-family:var(--mono);font-size:10px;color:var(--text-bright);font-weight:700;
+  display:flex;align-items:center;gap:6px}
+.algo-card.applied .algo-name{color:var(--ok)}
+.algo-card.running .algo-name{color:var(--accent)}
+.algo-desc{font-size:9px;color:var(--text-dim);margin-top:1px}
+.algo-badge{font-size:8px;padding:1px 5px;border-radius:2px;font-family:var(--mono);white-space:nowrap;flex-shrink:0}
+.badge-slow{background:rgba(255,212,77,.08);color:var(--warn);border:1px solid rgba(255,212,77,.2)}
+.badge-fast{background:rgba(0,212,255,.06);color:var(--accent-dim);border:1px solid rgba(0,212,255,.15)}
+.badge-done{background:rgba(0,255,136,.08);color:var(--ok);border:1px solid rgba(0,255,136,.2)}
+.badge-run{background:rgba(0,212,255,.08);color:var(--accent);border:1px solid rgba(0,212,255,.2);cursor:pointer}
+/* Params section (expandable) */
+.algo-params{padding:0 10px 10px;display:none}
+.algo-card.open .algo-params{display:block}
+.param-row{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
+.param-top{display:flex;justify-content:space-between;align-items:center}
+.param-name{font-size:9px;font-family:var(--mono);color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px}
+.param-val{font-size:10px;font-family:var(--mono);color:var(--accent)}
+input[type=range]{-webkit-appearance:none;width:100%;height:2px;background:var(--border);border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;background:var(--accent);border-radius:50%;cursor:pointer}
+input[type=range]::-moz-range-thumb{width:12px;height:12px;background:var(--accent);border-radius:50%;border:none}
+.algo-run-btn{width:100%;padding:7px;border-radius:4px;border:none;cursor:pointer;
+  font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;
+  background:rgba(0,212,255,.1);color:var(--accent);border:1px solid rgba(0,212,255,.2);
+  transition:all .15s;margin-top:4px}
+.algo-run-btn:hover{background:rgba(0,212,255,.2)}
+.algo-run-btn:disabled{opacity:.3;cursor:not-allowed}
+.algo-result-row{display:flex;align-items:center;justify-content:space-between;
+  padding:5px 10px;background:rgba(0,255,136,.04);border-top:1px solid rgba(0,255,136,.1);
+  font-family:var(--mono);font-size:9px;display:none}
+.algo-card.applied .algo-result-row{display:flex}
+.algo-result-txt{color:var(--ok)}
+.algo-dl-btn{color:var(--ok);font-size:9px;cursor:pointer;text-decoration:underline;
+  background:none;border:none;font-family:var(--mono);padding:0}
+.algo-dl-btn:hover{color:#fff}
+.algo-spin{width:12px;height:12px;border:1.5px solid var(--border);border-top-color:var(--accent);
+  border-radius:50%;animation:spin .6s linear infinite;display:none;flex-shrink:0}
+.algo-card.running .algo-spin{display:inline-block}
+
+/* ── BUTTONS ── */
 .btn{padding:9px 12px;border-radius:5px;border:none;cursor:pointer;font-family:var(--mono);
   font-size:11px;letter-spacing:1px;text-transform:uppercase;transition:all .15s;width:100%}
 .btn-run{background:var(--accent);color:var(--bg);font-weight:700;font-size:12px;padding:11px}
@@ -116,43 +170,57 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
 .btn-s{background:transparent;color:var(--text);border:1px solid var(--border)}
 .btn-s:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
 .btn-s:disabled{opacity:.25;cursor:not-allowed}
-.btn-dl{background:rgba(0,255,136,.06);color:var(--ok);border:1px solid rgba(0,255,136,.25);
-  font-size:10px;margin-top:6px}
+.btn-dl{background:rgba(0,255,136,.06);color:var(--ok);border:1px solid rgba(0,255,136,.25);font-size:10px;margin-top:6px}
 .btn-dl:hover:not(:disabled){background:rgba(0,255,136,.12)}
 .btn-dl:disabled{opacity:.2;cursor:not-allowed}
 .btn-row{display:flex;gap:6px;margin-top:6px}.btn-row .btn{flex:1}
 
-/* Main */
+/* ── MAIN ── */
 .main{display:flex;flex-direction:column;height:100%;overflow:hidden}
 .canvas-area{flex:1;display:flex;align-items:center;justify-content:center;
   background:radial-gradient(ellipse at 50% 50%,#0d1e30 0%,var(--bg) 70%);
   position:relative;overflow:hidden;padding:16px}
 .drop-hint{display:flex;flex-direction:column;align-items:center;gap:12px;color:var(--text-dim)}
-.drop-hint .bi{font-size:52px;opacity:.14}
+.drop-hint .bi{font-size:50px;opacity:.13}
 .drop-hint p{font-size:12px;letter-spacing:2px;text-transform:uppercase;font-family:var(--mono)}
 .drop-hint small{font-size:10px;opacity:.4}
 #cv{display:none;max-width:100%;max-height:100%;border-radius:4px;cursor:ew-resize;touch-action:none}
 #cv.visible{display:block}
+
+/* Active algo label on canvas */
+.canvas-label{position:absolute;top:12px;left:50%;transform:translateX(-50%);
+  background:rgba(6,10,16,.88);border:1px solid var(--border);
+  font-family:var(--mono);font-size:9px;color:var(--text-dim);padding:4px 10px;
+  border-radius:12px;letter-spacing:1px;text-transform:uppercase;display:none;
+  white-space:nowrap;pointer-events:none;z-index:5}
+.canvas-label.show{display:block}
+.canvas-label.algo-mode{border-color:var(--accent-dim);color:var(--accent);background:rgba(0,212,255,.08)}
+
 .proc{position:absolute;inset:0;background:rgba(6,10,16,.92);
   display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:20}
 .proc.on{display:flex}
-.spinner{width:38px;height:38px;border:2px solid var(--border);border-top-color:var(--accent);
+.spinner{width:36px;height:36px;border:2px solid var(--border);border-top-color:var(--accent);
   border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .proc-t{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:2px;text-transform:uppercase}
 .proc-s{font-family:var(--mono);font-size:9px;color:var(--text-dim);text-align:center;max-width:280px;line-height:1.4}
+
+/* Stats */
 .stats{background:var(--bg2);border-top:1px solid var(--border);padding:5px 16px;
-  display:flex;gap:20px;align-items:center;font-family:var(--mono);font-size:10px;
-  color:var(--text-dim);min-height:30px;flex-shrink:0}
+  display:flex;gap:16px;align-items:center;font-family:var(--mono);font-size:10px;
+  color:var(--text-dim);min-height:30px;flex-shrink:0;flex-wrap:wrap}
 .stat em{color:var(--accent);font-style:normal}
+
+/* Toast */
 .toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
   background:var(--bg3);border:1px solid var(--accent-dim);color:var(--accent);
   padding:7px 16px;border-radius:5px;font-family:var(--mono);font-size:11px;
-  letter-spacing:1px;z-index:100;display:none;white-space:nowrap}
+  letter-spacing:1px;z-index:200;display:none;white-space:nowrap}
+
 @media(max-width:700px){
   .app{grid-template-columns:1fr;grid-template-rows:auto 1fr;height:auto;overflow:auto}
   .sidebar{height:auto;overflow:visible}.sidebar-scroll{overflow:visible}
-  .main{height:60vh}.hbadge{display:none}body{overflow:auto}
+  .main{height:55vh}.hbadge{display:none}body{overflow:auto}
 }
 </style>
 </head>
@@ -160,7 +228,7 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
 <header>
   <div>
     <div class="logo">Pixel<b>Lab</b></div>
-    <div class="tagline">Auto Smart Pipeline · Zero AI · Pure Math</div>
+    <div class="tagline">Auto Pipeline + Individual Algorithms · Zero AI</div>
   </div>
   <div class="hbadge">⬡ 4 Profiles · 7 Algorithms</div>
 </header>
@@ -181,50 +249,71 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
         <div class="img-badge" id="ibadge"></div>
       </div>
 
-      <!-- PHOTO TYPE -->
+      <!-- MODE TABS -->
       <div class="panel">
-        <div class="sec-label">Photo Type</div>
-        <div class="type-grid" id="typeGrid">
-          <button class="type-btn" data-type="portrait">
-            <span class="ti">👤</span><span class="tl">Portrait</span>
+        <div class="sec-label">Mode</div>
+        <div class="mode-tabs">
+          <button class="mode-tab active" id="tab-auto" onclick="switchMode('auto')">
+            <span class="mi">⚡</span>Auto Pipeline
           </button>
-          <button class="type-btn" data-type="landscape">
-            <span class="ti">🏔️</span><span class="tl">Landscape</span>
-          </button>
-          <button class="type-btn" data-type="document">
-            <span class="ti">📄</span><span class="tl">Document</span>
-          </button>
-          <button class="type-btn" data-type="lowlight">
-            <span class="ti">🌙</span><span class="tl">Low-light</span>
+          <button class="mode-tab" id="tab-individual" onclick="switchMode('individual')">
+            <span class="mi">🔬</span>Try Each
           </button>
         </div>
-        <div class="type-hint" id="typeHint">Select a photo type to tune the pipeline for your image.</div>
       </div>
 
-      <!-- ANALYSIS -->
-      <div class="panel collapsible" id="aPanel">
-        <div class="sec-label" id="aLabel">Image Analysis</div>
-        <div class="metrics-grid" id="mgrid"></div>
+      <!-- ═══ AUTO MODE ═══ -->
+      <div id="autoSection">
+        <!-- Photo Type -->
+        <div class="panel">
+          <div class="sec-label">Photo Type</div>
+          <div class="type-grid" id="typeGrid">
+            <button class="type-btn active" data-type="portrait"><span class="ti">👤</span><span class="tl">Portrait</span></button>
+            <button class="type-btn" data-type="landscape"><span class="ti">🏔️</span><span class="tl">Landscape</span></button>
+            <button class="type-btn" data-type="document"><span class="ti">📄</span><span class="tl">Document</span></button>
+            <button class="type-btn" data-type="lowlight"><span class="ti">🌙</span><span class="tl">Low-light</span></button>
+          </div>
+        </div>
+        <!-- Analysis -->
+        <div class="panel collapsible" id="aPanel">
+          <div class="sec-label" id="aLabel">Image Analysis</div>
+          <div class="metrics-grid" id="mgrid"></div>
+        </div>
+        <!-- Pipeline steps -->
+        <div class="panel collapsible" id="pPanel">
+          <div class="sec-label" id="pLabel">Auto Pipeline</div>
+          <div class="pipe-summary" id="pSum"></div>
+          <div class="pipe-steps" id="pSteps"></div>
+        </div>
       </div>
 
-      <!-- PIPELINE -->
-      <div class="panel collapsible" id="pPanel">
-        <div class="sec-label" id="pLabel">Auto Pipeline</div>
-        <div class="pipe-summary" id="pSum"></div>
-        <div class="pipe-steps" id="pSteps"></div>
+      <!-- ═══ INDIVIDUAL MODE ═══ -->
+      <div id="indSection" style="display:none">
+        <div class="panel">
+          <div class="sec-label">Try Each Algorithm</div>
+          <div style="font-size:9px;color:var(--text-dim);font-family:var(--mono);margin-bottom:10px;line-height:1.5">
+            Run any algorithm individually. Expand to tweak params. Compare results in the viewer. Download whichever looks best.
+          </div>
+          <div class="algo-cards" id="algoCards"></div>
+        </div>
       </div>
 
-    </div>
+    </div><!-- /scroll -->
 
     <!-- STICKY FOOTER -->
-    <div class="sidebar-footer">
-      <button class="btn btn-run" id="runBtn" disabled>▶ Run Pipeline</button>
+    <div class="sidebar-footer" id="autoFooter">
+      <button class="btn btn-run" id="runBtn" disabled>▶ Run Auto Pipeline</button>
       <div class="btn-row">
         <button class="btn btn-s" id="rstBtn" disabled>↺ Reset</button>
         <button class="btn btn-s" id="newBtn" disabled>⟳ New Image</button>
       </div>
       <button class="btn btn-dl" id="dlBtn" disabled>↓ Download Enhanced Image</button>
     </div>
+    <div class="sidebar-footer" id="indFooter" style="display:none">
+      <button class="btn btn-s" id="rstBtnInd" disabled>↺ Reset to Original</button>
+      <button class="btn btn-s" id="newBtnInd" disabled style="margin-top:6px">⟳ New Image</button>
+    </div>
+
   </aside>
 
   <main class="main">
@@ -232,9 +321,10 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
       <div class="drop-hint" id="dhint">
         <div class="bi">⬡</div>
         <p>Upload an image to begin</p>
-        <small>Select Photo Type first for best results</small>
+        <small>Auto Pipeline or try algorithms individually</small>
       </div>
       <canvas id="cv"></canvas>
+      <div class="canvas-label" id="canvasLabel"></div>
       <div class="proc" id="proc">
         <div class="spinner"></div>
         <div class="proc-t" id="pt">Processing…</div>
@@ -243,8 +333,8 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
     </div>
     <div class="stats">
       <div class="stat">SIZE <em id="ss">—</em></div>
-      <div class="stat">TYPE <em id="styp">—</em></div>
-      <div class="stat">STEPS <em id="sp">—</em></div>
+      <div class="stat">MODE <em id="smode">Auto</em></div>
+      <div class="stat">ACTIVE <em id="sactive">—</em></div>
       <div class="stat">TIME <em id="st">—</em></div>
       <div class="stat" style="margin-left:auto;font-size:9px;opacity:.3">⇔ Drag to compare</div>
     </div>
@@ -255,17 +345,17 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
 <script>
 'use strict';
 
-// ════════════════════════════════════════════════════════
+// ══════════════════════════════════════
 //  FAST BOX BLUR
-// ════════════════════════════════════════════════════════
+// ══════════════════════════════════════
 function bH(s,W,H,r){const d=new Float32Array(s.length),m=2*r+1;for(let y=0;y<H;y++){const b=y*W;let v=(r+1)*s[b];for(let x=1;x<=r;x++)v+=s[b+Math.min(W-1,x)];for(let x=0;x<W;x++){d[b+x]=v/m;v+=s[b+Math.min(W-1,x+r+1)];v-=s[b+Math.max(0,x-r)];}}return d;}
 function bV(s,W,H,r){const d=new Float32Array(s.length),m=2*r+1;for(let x=0;x<W;x++){let v=(r+1)*s[x];for(let y=1;y<=r;y++)v+=s[Math.min(H-1,y)*W+x];for(let y=0;y<H;y++){d[y*W+x]=v/m;v+=s[Math.min(H-1,y+r+1)*W+x];v-=s[Math.max(0,y-r)*W+x];}}return d;}
 function blurCh(s,W,H,sig){const r=Math.max(0,Math.round(sig));if(!r)return s instanceof Float32Array?s:new Float32Array(s);let t=s instanceof Float32Array?s:new Float32Array(s);for(let p=0;p<3;p++){t=bH(t,W,H,r);t=bV(t,W,H,r);}return t;}
 function blurRGB(src,W,H,sig){const n=W*H,cs=[new Float32Array(n),new Float32Array(n),new Float32Array(n)];for(let i=0;i<n;i++){cs[0][i]=src[i*4];cs[1][i]=src[i*4+1];cs[2][i]=src[i*4+2];}const b=cs.map(c=>blurCh(c,W,H,sig));const d=new Uint8ClampedArray(src.length);for(let i=0;i<n;i++){d[i*4]=b[0][i];d[i*4+1]=b[1][i];d[i*4+2]=b[2][i];d[i*4+3]=src[i*4+3];}return d;}
 
-// ════════════════════════════════════════════════════════
+// ══════════════════════════════════════
 //  ALGORITHMS
-// ════════════════════════════════════════════════════════
+// ══════════════════════════════════════
 function doCLAHE(src,W,H,clip,tile){
   const d=new Uint8ClampedArray(src.length);
   const tX=Math.max(1,Math.ceil(W/tile)),tY=Math.max(1,Math.ceil(H/tile));
@@ -290,230 +380,264 @@ function doCLAHE(src,W,H,clip,tile){
     const sc=lum>0?v/lum:1;
     d[i]=Math.min(255,src[i]*sc|0);d[i+1]=Math.min(255,src[i+1]*sc|0);d[i+2]=Math.min(255,src[i+2]*sc|0);d[i+3]=src[i+3];}
   return d;}
+function doUnsharp(src,W,H,rad,amt,thr){const bl=blurRGB(src,W,H,rad),d=new Uint8ClampedArray(src.length);for(let i=0;i<src.length;i+=4){for(let c=0;c<3;c++){const df=src[i+c]-bl[i+c];d[i+c]=Math.max(0,Math.min(255,src[i+c]+(Math.abs(df)>thr?amt*df:0)));}d[i+3]=src[i+3];}return d;}
+function doBilateral(src,W,H,sS,rS){const d=new Uint8ClampedArray(src.length),r=Math.ceil(2*sS),ss=2*sS*sS,rs=2*rS*rS;for(let y=0;y<H;y++)for(let x=0;x<W;x++){const ci=(y*W+x)*4,cR=src[ci],cG=src[ci+1],cB=src[ci+2];let aR=0,aG=0,aB=0,aW=0;for(let dy=-r;dy<=r;dy++){const ny=Math.max(0,Math.min(H-1,y+dy));for(let dx=-r;dx<=r;dx++){const nx=Math.max(0,Math.min(W-1,x+dx));const ni=(ny*W+nx)*4,nR=src[ni],nG=src[ni+1],nB=src[ni+2];const w=Math.exp(-(dx*dx+dy*dy)/ss-((nR-cR)**2+(nG-cG)**2+(nB-cB)**2)/rs);aR+=w*nR;aG+=w*nG;aB+=w*nB;aW+=w;}}d[ci]=aR/aW|0;d[ci+1]=aG/aW|0;d[ci+2]=aB/aW|0;d[ci+3]=src[ci+3];}return d;}
+function doRetinex(src,W,H,scales){const n=W*H,wt=1/scales.length,d=new Uint8ClampedArray(src.length);for(let c=0;c<3;c++){const ch=new Float32Array(n);for(let i=0;i<n;i++)ch[i]=src[i*4+c]+1;const lc=ch.map(v=>Math.log(v)),out=new Float32Array(n);for(const sig of scales){const bl=blurCh(ch,W,H,sig);for(let i=0;i<n;i++)out[i]+=wt*(lc[i]-Math.log(Math.max(bl[i],1)));}let mn=Infinity,mx=-Infinity;for(let i=0;i<n;i++){if(out[i]<mn)mn=out[i];if(out[i]>mx)mx=out[i];}const rng=mx-mn||1;for(let i=0;i<n;i++)d[i*4+c]=(out[i]-mn)/rng*255|0;}for(let i=0;i<n;i++)d[i*4+3]=src[i*4+3];return d;}
+function doLaplacian(src,W,H,str){const d=new Uint8ClampedArray(src.length),k=[0,-1,0,-1,4,-1,0,-1,0];for(let y=0;y<H;y++)for(let x=0;x<W;x++){const ci=(y*W+x)*4;let lR=0,lG=0,lB=0,ki=0;for(let dy=-1;dy<=1;dy++){const ny=Math.max(0,Math.min(H-1,y+dy));for(let dx=-1;dx<=1;dx++){const ni=(ny*W+Math.max(0,Math.min(W-1,x+dx)))*4;lR+=k[ki]*src[ni];lG+=k[ki]*src[ni+1];lB+=k[ki]*src[ni+2];ki++;}}d[ci]=Math.max(0,Math.min(255,src[ci]+str*lR|0));d[ci+1]=Math.max(0,Math.min(255,src[ci+1]+str*lG|0));d[ci+2]=Math.max(0,Math.min(255,src[ci+2]+str*lB|0));d[ci+3]=src[ci+3];}return d;}
+function doNLM(src,W,H,h,sR,pR){const d=new Uint8ClampedArray(src.length),h2=h*h,ps=(2*pR+1)**2;for(let y=0;y<H;y++)for(let x=0;x<W;x++){const ci=(y*W+x)*4;let sRc=0,sGc=0,sBc=0,sW=0;for(let sy=-sR;sy<=sR;sy++)for(let sx=-sR;sx<=sR;sx++){const ny=y+sy,nx=x+sx;if(ny<0||ny>=H||nx<0||nx>=W)continue;let dist=0;for(let py=-pR;py<=pR;py++)for(let px2=-pR;px2<=pR;px2++){const ay=Math.max(0,Math.min(H-1,y+py)),ax=Math.max(0,Math.min(W-1,x+px2));const by=Math.max(0,Math.min(H-1,ny+py)),bx=Math.max(0,Math.min(W-1,nx+px2));const ai=(ay*W+ax)*4,bi=(by*W+bx)*4;for(let cv=0;cv<3;cv++){const dv=src[ai+cv]-src[bi+cv];dist+=dv*dv;}}const w=Math.exp(-dist/(3*ps*65025*h2));const ni=(ny*W+nx)*4;sRc+=w*src[ni];sGc+=w*src[ni+1];sBc+=w*src[ni+2];sW+=w;}d[ci]=sRc/sW|0;d[ci+1]=sGc/sW|0;d[ci+2]=sBc/sW|0;d[ci+3]=src[ci+3];}return d;}
+function doHighPass(src,W,H,blurR,boost){const bl=blurRGB(src,W,H,blurR),d=new Uint8ClampedArray(src.length);for(let i=0;i<src.length;i+=4){for(let c=0;c<3;c++)d[i+c]=Math.max(0,Math.min(255,128+boost*(src[i+c]-bl[i+c])|0));d[i+3]=src[i+3];}return d;}
 
-function doUnsharp(src,W,H,rad,amt,thr){
-  const bl=blurRGB(src,W,H,rad),d=new Uint8ClampedArray(src.length);
-  for(let i=0;i<src.length;i+=4){
-    for(let c=0;c<3;c++){const df=src[i+c]-bl[i+c];d[i+c]=Math.max(0,Math.min(255,src[i+c]+(Math.abs(df)>thr?amt*df:0)));}
-    d[i+3]=src[i+3];}return d;}
+// ══════════════════════════════════════
+//  INDIVIDUAL ALGO DEFINITIONS
+// ══════════════════════════════════════
+const ALGOS = [
+  {id:'clahe',icon:'◈',name:'CLAHE',desc:'Adaptive contrast · medical imaging gold standard',speed:'fast',
+    params:[{id:'clip',label:'Clip Limit',min:.5,max:8,step:.5,def:2.5},{id:'tile',label:'Tile Size px',min:16,max:128,step:8,def:64}],
+    fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)},
+  {id:'unsharp',icon:'◈',name:'Unsharp Mask',desc:'Classic edge sharpening via Gaussian subtraction',speed:'fast',
+    params:[{id:'rad',label:'Blur Radius',min:.5,max:10,step:.5,def:2},{id:'amt',label:'Amount',min:.1,max:3,step:.1,def:1.2},{id:'thr',label:'Threshold',min:0,max:30,step:1,def:3}],
+    fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)},
+  {id:'bilateral',icon:'◈',name:'Bilateral Filter',desc:'Edge-preserving noise smoothing · keeps boundaries sharp',speed:'slow',
+    params:[{id:'sS',label:'Spatial σ',min:1,max:10,step:.5,def:3},{id:'rS',label:'Range σ',min:10,max:120,step:5,def:40}],
+    fn:(s,W,H,p)=>doBilateral(s,W,H,p.sS,p.rS)},
+  {id:'retinex',icon:'◈',name:'Multi-Scale Retinex',desc:'Illumination normalization · NASA-developed · fixes uneven light',speed:'fast',
+    params:[{id:'s1',label:'Scale 1 σ',min:5,max:30,step:5,def:15},{id:'s2',label:'Scale 2 σ',min:30,max:100,step:10,def:60},{id:'s3',label:'Scale 3 σ',min:80,max:200,step:20,def:120}],
+    fn:(s,W,H,p)=>doRetinex(s,W,H,[p.s1,p.s2,p.s3])},
+  {id:'laplacian',icon:'◈',name:'Laplacian Sharpening',desc:'High-frequency boosting via Laplacian kernel convolution',speed:'fast',
+    params:[{id:'str',label:'Strength',min:.1,max:2,step:.1,def:.6}],
+    fn:(s,W,H,p)=>doLaplacian(s,W,H,p.str)},
+  {id:'nlm',icon:'◈',name:'Non-Local Means',desc:'Patch similarity denoising · best quality noise removal',speed:'slow',
+    params:[{id:'h',label:'Filter h',min:.01,max:.25,step:.01,def:.07},{id:'sR',label:'Search Radius',min:3,max:8,step:1,def:5},{id:'pR',label:'Patch Radius',min:1,max:3,step:1,def:2}],
+    fn:(s,W,H,p)=>doNLM(s,W,H,p.h,p.sR,p.pR)},
+  {id:'highpass',icon:'◈',name:'High-Pass Filter',desc:'Extract and amplify fine detail layer from image',speed:'fast',
+    params:[{id:'blurR',label:'Detail Scale',min:1,max:20,step:1,def:5},{id:'boost',label:'Boost',min:1,max:6,step:.1,def:2}],
+    fn:(s,W,H,p)=>doHighPass(s,W,H,p.blurR,p.boost)}
+];
 
-function doBilateral(src,W,H,sS,rS){
-  const d=new Uint8ClampedArray(src.length),r=Math.ceil(2*sS),ss=2*sS*sS,rs=2*rS*rS;
-  for(let y=0;y<H;y++)for(let x=0;x<W;x++){
-    const ci=(y*W+x)*4,cR=src[ci],cG=src[ci+1],cB=src[ci+2];let aR=0,aG=0,aB=0,aW=0;
-    for(let dy=-r;dy<=r;dy++){const ny=Math.max(0,Math.min(H-1,y+dy));
-      for(let dx=-r;dx<=r;dx++){const nx=Math.max(0,Math.min(W-1,x+dx));
-        const ni=(ny*W+nx)*4,nR=src[ni],nG=src[ni+1],nB=src[ni+2];
-        const w=Math.exp(-(dx*dx+dy*dy)/ss-((nR-cR)**2+(nG-cG)**2+(nB-cB)**2)/rs);
-        aR+=w*nR;aG+=w*nG;aB+=w*nB;aW+=w;}}
-    d[ci]=aR/aW|0;d[ci+1]=aG/aW|0;d[ci+2]=aB/aW|0;d[ci+3]=src[ci+3];}return d;}
+// Stored results per algo
+const algoResults = {}; // id -> ImageData
+const algoParams  = {}; // id -> {param values}
 
-function doRetinex(src,W,H,scales){
-  const n=W*H,wt=1/scales.length,d=new Uint8ClampedArray(src.length);
-  for(let c=0;c<3;c++){
-    const ch=new Float32Array(n);for(let i=0;i<n;i++)ch[i]=src[i*4+c]+1;
-    const lc=ch.map(v=>Math.log(v)),out=new Float32Array(n);
-    for(const sig of scales){const bl=blurCh(ch,W,H,sig);for(let i=0;i<n;i++)out[i]+=wt*(lc[i]-Math.log(Math.max(bl[i],1)));}
-    let mn=Infinity,mx=-Infinity;for(let i=0;i<n;i++){if(out[i]<mn)mn=out[i];if(out[i]>mx)mx=out[i];}
-    const rng=mx-mn||1;for(let i=0;i<n;i++)d[i*4+c]=(out[i]-mn)/rng*255|0;}
-  for(let i=0;i<n;i++)d[i*4+3]=src[i*4+3];return d;}
-
-function doNLM(src,W,H,h,sR,pR){
-  const d=new Uint8ClampedArray(src.length),h2=h*h,ps=(2*pR+1)**2;
-  for(let y=0;y<H;y++)for(let x=0;x<W;x++){
-    const ci=(y*W+x)*4;let sRc=0,sGc=0,sBc=0,sW=0;
-    for(let sy=-sR;sy<=sR;sy++)for(let sx=-sR;sx<=sR;sx++){
-      const ny=y+sy,nx=x+sx;if(ny<0||ny>=H||nx<0||nx>=W)continue;
-      let dist=0;
-      for(let py=-pR;py<=pR;py++)for(let px=-pR;px<=pR;px++){
-        const ay=Math.max(0,Math.min(H-1,y+py)),ax=Math.max(0,Math.min(W-1,x+px));
-        const by=Math.max(0,Math.min(H-1,ny+py)),bx=Math.max(0,Math.min(W-1,nx+px));
-        const ai=(ay*W+ax)*4,bi=(by*W+bx)*4;
-        for(let cv=0;cv<3;cv++){const dv=src[ai+cv]-src[bi+cv];dist+=dv*dv;}}
-      const w=Math.exp(-dist/(3*ps*65025*h2));
-      const ni=(ny*W+nx)*4;sRc+=w*src[ni];sGc+=w*src[ni+1];sBc+=w*src[ni+2];sW+=w;}
-    d[ci]=sRc/sW|0;d[ci+1]=sGc/sW|0;d[ci+2]=sBc/sW|0;d[ci+3]=src[ci+3];}return d;}
-
-// ════════════════════════════════════════════════════════
-//  PHOTO TYPE PROFILES — each with tailored thresholds
-// ════════════════════════════════════════════════════════
+// ══════════════════════════════════════
+//  PHOTO PROFILES (Auto mode)
+// ══════════════════════════════════════
 const PROFILES = {
-  portrait: {
-    label:'Portrait', icon:'👤',
-    hint:'Gentle on skin texture · skips noise filter (skin ≠ noise) · preserves natural tones · only sharpens hard edges like clothing',
-    build(m){
-      const steps=[];
-      // Much higher thresholds — portraits need delicate treatment
-      const isDark    = m.brightness < 70;
-      const isLowC    = m.contrast   < 28;   // only fire if really flat
-      const isVNoisy  = m.noise      > 12;   // skin texture is NOT noise
-      const isBlurry  = m.sharpness  < 8;    // only fire if really blurry
-      const isUneven  = m.lightingVar> 32;   // higher bar for Retinex
-
-      if(isUneven) steps.push({name:'Multi-Scale Retinex',
-        reason:'Uneven face lighting → normalize without over-processing',
-        pl:'σ = 15·60·120', params:{s1:15,s2:60,s3:120},
-        fn:(s,W,H,p)=>doRetinex(s,W,H,[p.s1,p.s2,p.s3])});
-
-      if(isDark||isLowC) steps.push({name:'CLAHE',
-        reason:isDark?'Dark portrait → gentle local contrast lift':'Flat tones → subtle equalization',
-        pl:'clip=1.5 tile=96px (large tiles = softer)',
-        params:{clip:1.5,tile:96},
-        fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)});
-
-      // Denoising only for genuinely noisy images (high threshold!)
-      if(isVNoisy) steps.push({name:'Bilateral Filter',
-        reason:'Very noisy image → gentle smoothing, preserving face edges',
-        pl:'spatial σ=5 range σ=60 (high range = keep skin detail)',
-        params:{sS:5,rS:60},
-        fn:(s,W,H,p)=>doBilateral(s,W,H,p.sS,p.rS)});
-
-      // Sharpening: high threshold so only clothing/hair edges sharpen, not skin
-      if(isBlurry) steps.push({name:'Unsharp Mask',
-        reason:'Blurry portrait → sharpen edges only (threshold=10 protects skin)',
-        pl:'radius=2 amount=0.7 threshold=10',
-        params:{rad:2,amt:0.7,thr:10},
-        fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});
-      else steps.push({name:'Unsharp Mask',
-        reason:'Subtle crispness — high threshold skips smooth skin entirely',
-        pl:'radius=1 amount=0.5 threshold=10',
-        params:{rad:1,amt:0.5,thr:10},
-        fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});
-
-      return steps;
-    }
-  },
-
-  landscape: {
-    label:'Landscape', icon:'🏔️',
-    hint:'Full contrast boost · texture sharpening · handles wide tonal range · Retinex for uneven sky',
-    build(m){
-      const steps=[];
-      const isDark   = m.brightness < 80;
-      const isLowC   = m.contrast   < 38;
-      const isNoisy  = m.noise      > 4.5;
-      const isVNoisy = m.noise      > 11;
-      const isBlurry = m.sharpness  < 10;
-      const isSoft   = m.sharpness  < 22 && !isBlurry;
-      const isUneven = m.lightingVar> 22;
-
-      if(isUneven) steps.push({name:'Multi-Scale Retinex',
-        reason:'Uneven lighting / harsh sky → normalize illumination first',
-        pl:'σ = 15·60·120',params:{s1:15,s2:60,s3:120},
-        fn:(s,W,H,p)=>doRetinex(s,W,H,[p.s1,p.s2,p.s3])});
-
-      if(isDark||isLowC){const clip=isDark?3.5:2.5;steps.push({name:'CLAHE',
-        reason:isDark?'Dark scene → strong contrast boost':'Flat scene → local histogram eq.',
-        pl:'clip='+clip+' tile=64px',params:{clip,tile:64},
-        fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)});}
-
-      if(isNoisy){if(isVNoisy)steps.push({name:'Non-Local Means',
-        reason:'High noise → patch denoising (before sharpening)',
-        pl:'h=0.08 search=5 patch=2',params:{h:.08,sR:5,pR:2},
-        fn:(s,W,H,p)=>doNLM(s,W,H,p.h,p.sR,p.pR)});
-      else steps.push({name:'Bilateral Filter',
-        reason:'Moderate noise → edge-preserving smoothing',
-        pl:'spatial σ=3 range σ=40',params:{sS:3,rS:40},
-        fn:(s,W,H,p)=>doBilateral(s,W,H,p.sS,p.rS)});}
-
-      if(isBlurry)steps.push({name:'Unsharp Mask',
-        reason:'Soft landscape → aggressive sharpening for texture detail',
-        pl:'radius=3 amount=1.8 threshold=3',params:{rad:3,amt:1.8,thr:3},
-        fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});
-      else steps.push({name:'Unsharp Mask',
-        reason:isSoft?'Slightly soft → texture sharpening finish':'Crispness pass for fine detail',
-        pl:'radius=1.5 amount=1.2 threshold=3',params:{rad:1.5,amt:1.2,thr:3},
-        fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});
-
-      if(!steps.length){steps.push({name:'CLAHE',reason:'Balanced scene → gentle polish',pl:'clip=1.5 tile=80px',params:{clip:1.5,tile:80},fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)});steps.push({name:'Unsharp Mask',reason:'Mild texture enhancement',pl:'radius=1 amount=0.9 threshold=4',params:{rad:1,amt:.9,thr:4},fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});}
-      return steps;
-    }
-  },
-
-  document: {
-    label:'Document', icon:'📄',
-    hint:'Maximum text readability · aggressive contrast · crisp edges · suppress paper noise',
-    build(m){
-      const steps=[];
-      const isNoisy=m.noise>3;
-
-      // Always boost contrast for documents — small tiles for text-level detail
-      steps.push({name:'CLAHE',
-        reason:'Document → maximize local contrast for text readability',
-        pl:'clip=4.0 tile=32px (small tiles for text detail)',
-        params:{clip:4.0,tile:32},
-        fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)});
-
-      // Light NLM to remove paper/scan noise without blurring text
-      if(isNoisy)steps.push({name:'Non-Local Means',
-        reason:'Scan/paper noise → patch denoising preserves text edges',
-        pl:'h=0.05 search=4 patch=1',params:{h:.05,sR:4,pR:1},
-        fn:(s,W,H,p)=>doNLM(s,W,H,p.h,p.sR,p.pR)});
-
-      // Aggressive sharpening — low threshold to catch every text stroke
-      steps.push({name:'Unsharp Mask',
-        reason:'Maximize text crispness — low threshold catches every stroke',
-        pl:'radius=1 amount=2.5 threshold=2',params:{rad:1,amt:2.5,thr:2},
-        fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});
-
-      return steps;
-    }
-  },
-
-  lowlight: {
-    label:'Low-light', icon:'🌙',
-    hint:'Always applies Retinex illumination lift · aggressive CLAHE · noise removal · protects shadow detail',
-    build(m){
-      const steps=[];
-      const isVNoisy=m.noise>6;
-      const isBlurry=m.sharpness<18;
-
-      // Retinex always — the main tool for low-light illumination recovery
-      steps.push({name:'Multi-Scale Retinex',
-        reason:'Low-light → log-domain illumination recovery across 3 scales',
-        pl:'σ = 15·60·120',params:{s1:15,s2:60,s3:120},
-        fn:(s,W,H,p)=>doRetinex(s,W,H,[p.s1,p.s2,p.s3])});
-
-      // CLAHE always after Retinex for local contrast
-      steps.push({name:'CLAHE',
-        reason:'Post-Retinex → local contrast restoration in lifted shadows',
-        pl:'clip=3.5 tile=64px',params:{clip:3.5,tile:64},
-        fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)});
-
-      // Denoise — low-light almost always needs this
-      if(isVNoisy)steps.push({name:'Non-Local Means',
-        reason:'Low-light noise → patch denoising before sharpening',
-        pl:'h=0.09 search=5 patch=2',params:{h:.09,sR:5,pR:2},
-        fn:(s,W,H,p)=>doNLM(s,W,H,p.h,p.sR,p.pR)});
-      else steps.push({name:'Bilateral Filter',
-        reason:'Amplified noise from lift → edge-preserving smoothing',
-        pl:'spatial σ=4 range σ=50',params:{sS:4,rS:50},
-        fn:(s,W,H,p)=>doBilateral(s,W,H,p.sS,p.rS)});
-
-      // Final sharpening
-      if(isBlurry)steps.push({name:'Unsharp Mask',
-        reason:'Recover detail lost to noise or motion in low-light',
-        pl:'radius=2 amount=1.0 threshold=5',params:{rad:2,amt:1.0,thr:5},
-        fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});
-
-      return steps;
-    }
-  }
+  portrait:{label:'Portrait',build(m){
+    const s=[];
+    if(m.lightingVar>32)s.push({name:'Multi-Scale Retinex',reason:'Uneven face lighting → normalize',pl:'σ=15·60·120',params:{s1:15,s2:60,s3:120},fn:(d,W,H,p)=>doRetinex(d,W,H,[p.s1,p.s2,p.s3])});
+    if(m.brightness<70||m.contrast<28)s.push({name:'CLAHE',reason:m.brightness<70?'Dark portrait → gentle lift':'Flat tones → subtle eq.',pl:'clip=1.5 tile=96px',params:{clip:1.5,tile:96},fn:(d,W,H,p)=>doCLAHE(d,W,H,p.clip,p.tile)});
+    if(m.noise>12)s.push({name:'Bilateral Filter',reason:'Very noisy → gentle smooth (high range σ protects skin)',pl:'spatial σ=5 range σ=60',params:{sS:5,rS:60},fn:(d,W,H,p)=>doBilateral(d,W,H,p.sS,p.rS)});
+    s.push({name:'Unsharp Mask',reason:'High threshold skips smooth skin — only sharpens hard edges',pl:'radius='+(m.sharpness<8?2:1)+' amount='+(m.sharpness<8?.7:.5)+' thr=10',params:{rad:m.sharpness<8?2:1,amt:m.sharpness<8?.7:.5,thr:10},fn:(d,W,H,p)=>doUnsharp(d,W,H,p.rad,p.amt,p.thr)});
+    return s;}},
+  landscape:{label:'Landscape',build(m){
+    const s=[];
+    if(m.lightingVar>22)s.push({name:'Multi-Scale Retinex',reason:'Uneven sky/ground lighting',pl:'σ=15·60·120',params:{s1:15,s2:60,s3:120},fn:(d,W,H,p)=>doRetinex(d,W,H,[p.s1,p.s2,p.s3])});
+    if(m.brightness<80||m.contrast<38){const c=m.brightness<80?3.5:2.5;s.push({name:'CLAHE',reason:'Boost scene contrast',pl:'clip='+c+' tile=64px',params:{clip:c,tile:64},fn:(d,W,H,p)=>doCLAHE(d,W,H,p.clip,p.tile)});}
+    if(m.noise>4.5)s.push(m.noise>11?{name:'Non-Local Means',reason:'High noise → patch denoising',pl:'h=0.08 s=5 p=2',params:{h:.08,sR:5,pR:2},fn:(d,W,H,p)=>doNLM(d,W,H,p.h,p.sR,p.pR)}:{name:'Bilateral Filter',reason:'Moderate noise → edge smoothing',pl:'σs=3 σr=40',params:{sS:3,rS:40},fn:(d,W,H,p)=>doBilateral(d,W,H,p.sS,p.rS)});
+    s.push({name:'Unsharp Mask',reason:'Texture sharpening',pl:'radius=1.5 amount=1.2 thr=3',params:{rad:1.5,amt:1.2,thr:3},fn:(d,W,H,p)=>doUnsharp(d,W,H,p.rad,p.amt,p.thr)});
+    if(!s.length){s.push({name:'CLAHE',reason:'Gentle polish',pl:'clip=1.5 tile=80px',params:{clip:1.5,tile:80},fn:(d,W,H,p)=>doCLAHE(d,W,H,p.clip,p.tile)});}
+    return s;}},
+  document:{label:'Document',build(m){
+    const s=[];
+    s.push({name:'CLAHE',reason:'Max text readability · small tiles = text-level detail',pl:'clip=4.0 tile=32px',params:{clip:4,tile:32},fn:(d,W,H,p)=>doCLAHE(d,W,H,p.clip,p.tile)});
+    if(m.noise>3)s.push({name:'Non-Local Means',reason:'Paper/scan noise removal',pl:'h=0.05 s=4 p=1',params:{h:.05,sR:4,pR:1},fn:(d,W,H,p)=>doNLM(d,W,H,p.h,p.sR,p.pR)});
+    s.push({name:'Unsharp Mask',reason:'Max text stroke crispness',pl:'radius=1 amount=2.5 thr=2',params:{rad:1,amt:2.5,thr:2},fn:(d,W,H,p)=>doUnsharp(d,W,H,p.rad,p.amt,p.thr)});
+    return s;}},
+  lowlight:{label:'Low-light',build(m){
+    const s=[];
+    s.push({name:'Multi-Scale Retinex',reason:'Log-domain illumination recovery',pl:'σ=15·60·120',params:{s1:15,s2:60,s3:120},fn:(d,W,H,p)=>doRetinex(d,W,H,[p.s1,p.s2,p.s3])});
+    s.push({name:'CLAHE',reason:'Local contrast restoration after lift',pl:'clip=3.5 tile=64px',params:{clip:3.5,tile:64},fn:(d,W,H,p)=>doCLAHE(d,W,H,p.clip,p.tile)});
+    s.push(m.noise>6?{name:'Non-Local Means',reason:'Low-light noise removal',pl:'h=0.09 s=5 p=2',params:{h:.09,sR:5,pR:2},fn:(d,W,H,p)=>doNLM(d,W,H,p.h,p.sR,p.pR)}:{name:'Bilateral Filter',reason:'Amplified noise smoothing',pl:'σs=4 σr=50',params:{sS:4,rS:50},fn:(d,W,H,p)=>doBilateral(d,W,H,p.sS,p.rS)});
+    if(m.sharpness<18)s.push({name:'Unsharp Mask',reason:'Recover lost detail',pl:'radius=2 amount=1.0 thr=5',params:{rad:2,amt:1.0,thr:5},fn:(d,W,H,p)=>doUnsharp(d,W,H,p.rad,p.amt,p.thr)});
+    return s;}}
 };
 
-// ════════════════════════════════════════════════════════
-//  IMAGE ANALYSIS
-// ════════════════════════════════════════════════════════
+// ══════════════════════════════════════
+//  CANVAS SPLIT VIEW
+// ══════════════════════════════════════
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+const offB=document.createElement('canvas'),offA=document.createElement('canvas');
+let splitPos=.5,hasBefore=false,hasAfter=false,pDown=false;
+
+function drawSplit(){
+  if(!hasBefore)return;
+  const W=cv.width,H=cv.height,sx=Math.round(splitPos*W);
+  ctx.drawImage(offB,0,0);
+  if(hasAfter){ctx.save();ctx.beginPath();ctx.rect(sx,0,W-sx,H);ctx.clip();ctx.drawImage(offA,0,0);ctx.restore();}
+  ctx.save();ctx.shadowColor='rgba(0,212,255,.8)';ctx.shadowBlur=10;
+  ctx.strokeStyle='#00d4ff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(sx,0);ctx.lineTo(sx,H);ctx.stroke();ctx.restore();
+  const hy=H/2;
+  ctx.save();ctx.shadowColor='rgba(0,212,255,.6)';ctx.shadowBlur=14;
+  ctx.fillStyle='#00d4ff';ctx.beginPath();ctx.arc(sx,hy,14,0,Math.PI*2);ctx.fill();ctx.restore();
+  ctx.fillStyle='#060a10';ctx.font='bold 11px monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('⇔',sx,hy);
+  function lbl(txt,x,color,align){ctx.font='bold 9px monospace';ctx.textAlign=align;const tw=ctx.measureText(txt).width,p=7;const bx=align==='left'?x:x-tw-p*2;ctx.fillStyle='rgba(6,10,16,.82)';ctx.fillRect(bx,8,tw+p*2,18);ctx.fillStyle=color;ctx.textBaseline='middle';ctx.fillText(txt,align==='left'?x+p:x-p,17);}
+  lbl('◀ ORIGINAL',sx-4,'#5a7a9a','right');
+  if(hasAfter)lbl('ENHANCED ▶',sx+4,'#00ff88','left');
+}
+function spFE(e){const r=cv.getBoundingClientRect();return Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));}
+cv.addEventListener('pointerdown',e=>{pDown=true;cv.setPointerCapture(e.pointerId);splitPos=spFE(e);drawSplit();e.preventDefault();});
+cv.addEventListener('pointermove',e=>{if(!pDown)return;splitPos=spFE(e);drawSplit();e.preventDefault();});
+cv.addEventListener('pointerup',e=>{pDown=false;cv.releasePointerCapture(e.pointerId);});
+cv.addEventListener('pointercancel',()=>pDown=false);
+
+// ══════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════
+let origData=null,imgW=0,imgH=0,pipeline=[],currentType='portrait',currentMetrics=null;
+let currentMode='auto';
+let activeAlgoResult=null; // current result for download in individual mode
+
+// ══════════════════════════════════════
+//  DOM
+// ══════════════════════════════════════
+const $=id=>document.getElementById(id);
+const uzone=$('uzone'),fin=$('fin');
+const aPanel=$('aPanel'),pPanel=$('pPanel'),mgrid=$('mgrid');
+const pSteps=$('pSteps'),pSum=$('pSum'),pLabel=$('pLabel');
+const runBtn=$('runBtn'),rstBtn=$('rstBtn'),newBtn=$('newBtn'),dlBtn=$('dlBtn');
+const rstBtnInd=$('rstBtnInd'),newBtnInd=$('newBtnInd');
+const dhint=$('dhint'),proc=$('proc'),pt=$('pt'),ps=$('ps');
+const ibadge=$('ibadge'),ssStat=$('ss'),smodeStat=$('smode'),sactiveStat=$('sactive'),stStat=$('st');
+const toastEl=$('toast'),canvasLabel=$('canvasLabel');
+const autoSection=$('autoSection'),indSection=$('indSection');
+const autoFooter=$('autoFooter'),indFooter=$('indFooter');
+
+// ══════════════════════════════════════
+//  MODE SWITCH
+// ══════════════════════════════════════
+function switchMode(mode){
+  currentMode=mode;
+  $('tab-auto').classList.toggle('active',mode==='auto');
+  $('tab-individual').classList.toggle('active',mode==='individual');
+  autoSection.style.display=mode==='auto'?'block':'none';
+  indSection.style.display=mode==='individual'?'block':'none';
+  autoFooter.style.display=mode==='auto'?'block':'none';
+  indFooter.style.display=mode==='individual'?'block':'none';
+  smodeStat.textContent=mode==='auto'?'Auto':'Individual';
+  // Reset canvas to original when switching
+  if(origData){hasAfter=false;offA.getContext('2d').putImageData(origData,0,0);drawSplit();canvasLabel.classList.remove('show','algo-mode');activeAlgoResult=null;}
+}
+
+// ══════════════════════════════════════
+//  BUILD INDIVIDUAL ALGO CARDS
+// ══════════════════════════════════════
+function buildAlgoCards(){
+  const container=$('algoCards');container.innerHTML='';
+  ALGOS.forEach(algo=>{
+    // Init params
+    algoParams[algo.id]={};
+    algo.params.forEach(p=>algoParams[algo.id][p.id]=p.def);
+
+    const card=document.createElement('div');
+    card.className='algo-card';card.id='acard-'+algo.id;
+
+    // Build param rows HTML
+    const paramRows=algo.params.map(p=>`
+      <div class="param-row">
+        <div class="param-top">
+          <span class="param-name">${p.label}</span>
+          <span class="param-val" id="pv-${algo.id}-${p.id}">${p.def}</span>
+        </div>
+        <input type="range" min="${p.min}" max="${p.max}" step="${p.step}" value="${p.def}"
+          id="pr-${algo.id}-${p.id}"
+          oninput="algoParams['${algo.id}']['${p.id}']=parseFloat(this.value);document.getElementById('pv-${algo.id}-${p.id}').textContent=this.value">
+      </div>`).join('');
+
+    card.innerHTML=`
+      <div class="algo-card-header" onclick="toggleAlgoCard('${algo.id}')">
+        <div class="algo-info">
+          <div class="algo-name">
+            ${algo.name}
+            <div class="algo-spin" id="aspin-${algo.id}"></div>
+          </div>
+          <div class="algo-desc">${algo.desc}</div>
+        </div>
+        <span class="algo-badge ${algo.speed==='slow'?'badge-slow':'badge-fast'}" id="abadge-${algo.id}">
+          ${algo.speed==='slow'?'SLOW':'FAST'}
+        </span>
+      </div>
+      <div class="algo-params" id="aparams-${algo.id}">
+        ${paramRows}
+        <button class="algo-run-btn" id="arun-${algo.id}" onclick="runAlgo('${algo.id}')" ${origData?'':'disabled'}>
+          ▶ Run ${algo.name}
+        </button>
+      </div>
+      <div class="algo-result-row" id="ares-${algo.id}">
+        <span class="algo-result-txt" id="arestxt-${algo.id}">—</span>
+        <button class="algo-dl-btn" onclick="downloadAlgo('${algo.id}')">↓ Save this</button>
+      </div>`;
+    container.appendChild(card);
+  });
+}
+
+function toggleAlgoCard(id){
+  const card=$('acard-'+id);
+  card.classList.toggle('open');
+}
+
+async function runAlgo(id){
+  if(!origData)return;
+  const algo=ALGOS.find(a=>a.id===id);
+  // Mark running
+  $('acard-'+id).className='algo-card open running';
+  $('aspin-'+id).style.display='inline-block';
+  $('arun-'+id).disabled=true;
+  $('abadge-'+id).className='algo-badge badge-fast';
+  $('abadge-'+id).textContent='…';
+  proc.classList.add('on');
+  pt.textContent='Running '+algo.name+'…';
+  ps.textContent=algo.desc;
+  await new Promise(r=>setTimeout(r,60));
+  const src=new Uint8ClampedArray(origData.data);
+  const t0=performance.now();
+  const result=algo.fn(src,imgW,imgH,{...algoParams[id]});
+  const ms=Math.round(performance.now()-t0);
+  // Store result
+  algoResults[id]=new ImageData(result,imgW,imgH);
+  activeAlgoResult=algoResults[id];
+  // Show on canvas
+  offA.getContext('2d').putImageData(algoResults[id],0,0);
+  hasAfter=true;splitPos=.5;drawSplit();
+  // Update card
+  $('acard-'+id).className='algo-card open applied';
+  $('aspin-'+id).style.display='none';
+  $('arun-'+id).disabled=false;
+  $('abadge-'+id).className='algo-badge badge-done';$('abadge-'+id).textContent='✓ DONE';
+  $('arestxt-'+id).textContent='Applied in '+ms+'ms · drag divider to compare';
+  // Canvas label
+  canvasLabel.textContent=algo.name+' — drag to compare';
+  canvasLabel.className='canvas-label show algo-mode';
+  proc.classList.remove('on');
+  stStat.textContent=ms+'ms';
+  sactiveStat.textContent=algo.name;
+  showToast(algo.name+' done in '+ms+'ms ✓');
+}
+
+function downloadAlgo(id){
+  const data=algoResults[id];if(!data)return;
+  const c=document.createElement('canvas');c.width=imgW;c.height=imgH;
+  c.getContext('2d').putImageData(data,0,0);
+  const a=document.createElement('a');a.href=c.toDataURL('image/png');
+  a.download='pixellab_'+id+'_'+Date.now()+'.png';a.click();
+  showToast(id+' result saved as PNG ✓');
+}
+
+// Re-enable run buttons after image load
+function enableAlgoButtons(){
+  ALGOS.forEach(a=>{const b=$('arun-'+a.id);if(b)b.disabled=false;});
+}
+
+// ══════════════════════════════════════
+//  ANALYSIS
+// ══════════════════════════════════════
 function analyzeImage(data,W,H){
   const n=W*H,lum=new Float32Array(n);
   for(let i=0;i<n;i++)lum[i]=.299*data[i*4]+.587*data[i*4+1]+.114*data[i*4+2];
   let sumL=0;for(let i=0;i<n;i++)sumL+=lum[i];const brightness=sumL/n;
   let sq=0;for(let i=0;i<n;i++)sq+=(lum[i]-brightness)**2;const contrast=Math.sqrt(sq/n);
-  let ls=0,lc=0;
-  for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){const i=y*W+x;ls+=Math.abs(4*lum[i]-lum[i-1]-lum[i+1]-lum[i-W]-lum[i+W]);lc++;}
+  let ls=0,lc=0;for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){const i=y*W+x;ls+=Math.abs(4*lum[i]-lum[i-1]-lum[i+1]-lum[i-W]-lum[i+W]);lc++;}
   const sharpness=ls/lc;
-  let ns=0,nsq=0,nc=0;
-  for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){let m=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)m+=lum[(y+dy)*W+(x+dx)];m/=9;const df=lum[y*W+x]-m;ns+=df;nsq+=df*df;nc++;}
+  let ns=0,nsq=0,nc=0;for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){let m=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)m+=lum[(y+dy)*W+(x+dx)];m/=9;const df=lum[y*W+x]-m;ns+=df;nsq+=df*df;nc++;}
   const noise=Math.sqrt(nsq/nc-(ns/nc)**2);
   const qM=[0,0,0,0],qN=[0,0,0,0];
   for(let y=0;y<H;y++)for(let x=0;x<W;x++){const q=(y>=H/2?2:0)+(x>=W/2?1:0);qM[q]+=lum[y*W+x];qN[q]++;}
@@ -522,123 +646,30 @@ function analyzeImage(data,W,H){
   return{brightness,contrast,sharpness,noise,lightingVar};
 }
 
-// ════════════════════════════════════════════════════════
-//  CANVAS SPLIT VIEW
-// ════════════════════════════════════════════════════════
-const cv=document.getElementById('cv');
-const ctx=cv.getContext('2d');
-const offB=document.createElement('canvas');
-const offA=document.createElement('canvas');
-let splitPos=.5,hasBefore=false,hasAfter=false;
-
-function drawSplit(){
-  if(!hasBefore)return;
-  const W=cv.width,H=cv.height,sx=Math.round(splitPos*W);
-  ctx.drawImage(offB,0,0);
-  if(hasAfter){ctx.save();ctx.beginPath();ctx.rect(sx,0,W-sx,H);ctx.clip();ctx.drawImage(offA,0,0);ctx.restore();}
-  // Divider
-  ctx.save();ctx.shadowColor='rgba(0,212,255,.8)';ctx.shadowBlur=10;
-  ctx.strokeStyle='#00d4ff';ctx.lineWidth=2;
-  ctx.beginPath();ctx.moveTo(sx,0);ctx.lineTo(sx,H);ctx.stroke();ctx.restore();
-  // Handle
-  const hy=H/2;
-  ctx.save();ctx.shadowColor='rgba(0,212,255,.6)';ctx.shadowBlur=14;
-  ctx.fillStyle='#00d4ff';ctx.beginPath();ctx.arc(sx,hy,14,0,Math.PI*2);ctx.fill();ctx.restore();
-  ctx.fillStyle='#060a10';ctx.font='bold 11px monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('⇔',sx,hy);
-  // Labels
-  function lbl(txt,x,color,align){
-    ctx.font='bold 9px monospace';ctx.textAlign=align;
-    const tw=ctx.measureText(txt).width,pad=7;
-    const bx=align==='left'?x:x-tw-pad*2;
-    ctx.fillStyle='rgba(6,10,16,.82)';ctx.fillRect(bx,8,tw+pad*2,18);
-    ctx.fillStyle=color;ctx.textBaseline='middle';ctx.fillText(txt,align==='left'?x+pad:x-pad,17);
-  }
-  lbl('◀ ORIGINAL',sx-4,'#5a7a9a','right');
-  if(hasAfter)lbl('ENHANCED ▶',sx+4,'#00ff88','left');
-}
-
-let pDown=false;
-function spFE(e){const r=cv.getBoundingClientRect();return Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));}
-cv.addEventListener('pointerdown',e=>{pDown=true;cv.setPointerCapture(e.pointerId);splitPos=spFE(e);drawSplit();e.preventDefault();});
-cv.addEventListener('pointermove',e=>{if(!pDown)return;splitPos=spFE(e);drawSplit();e.preventDefault();});
-cv.addEventListener('pointerup',e=>{pDown=false;cv.releasePointerCapture(e.pointerId);});
-cv.addEventListener('pointercancel',()=>pDown=false);
-
-// ════════════════════════════════════════════════════════
-//  STATE
-// ════════════════════════════════════════════════════════
-let origData=null,enhData=null,imgW=0,imgH=0,pipeline=[];
-let currentType=null,currentMetrics=null;
-
-// ════════════════════════════════════════════════════════
-//  DOM
-// ════════════════════════════════════════════════════════
-const $=id=>document.getElementById(id);
-const uzone=$('uzone'),fin=$('fin');
-const aPanel=$('aPanel'),pPanel=$('pPanel'),mgrid=$('mgrid');
-const pSteps=$('pSteps'),pSum=$('pSum'),pLabel=$('pLabel'),aLabel=$('aLabel');
-const runBtn=$('runBtn'),rstBtn=$('rstBtn'),newBtn=$('newBtn'),dlBtn=$('dlBtn');
-const dhint=$('dhint'),proc=$('proc'),pt=$('pt'),ps=$('ps');
-const ibadge=$('ibadge'),ssStat=$('ss'),spStat=$('sp'),stStat=$('st'),stypStat=$('styp');
-const toastEl=$('toast'),typeHint=$('typeHint');
-
-// ════════════════════════════════════════════════════════
-//  PHOTO TYPE SELECTION
-// ════════════════════════════════════════════════════════
-document.querySelectorAll('.type-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const type=btn.dataset.type;
-    if(type===currentType) return;
-    document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    currentType=type;
-    typeHint.textContent=PROFILES[type].hint;
-    stypStat.textContent=PROFILES[type].label;
-    // If image already loaded, rebuild pipeline for new type
-    if(currentMetrics){
-      pipeline=PROFILES[type].build(currentMetrics);
-      renderPipeline(pipeline);
-      // Reset run state
-      enhData=null;hasAfter=false;
-      offA.getContext('2d').putImageData(origData,0,0);
-      drawSplit();
-      dlBtn.disabled=true;stStat.textContent='—';
-      showToast('Pipeline updated for '+PROFILES[type].label+' ✓');
-    }
-  });
-});
-
-// ════════════════════════════════════════════════════════
-//  RENDER ANALYSIS
-// ════════════════════════════════════════════════════════
 function renderAnalysis(m){
   mgrid.innerHTML='';
   function card(name,val,min,max,tc,tt,full=false){
     const pct=Math.round(Math.max(0,Math.min(100,(val-min)/(max-min)*100)));
-    const col={tw:'#ff6030',to:'#00d4ff',tg:'#00ff88'}[tc]||'#00d4ff';
+    const col={tw:'#ff6030',tg:'#00ff88'}[tc]||'#00d4ff';
     const el=document.createElement('div');el.className='mc'+(full?' full':'');
-    el.innerHTML=`<div class="mn">${name}</div>
-      <div class="mb"><div class="mf" style="width:${pct}%;background:${col}"></div></div>
+    el.innerHTML=`<div class="mn">${name}</div><div class="mb"><div class="mf" style="width:${pct}%;background:${col}"></div></div>
       <div class="mr"><span class="mv">${Math.round(val)}</span><span class="mtag ${tc}">${tt}</span></div>`;
     mgrid.appendChild(el);
   }
-  card('Brightness',m.brightness,0,255,m.brightness<80?'tw':m.brightness>185?'tw':'tg',m.brightness<80?'DARK':m.brightness>185?'BRIGHT':'NORMAL');
-  card('Contrast',m.contrast,0,100,m.contrast<38?'tw':'tg',m.contrast<38?'LOW':'NORMAL');
-  card('Sharpness',m.sharpness,0,60,m.sharpness<22?'tw':'tg',m.sharpness<10?'BLURRY':m.sharpness<22?'SOFT':'SHARP');
-  card('Noise',m.noise,0,20,m.noise>4.5?'tw':'tg',m.noise>11?'NOISY':m.noise>4.5?'GRAINY':'CLEAN');
-  card('Lighting',m.lightingVar,0,60,m.lightingVar>22?'tw':'tg',m.lightingVar>22?'UNEVEN':'UNIFORM',true);
+  card('Brightness',m.brightness,0,255,m.brightness<80?'tw':m.brightness>185?'tw':'tg',m.brightness<80?'DARK':m.brightness>185?'BRIGHT':'OK');
+  card('Contrast',m.contrast,0,100,m.contrast<38?'tw':'tg',m.contrast<38?'LOW':'OK');
+  card('Sharpness',m.sharpness,0,60,m.sharpness<22?'tw':'tg',m.sharpness<10?'BLURRY':m.sharpness<22?'SOFT':'OK');
+  card('Noise',m.noise,0,20,m.noise>4.5?'tw':'tg',m.noise>11?'NOISY':m.noise>4.5?'GRAINY':'OK');
+  card('Lighting',m.lightingVar,0,60,m.lightingVar>22?'tw':'tg',m.lightingVar>22?'UNEVEN':'OK',true);
   aPanel.classList.add('open');
 }
 
-// ════════════════════════════════════════════════════════
-//  RENDER PIPELINE
-// ════════════════════════════════════════════════════════
 function renderPipeline(steps){
   pSteps.innerHTML='';
   pLabel.textContent='Auto Pipeline';pLabel.className='sec-label';
   pSum.textContent=steps.length+' step'+(steps.length>1?'s':'')+': '+steps.map(s=>s.name).join(' → ');
   pSum.className='pipe-summary';
-  spStat.textContent=steps.length;
+  spStat&&(spStat.textContent=steps.length);
   steps.forEach((s,i)=>{
     const el=document.createElement('div');el.className='sc';el.id='sc'+i;
     el.innerHTML=`<div class="sc-num" id="sn${i}">${i+1}</div><div class="sc-spin"></div>
@@ -655,9 +686,9 @@ function renderPipeline(steps){
   setTimeout(()=>pPanel.scrollIntoView({behavior:'smooth',block:'nearest'}),200);
 }
 
-// ════════════════════════════════════════════════════════
+// ══════════════════════════════════════
 //  LOAD IMAGE
-// ════════════════════════════════════════════════════════
+// ══════════════════════════════════════
 function loadImage(file){
   if(!file||!file.type.startsWith('image/'))return;
   const reader=new FileReader();
@@ -672,41 +703,43 @@ function loadImage(file){
       const tmp=document.createElement('canvas');tmp.width=w;tmp.height=h;
       tmp.getContext('2d').drawImage(img,0,0,w,h);
       origData=tmp.getContext('2d').getImageData(0,0,w,h);
-      enhData=null;
       offB.getContext('2d').putImageData(origData,0,0);
       offA.getContext('2d').putImageData(origData,0,0);
       hasBefore=true;hasAfter=false;
       dhint.style.display='none';cv.classList.add('visible');
-      drawSplit();
       rstBtn.disabled=false;newBtn.disabled=false;dlBtn.disabled=true;
+      rstBtnInd.disabled=false;newBtnInd.disabled=false;
+      canvasLabel.classList.remove('show','algo-mode');
+      drawSplit();
       ibadge.textContent=img.width+'×'+img.height+' → '+w+'×'+h+' px';
       ssStat.textContent=w+'×'+h;
+      // Clear old algo results
+      Object.keys(algoResults).forEach(k=>delete algoResults[k]);
+      ALGOS.forEach(a=>{
+        const c=$('acard-'+a.id);if(!c)return;
+        c.className='algo-card';
+        $('abadge-'+a.id).className='algo-badge '+(a.speed==='slow'?'badge-slow':'badge-fast');
+        $('abadge-'+a.id).textContent=a.speed==='slow'?'SLOW':'FAST';
+      });
+      enableAlgoButtons();
       currentMetrics=analyzeImage(origData.data,w,h);
       renderAnalysis(currentMetrics);
-      // Use selected type or default to portrait as first suggestion
-      const type=currentType||'portrait';
-      if(!currentType){
-        currentType='portrait';
-        document.querySelector('[data-type="portrait"]').classList.add('active');
-        typeHint.textContent=PROFILES.portrait.hint;
-        stypStat.textContent='Portrait';
-      }
-      pipeline=PROFILES[type].build(currentMetrics);
+      pipeline=PROFILES[currentType].build(currentMetrics);
       renderPipeline(pipeline);
-      showToast('Analysis done — '+pipeline.length+' steps for '+PROFILES[type].label+' ✓');
+      showToast('Loaded · '+pipeline.length+' auto steps for '+PROFILES[currentType].label+' ✓');
     };
     img.src=e.target.result;
   };
   reader.readAsDataURL(file);
 }
 
-// ════════════════════════════════════════════════════════
-//  RUN PIPELINE
-// ════════════════════════════════════════════════════════
+// ══════════════════════════════════════
+//  RUN AUTO PIPELINE
+// ══════════════════════════════════════
 runBtn.addEventListener('click',async()=>{
   if(!origData||!pipeline.length)return;
-  runBtn.disabled=true;dlBtn.disabled=true;
-  hasAfter=false;proc.classList.add('on');
+  runBtn.disabled=true;dlBtn.disabled=true;hasAfter=false;
+  proc.classList.add('on');
   let cur=new Uint8ClampedArray(origData.data);
   const t0=performance.now();
   for(let i=0;i<pipeline.length;i++){
@@ -719,51 +752,70 @@ runBtn.addEventListener('click',async()=>{
     cur=s.fn(cur,imgW,imgH,s.params);
     const ms=Math.round(performance.now()-ts);
     $('sc'+i).className='sc done';
-    $('sn'+i).textContent='✓';
-    $('stm'+i).textContent=ms+'ms';
-    $('sr'+i).textContent='→ Applied in '+ms+'ms';
+    $('sn'+i).textContent='✓';$('stm'+i).textContent=ms+'ms';$('sr'+i).textContent='→ Applied in '+ms+'ms';
   }
   const total=Math.round(performance.now()-t0);
-  enhData=new ImageData(cur,imgW,imgH);
+  const enhData=new ImageData(cur,imgW,imgH);
   offA.getContext('2d').putImageData(enhData,0,0);
   hasAfter=true;splitPos=.5;drawSplit();
+  activeAlgoResult=enhData;
   pLabel.textContent='✓ Pipeline Results';pLabel.className='sec-label done';
-  pSum.textContent='✓ '+pipeline.length+' steps · '+total+'ms · drag divider to compare';
+  pSum.textContent='✓ '+pipeline.length+' steps · '+total+'ms · drag to compare';
   pSum.className='pipe-summary done';
-  stStat.textContent=total+'ms';
+  canvasLabel.textContent=PROFILES[currentType].label+' Auto Pipeline';
+  canvasLabel.className='canvas-label show';
+  stStat.textContent=total+'ms';sactiveStat.textContent='Auto ('+pipeline.length+' steps)';
   proc.classList.remove('on');runBtn.disabled=false;dlBtn.disabled=false;
-  setTimeout(()=>pSteps.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
   showToast('Done in '+total+'ms ✓');
 });
 
-// ════════════════════════════════════════════════════════
-//  RESET
-// ════════════════════════════════════════════════════════
-rstBtn.addEventListener('click',()=>{
+// ══════════════════════════════════════
+//  PHOTO TYPE
+// ══════════════════════════════════════
+document.querySelectorAll('.type-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const type=btn.dataset.type;if(type===currentType)return;
+    document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');currentType=type;
+    if(currentMetrics){
+      pipeline=PROFILES[type].build(currentMetrics);renderPipeline(pipeline);
+      hasAfter=false;offA.getContext('2d').putImageData(origData,0,0);drawSplit();
+      dlBtn.disabled=true;stStat.textContent='—';canvasLabel.classList.remove('show','algo-mode');
+      showToast('Pipeline updated for '+PROFILES[type].label+' ✓');
+    }
+  });
+});
+
+// ══════════════════════════════════════
+//  RESET / DOWNLOAD
+// ══════════════════════════════════════
+function resetToOriginal(){
   if(!origData)return;
-  enhData=null;hasAfter=false;
-  offA.getContext('2d').putImageData(origData,0,0);drawSplit();
-  dlBtn.disabled=true;stStat.textContent='—';
+  hasAfter=false;offA.getContext('2d').putImageData(origData,0,0);drawSplit();
+  canvasLabel.classList.remove('show','algo-mode');
+  dlBtn.disabled=true;stStat.textContent='—';sactiveStat.textContent='—';
   pLabel.textContent='Auto Pipeline';pLabel.className='sec-label';
   pSum.textContent=pipeline.length+' step'+(pipeline.length>1?'s':'')+': '+pipeline.map(s=>s.name).join(' → ');
   pSum.className='pipe-summary';
   pipeline.forEach((_,i)=>{$('sc'+i).className='sc';$('sn'+i).textContent=i+1;$('stm'+i).textContent='';$('sr'+i).textContent='';});
   showToast('Reset to original');
-});
-
-dlBtn.addEventListener('click',()=>{
-  if(!enhData)return;
-  const c=document.createElement('canvas');c.width=imgW;c.height=imgH;
-  c.getContext('2d').putImageData(enhData,0,0);
-  const a=document.createElement('a');a.href=c.toDataURL('image/png');
-  a.download='pixellab_'+currentType+'_'+Date.now()+'.png';a.click();
-  showToast('Saved as PNG ✓');
-});
+}
+rstBtn.addEventListener('click',resetToOriginal);
+rstBtnInd.addEventListener('click',()=>{resetToOriginal();Object.keys(algoResults).forEach(k=>delete algoResults[k]);ALGOS.forEach(a=>{const c=$('acard-'+a.id);if(!c)return;c.className='algo-card';$('abadge-'+a.id).className='algo-badge '+(a.speed==='slow'?'badge-slow':'badge-fast');$('abadge-'+a.id).textContent=a.speed==='slow'?'SLOW':'FAST';});});
 newBtn.addEventListener('click',()=>fin.click());
+newBtnInd.addEventListener('click',()=>fin.click());
+dlBtn.addEventListener('click',()=>{
+  if(!activeAlgoResult)return;
+  const c=document.createElement('canvas');c.width=imgW;c.height=imgH;
+  c.getContext('2d').putImageData(activeAlgoResult,0,0);
+  const a=document.createElement('a');a.href=c.toDataURL('image/png');
+  a.download='pixellab_enhanced_'+Date.now()+'.png';a.click();
+  showToast('Saved ✓');
+});
 
-// ════════════════════════════════════════════════════════
+// ══════════════════════════════════════
 //  UPLOAD
-// ════════════════════════════════════════════════════════
+// ══════════════════════════════════════
 uzone.addEventListener('dragover',e=>{e.preventDefault();uzone.classList.add('over');});
 uzone.addEventListener('dragleave',()=>uzone.classList.remove('over'));
 uzone.addEventListener('drop',e=>{e.preventDefault();uzone.classList.remove('over');loadImage(e.dataTransfer.files[0]);});
@@ -771,11 +823,16 @@ fin.addEventListener('change',()=>loadImage(fin.files[0]));
 $('carea').addEventListener('dragover',e=>e.preventDefault());
 $('carea').addEventListener('drop',e=>{e.preventDefault();loadImage(e.dataTransfer.files[0]);});
 
-// ════════════════════════════════════════════════════════
-//  TOAST & SW
-// ════════════════════════════════════════════════════════
+// ══════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════
+buildAlgoCards();
+
+// Toast
 let tt;function showToast(m){toastEl.textContent=m;toastEl.style.display='block';clearTimeout(tt);tt=setTimeout(()=>toastEl.style.display='none',2600);}
-if('serviceWorker' in navigator){const sw=`const C='plv5';self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});}
+
+// SW
+if('serviceWorker' in navigator){const sw=`const C='plv6';self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});}
 </script>
 </body>
 </html>
