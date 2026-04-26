@@ -18,26 +18,19 @@
   --mono:'Space Mono',monospace;--ui:'Exo 2',sans-serif;
 }
 body{background:var(--bg);color:var(--text);font-family:var(--ui);min-height:100vh;overflow:hidden}
-
 header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 20px;
-  display:flex;align-items:center;gap:16px;height:49px;position:relative;z-index:10}
+  display:flex;align-items:center;gap:16px;height:49px;z-index:10;position:relative}
 .logo{font-family:var(--mono);font-size:16px;color:var(--accent);letter-spacing:3px}
 .logo b{color:var(--accent2)}
 .tagline{font-size:9px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-top:2px}
-.hbadge{margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--text-dim);
-  border:1px solid var(--border);padding:3px 8px;border-radius:3px}
+.hbadge{margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--text-dim);border:1px solid var(--border);padding:3px 8px;border-radius:3px}
 
-/* ── LAYOUT ── */
 .app{display:grid;grid-template-columns:288px 1fr;height:calc(100vh - 49px)}
-
-/* ── SIDEBAR ── */
-.sidebar{background:var(--bg2);border-right:1px solid var(--border);
-  display:flex;flex-direction:column;height:100%;overflow:hidden}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100%;overflow:hidden}
 .sidebar-scroll{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 .sidebar-scroll::-webkit-scrollbar{width:4px}
 .sidebar-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 .sidebar-footer{border-top:1px solid var(--border);padding:12px 14px;background:var(--bg2);flex-shrink:0}
-
 .panel{padding:12px 14px;border-bottom:1px solid var(--border)}
 .sec-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);
   font-family:var(--mono);display:flex;align-items:center;gap:8px;margin-bottom:10px;transition:color .3s}
@@ -54,6 +47,21 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
 .upload-zone p{font-size:10px;color:var(--text-dim);line-height:1.5}
 .img-badge{font-family:var(--mono);font-size:9px;color:var(--text-dim);text-align:center;margin-top:5px;min-height:12px}
 
+/* ── PHOTO TYPE SELECTOR ── */
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.type-btn{background:var(--bg4);border:1px solid var(--border);border-radius:6px;
+  padding:10px 6px;cursor:pointer;text-align:center;transition:all .2s;
+  display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--text-dim)}
+.type-btn:hover{border-color:var(--accent-dim);color:var(--text)}
+.type-btn.active{border-color:var(--accent);background:rgba(0,212,255,.08);color:var(--accent)}
+.type-btn .ti{font-size:20px;line-height:1}
+.type-btn .tl{font-size:10px;font-family:var(--mono);letter-spacing:.5px;text-transform:uppercase}
+.type-btn.active .tl{color:var(--accent)}
+.type-hint{font-size:9px;color:var(--text-dim);line-height:1.5;font-family:var(--mono);
+  background:var(--bg4);border:1px solid var(--border);border-radius:4px;padding:6px 8px;
+  min-height:36px;transition:all .2s}
+
+/* Collapsible */
 .collapsible{display:none}.collapsible.open{display:block}
 
 /* Metrics */
@@ -76,8 +84,6 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
   font-family:var(--mono);line-height:1.6;transition:all .4s}
 .pipe-summary.done{background:rgba(0,255,136,.05);border-color:rgba(0,255,136,.2);color:var(--ok)}
 .pipe-steps{display:flex;flex-direction:column;gap:5px}
-
-/* Step card — key: stays in its final state after run */
 .sc{display:flex;align-items:flex-start;gap:8px;background:var(--bg4);
   border:1px solid var(--border);border-radius:5px;padding:8px 10px;transition:all .35s}
 .sc.active{border-color:var(--accent);background:rgba(0,212,255,.06)}
@@ -97,10 +103,9 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
 .sc-time{font-family:var(--mono);font-size:9px;color:var(--ok);opacity:0;transition:opacity .3s;white-space:nowrap}
 .sc.done .sc-time{opacity:1}
 .sc-reason{font-size:9px;color:var(--text-dim);line-height:1.4;margin-top:2px}
-.sc-params{font-family:var(--mono);font-size:8px;color:var(--text-dim);margin-top:3px;opacity:.6}
-/* Result line shown after step done */
+.sc-params{font-family:var(--mono);font-size:8px;color:var(--text-dim);margin-top:3px;opacity:.55}
 .sc-result{font-size:9px;color:var(--ok);margin-top:3px;opacity:0;transition:opacity .3s;font-family:var(--mono)}
-.sc.done .sc-result{opacity:.8}
+.sc.done .sc-result{opacity:.75}
 
 /* Buttons */
 .btn{padding:9px 12px;border-radius:5px;border:none;cursor:pointer;font-family:var(--mono);
@@ -113,27 +118,21 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
 .btn-s:disabled{opacity:.25;cursor:not-allowed}
 .btn-dl{background:rgba(0,255,136,.06);color:var(--ok);border:1px solid rgba(0,255,136,.25);
   font-size:10px;margin-top:6px}
-.btn-dl:hover:not(:disabled){background:rgba(0,255,136,.12);box-shadow:0 0 12px rgba(0,255,136,.15)}
+.btn-dl:hover:not(:disabled){background:rgba(0,255,136,.12)}
 .btn-dl:disabled{opacity:.2;cursor:not-allowed}
 .btn-row{display:flex;gap:6px;margin-top:6px}.btn-row .btn{flex:1}
 
-/* ── MAIN ── */
+/* Main */
 .main{display:flex;flex-direction:column;height:100%;overflow:hidden}
 .canvas-area{flex:1;display:flex;align-items:center;justify-content:center;
   background:radial-gradient(ellipse at 50% 50%,#0d1e30 0%,var(--bg) 70%);
   position:relative;overflow:hidden;padding:16px}
-
-.drop-hint{display:flex;flex-direction:column;align-items:center;gap:12px;color:var(--text-dim);
-  pointer-events:none}
+.drop-hint{display:flex;flex-direction:column;align-items:center;gap:12px;color:var(--text-dim)}
 .drop-hint .bi{font-size:52px;opacity:.14}
 .drop-hint p{font-size:12px;letter-spacing:2px;text-transform:uppercase;font-family:var(--mono)}
 .drop-hint small{font-size:10px;opacity:.4}
-
-/* THE canvas — single element, no more clip-path CSS issues */
 #cv{display:none;max-width:100%;max-height:100%;border-radius:4px;cursor:ew-resize;touch-action:none}
 #cv.visible{display:block}
-
-/* Processing overlay */
 .proc{position:absolute;inset:0;background:rgba(6,10,16,.92);
   display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:20}
 .proc.on{display:flex}
@@ -142,37 +141,28 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
 @keyframes spin{to{transform:rotate(360deg)}}
 .proc-t{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:2px;text-transform:uppercase}
 .proc-s{font-family:var(--mono);font-size:9px;color:var(--text-dim);text-align:center;max-width:280px;line-height:1.4}
-
-/* Stats */
 .stats{background:var(--bg2);border-top:1px solid var(--border);padding:5px 16px;
   display:flex;gap:20px;align-items:center;font-family:var(--mono);font-size:10px;
   color:var(--text-dim);min-height:30px;flex-shrink:0}
 .stat em{color:var(--accent);font-style:normal}
-
-/* Toast */
 .toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
   background:var(--bg3);border:1px solid var(--accent-dim);color:var(--accent);
   padding:7px 16px;border-radius:5px;font-family:var(--mono);font-size:11px;
   letter-spacing:1px;z-index:100;display:none;white-space:nowrap}
-
 @media(max-width:700px){
   .app{grid-template-columns:1fr;grid-template-rows:auto 1fr;height:auto;overflow:auto}
-  .sidebar{height:auto;overflow:visible}
-  .sidebar-scroll{overflow:visible}
-  .main{height:60vh}
-  .hbadge{display:none}
-  body{overflow:auto}
+  .sidebar{height:auto;overflow:visible}.sidebar-scroll{overflow:visible}
+  .main{height:60vh}.hbadge{display:none}body{overflow:auto}
 }
 </style>
 </head>
 <body>
-
 <header>
   <div>
     <div class="logo">Pixel<b>Lab</b></div>
     <div class="tagline">Auto Smart Pipeline · Zero AI · Pure Math</div>
   </div>
-  <div class="hbadge">⬡ Image-Adaptive · 7 Algorithms</div>
+  <div class="hbadge">⬡ 4 Profiles · 7 Algorithms</div>
 </header>
 
 <div class="app">
@@ -191,6 +181,26 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
         <div class="img-badge" id="ibadge"></div>
       </div>
 
+      <!-- PHOTO TYPE -->
+      <div class="panel">
+        <div class="sec-label">Photo Type</div>
+        <div class="type-grid" id="typeGrid">
+          <button class="type-btn" data-type="portrait">
+            <span class="ti">👤</span><span class="tl">Portrait</span>
+          </button>
+          <button class="type-btn" data-type="landscape">
+            <span class="ti">🏔️</span><span class="tl">Landscape</span>
+          </button>
+          <button class="type-btn" data-type="document">
+            <span class="ti">📄</span><span class="tl">Document</span>
+          </button>
+          <button class="type-btn" data-type="lowlight">
+            <span class="ti">🌙</span><span class="tl">Low-light</span>
+          </button>
+        </div>
+        <div class="type-hint" id="typeHint">Select a photo type to tune the pipeline for your image.</div>
+      </div>
+
       <!-- ANALYSIS -->
       <div class="panel collapsible" id="aPanel">
         <div class="sec-label" id="aLabel">Image Analysis</div>
@@ -204,7 +214,7 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
         <div class="pipe-steps" id="pSteps"></div>
       </div>
 
-    </div><!-- /scroll -->
+    </div>
 
     <!-- STICKY FOOTER -->
     <div class="sidebar-footer">
@@ -222,9 +232,8 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
       <div class="drop-hint" id="dhint">
         <div class="bi">⬡</div>
         <p>Upload an image to begin</p>
-        <small>Analysis runs instantly · No AI involved</small>
+        <small>Select Photo Type first for best results</small>
       </div>
-      <!-- SINGLE CANVAS — split view drawn via Canvas 2D API -->
       <canvas id="cv"></canvas>
       <div class="proc" id="proc">
         <div class="spinner"></div>
@@ -234,20 +243,20 @@ header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 
     </div>
     <div class="stats">
       <div class="stat">SIZE <em id="ss">—</em></div>
+      <div class="stat">TYPE <em id="styp">—</em></div>
       <div class="stat">STEPS <em id="sp">—</em></div>
       <div class="stat">TIME <em id="st">—</em></div>
       <div class="stat" style="margin-left:auto;font-size:9px;opacity:.3">⇔ Drag to compare</div>
     </div>
   </main>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
 'use strict';
 
 // ════════════════════════════════════════════════════════
-//  FAST BOX BLUR  (O(n), 3-pass ≈ Gaussian)
+//  FAST BOX BLUR
 // ════════════════════════════════════════════════════════
 function bH(s,W,H,r){const d=new Float32Array(s.length),m=2*r+1;for(let y=0;y<H;y++){const b=y*W;let v=(r+1)*s[b];for(let x=1;x<=r;x++)v+=s[b+Math.min(W-1,x)];for(let x=0;x<W;x++){d[b+x]=v/m;v+=s[b+Math.min(W-1,x+r+1)];v-=s[b+Math.max(0,x-r)];}}return d;}
 function bV(s,W,H,r){const d=new Float32Array(s.length),m=2*r+1;for(let x=0;x<W;x++){let v=(r+1)*s[x];for(let y=1;y<=r;y++)v+=s[Math.min(H-1,y)*W+x];for(let y=0;y<H;y++){d[y*W+x]=v/m;v+=s[Math.min(H-1,y+r+1)*W+x];v-=s[Math.max(0,y-r)*W+x];}}return d;}
@@ -270,9 +279,7 @@ function doCLAHE(src,W,H,clip,tile){
     const add=Math.floor(ex/256);let rem=ex%256;
     for(let v=0;v<256;v++){hist[v]+=add;if(rem-->0)hist[v]++;}
     const lut=new Uint8ClampedArray(256);let cdf=0;
-    for(let v=0;v<256;v++){cdf+=hist[v];lut[v]=Math.round(cdf*255/px);}
-    cl[ty][tx]=lut;
-  }
+    for(let v=0;v<256;v++){cdf+=hist[v];lut[v]=Math.round(cdf*255/px);}cl[ty][tx]=lut;}
   for(let y=0;y<H;y++)for(let x=0;x<W;x++){
     const i=(y*W+x)*4,lum=Math.round(.299*src[i]+.587*src[i+1]+.114*src[i+2]);
     const fx=(x+.5)/tile-.5,fy=(y+.5)/tile-.5;
@@ -281,34 +288,26 @@ function doCLAHE(src,W,H,clip,tile){
     const wx=Math.max(0,Math.min(1,fx-tx0)),wy=Math.max(0,Math.min(1,fy-ty0));
     const v=cl[ty0][tx0][lum]*(1-wx)*(1-wy)+cl[ty0][tx1][lum]*wx*(1-wy)+cl[ty1][tx0][lum]*(1-wx)*wy+cl[ty1][tx1][lum]*wx*wy;
     const sc=lum>0?v/lum:1;
-    d[i]=Math.min(255,src[i]*sc|0);d[i+1]=Math.min(255,src[i+1]*sc|0);d[i+2]=Math.min(255,src[i+2]*sc|0);d[i+3]=src[i+3];
-  }
-  return d;
-}
+    d[i]=Math.min(255,src[i]*sc|0);d[i+1]=Math.min(255,src[i+1]*sc|0);d[i+2]=Math.min(255,src[i+2]*sc|0);d[i+3]=src[i+3];}
+  return d;}
+
 function doUnsharp(src,W,H,rad,amt,thr){
   const bl=blurRGB(src,W,H,rad),d=new Uint8ClampedArray(src.length);
   for(let i=0;i<src.length;i+=4){
     for(let c=0;c<3;c++){const df=src[i+c]-bl[i+c];d[i+c]=Math.max(0,Math.min(255,src[i+c]+(Math.abs(df)>thr?amt*df:0)));}
-    d[i+3]=src[i+3];
-  }
-  return d;
-}
+    d[i+3]=src[i+3];}return d;}
+
 function doBilateral(src,W,H,sS,rS){
   const d=new Uint8ClampedArray(src.length),r=Math.ceil(2*sS),ss=2*sS*sS,rs=2*rS*rS;
   for(let y=0;y<H;y++)for(let x=0;x<W;x++){
-    const ci=(y*W+x)*4,cR=src[ci],cG=src[ci+1],cB=src[ci+2];
-    let aR=0,aG=0,aB=0,aW=0;
+    const ci=(y*W+x)*4,cR=src[ci],cG=src[ci+1],cB=src[ci+2];let aR=0,aG=0,aB=0,aW=0;
     for(let dy=-r;dy<=r;dy++){const ny=Math.max(0,Math.min(H-1,y+dy));
       for(let dx=-r;dx<=r;dx++){const nx=Math.max(0,Math.min(W-1,x+dx));
         const ni=(ny*W+nx)*4,nR=src[ni],nG=src[ni+1],nB=src[ni+2];
         const w=Math.exp(-(dx*dx+dy*dy)/ss-((nR-cR)**2+(nG-cG)**2+(nB-cB)**2)/rs);
-        aR+=w*nR;aG+=w*nG;aB+=w*nB;aW+=w;
-      }
-    }
-    d[ci]=aR/aW|0;d[ci+1]=aG/aW|0;d[ci+2]=aB/aW|0;d[ci+3]=src[ci+3];
-  }
-  return d;
-}
+        aR+=w*nR;aG+=w*nG;aB+=w*nB;aW+=w;}}
+    d[ci]=aR/aW|0;d[ci+1]=aG/aW|0;d[ci+2]=aB/aW|0;d[ci+3]=src[ci+3];}return d;}
+
 function doRetinex(src,W,H,scales){
   const n=W*H,wt=1/scales.length,d=new Uint8ClampedArray(src.length);
   for(let c=0;c<3;c++){
@@ -316,10 +315,9 @@ function doRetinex(src,W,H,scales){
     const lc=ch.map(v=>Math.log(v)),out=new Float32Array(n);
     for(const sig of scales){const bl=blurCh(ch,W,H,sig);for(let i=0;i<n;i++)out[i]+=wt*(lc[i]-Math.log(Math.max(bl[i],1)));}
     let mn=Infinity,mx=-Infinity;for(let i=0;i<n;i++){if(out[i]<mn)mn=out[i];if(out[i]>mx)mx=out[i];}
-    const rng=mx-mn||1;for(let i=0;i<n;i++)d[i*4+c]=(out[i]-mn)/rng*255|0;
-  }
-  for(let i=0;i<n;i++)d[i*4+3]=src[i*4+3];return d;
-}
+    const rng=mx-mn||1;for(let i=0;i<n;i++)d[i*4+c]=(out[i]-mn)/rng*255|0;}
+  for(let i=0;i<n;i++)d[i*4+3]=src[i*4+3];return d;}
+
 function doNLM(src,W,H,h,sR,pR){
   const d=new Uint8ClampedArray(src.length),h2=h*h,ps=(2*pR+1)**2;
   for(let y=0;y<H;y++)for(let x=0;x<W;x++){
@@ -331,15 +329,177 @@ function doNLM(src,W,H,h,sR,pR){
         const ay=Math.max(0,Math.min(H-1,y+py)),ax=Math.max(0,Math.min(W-1,x+px));
         const by=Math.max(0,Math.min(H-1,ny+py)),bx=Math.max(0,Math.min(W-1,nx+px));
         const ai=(ay*W+ax)*4,bi=(by*W+bx)*4;
-        for(let cv=0;cv<3;cv++){const dv=src[ai+cv]-src[bi+cv];dist+=dv*dv;}
-      }
+        for(let cv=0;cv<3;cv++){const dv=src[ai+cv]-src[bi+cv];dist+=dv*dv;}}
       const w=Math.exp(-dist/(3*ps*65025*h2));
-      const ni=(ny*W+nx)*4;sRc+=w*src[ni];sGc+=w*src[ni+1];sBc+=w*src[ni+2];sW+=w;
+      const ni=(ny*W+nx)*4;sRc+=w*src[ni];sGc+=w*src[ni+1];sBc+=w*src[ni+2];sW+=w;}
+    d[ci]=sRc/sW|0;d[ci+1]=sGc/sW|0;d[ci+2]=sBc/sW|0;d[ci+3]=src[ci+3];}return d;}
+
+// ════════════════════════════════════════════════════════
+//  PHOTO TYPE PROFILES — each with tailored thresholds
+// ════════════════════════════════════════════════════════
+const PROFILES = {
+  portrait: {
+    label:'Portrait', icon:'👤',
+    hint:'Gentle on skin texture · skips noise filter (skin ≠ noise) · preserves natural tones · only sharpens hard edges like clothing',
+    build(m){
+      const steps=[];
+      // Much higher thresholds — portraits need delicate treatment
+      const isDark    = m.brightness < 70;
+      const isLowC    = m.contrast   < 28;   // only fire if really flat
+      const isVNoisy  = m.noise      > 12;   // skin texture is NOT noise
+      const isBlurry  = m.sharpness  < 8;    // only fire if really blurry
+      const isUneven  = m.lightingVar> 32;   // higher bar for Retinex
+
+      if(isUneven) steps.push({name:'Multi-Scale Retinex',
+        reason:'Uneven face lighting → normalize without over-processing',
+        pl:'σ = 15·60·120', params:{s1:15,s2:60,s3:120},
+        fn:(s,W,H,p)=>doRetinex(s,W,H,[p.s1,p.s2,p.s3])});
+
+      if(isDark||isLowC) steps.push({name:'CLAHE',
+        reason:isDark?'Dark portrait → gentle local contrast lift':'Flat tones → subtle equalization',
+        pl:'clip=1.5 tile=96px (large tiles = softer)',
+        params:{clip:1.5,tile:96},
+        fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)});
+
+      // Denoising only for genuinely noisy images (high threshold!)
+      if(isVNoisy) steps.push({name:'Bilateral Filter',
+        reason:'Very noisy image → gentle smoothing, preserving face edges',
+        pl:'spatial σ=5 range σ=60 (high range = keep skin detail)',
+        params:{sS:5,rS:60},
+        fn:(s,W,H,p)=>doBilateral(s,W,H,p.sS,p.rS)});
+
+      // Sharpening: high threshold so only clothing/hair edges sharpen, not skin
+      if(isBlurry) steps.push({name:'Unsharp Mask',
+        reason:'Blurry portrait → sharpen edges only (threshold=10 protects skin)',
+        pl:'radius=2 amount=0.7 threshold=10',
+        params:{rad:2,amt:0.7,thr:10},
+        fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});
+      else steps.push({name:'Unsharp Mask',
+        reason:'Subtle crispness — high threshold skips smooth skin entirely',
+        pl:'radius=1 amount=0.5 threshold=10',
+        params:{rad:1,amt:0.5,thr:10},
+        fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});
+
+      return steps;
     }
-    d[ci]=sRc/sW|0;d[ci+1]=sGc/sW|0;d[ci+2]=sBc/sW|0;d[ci+3]=src[ci+3];
+  },
+
+  landscape: {
+    label:'Landscape', icon:'🏔️',
+    hint:'Full contrast boost · texture sharpening · handles wide tonal range · Retinex for uneven sky',
+    build(m){
+      const steps=[];
+      const isDark   = m.brightness < 80;
+      const isLowC   = m.contrast   < 38;
+      const isNoisy  = m.noise      > 4.5;
+      const isVNoisy = m.noise      > 11;
+      const isBlurry = m.sharpness  < 10;
+      const isSoft   = m.sharpness  < 22 && !isBlurry;
+      const isUneven = m.lightingVar> 22;
+
+      if(isUneven) steps.push({name:'Multi-Scale Retinex',
+        reason:'Uneven lighting / harsh sky → normalize illumination first',
+        pl:'σ = 15·60·120',params:{s1:15,s2:60,s3:120},
+        fn:(s,W,H,p)=>doRetinex(s,W,H,[p.s1,p.s2,p.s3])});
+
+      if(isDark||isLowC){const clip=isDark?3.5:2.5;steps.push({name:'CLAHE',
+        reason:isDark?'Dark scene → strong contrast boost':'Flat scene → local histogram eq.',
+        pl:'clip='+clip+' tile=64px',params:{clip,tile:64},
+        fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)});}
+
+      if(isNoisy){if(isVNoisy)steps.push({name:'Non-Local Means',
+        reason:'High noise → patch denoising (before sharpening)',
+        pl:'h=0.08 search=5 patch=2',params:{h:.08,sR:5,pR:2},
+        fn:(s,W,H,p)=>doNLM(s,W,H,p.h,p.sR,p.pR)});
+      else steps.push({name:'Bilateral Filter',
+        reason:'Moderate noise → edge-preserving smoothing',
+        pl:'spatial σ=3 range σ=40',params:{sS:3,rS:40},
+        fn:(s,W,H,p)=>doBilateral(s,W,H,p.sS,p.rS)});}
+
+      if(isBlurry)steps.push({name:'Unsharp Mask',
+        reason:'Soft landscape → aggressive sharpening for texture detail',
+        pl:'radius=3 amount=1.8 threshold=3',params:{rad:3,amt:1.8,thr:3},
+        fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});
+      else steps.push({name:'Unsharp Mask',
+        reason:isSoft?'Slightly soft → texture sharpening finish':'Crispness pass for fine detail',
+        pl:'radius=1.5 amount=1.2 threshold=3',params:{rad:1.5,amt:1.2,thr:3},
+        fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});
+
+      if(!steps.length){steps.push({name:'CLAHE',reason:'Balanced scene → gentle polish',pl:'clip=1.5 tile=80px',params:{clip:1.5,tile:80},fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)});steps.push({name:'Unsharp Mask',reason:'Mild texture enhancement',pl:'radius=1 amount=0.9 threshold=4',params:{rad:1,amt:.9,thr:4},fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});}
+      return steps;
+    }
+  },
+
+  document: {
+    label:'Document', icon:'📄',
+    hint:'Maximum text readability · aggressive contrast · crisp edges · suppress paper noise',
+    build(m){
+      const steps=[];
+      const isNoisy=m.noise>3;
+
+      // Always boost contrast for documents — small tiles for text-level detail
+      steps.push({name:'CLAHE',
+        reason:'Document → maximize local contrast for text readability',
+        pl:'clip=4.0 tile=32px (small tiles for text detail)',
+        params:{clip:4.0,tile:32},
+        fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)});
+
+      // Light NLM to remove paper/scan noise without blurring text
+      if(isNoisy)steps.push({name:'Non-Local Means',
+        reason:'Scan/paper noise → patch denoising preserves text edges',
+        pl:'h=0.05 search=4 patch=1',params:{h:.05,sR:4,pR:1},
+        fn:(s,W,H,p)=>doNLM(s,W,H,p.h,p.sR,p.pR)});
+
+      // Aggressive sharpening — low threshold to catch every text stroke
+      steps.push({name:'Unsharp Mask',
+        reason:'Maximize text crispness — low threshold catches every stroke',
+        pl:'radius=1 amount=2.5 threshold=2',params:{rad:1,amt:2.5,thr:2},
+        fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});
+
+      return steps;
+    }
+  },
+
+  lowlight: {
+    label:'Low-light', icon:'🌙',
+    hint:'Always applies Retinex illumination lift · aggressive CLAHE · noise removal · protects shadow detail',
+    build(m){
+      const steps=[];
+      const isVNoisy=m.noise>6;
+      const isBlurry=m.sharpness<18;
+
+      // Retinex always — the main tool for low-light illumination recovery
+      steps.push({name:'Multi-Scale Retinex',
+        reason:'Low-light → log-domain illumination recovery across 3 scales',
+        pl:'σ = 15·60·120',params:{s1:15,s2:60,s3:120},
+        fn:(s,W,H,p)=>doRetinex(s,W,H,[p.s1,p.s2,p.s3])});
+
+      // CLAHE always after Retinex for local contrast
+      steps.push({name:'CLAHE',
+        reason:'Post-Retinex → local contrast restoration in lifted shadows',
+        pl:'clip=3.5 tile=64px',params:{clip:3.5,tile:64},
+        fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)});
+
+      // Denoise — low-light almost always needs this
+      if(isVNoisy)steps.push({name:'Non-Local Means',
+        reason:'Low-light noise → patch denoising before sharpening',
+        pl:'h=0.09 search=5 patch=2',params:{h:.09,sR:5,pR:2},
+        fn:(s,W,H,p)=>doNLM(s,W,H,p.h,p.sR,p.pR)});
+      else steps.push({name:'Bilateral Filter',
+        reason:'Amplified noise from lift → edge-preserving smoothing',
+        pl:'spatial σ=4 range σ=50',params:{sS:4,rS:50},
+        fn:(s,W,H,p)=>doBilateral(s,W,H,p.sS,p.rS)});
+
+      // Final sharpening
+      if(isBlurry)steps.push({name:'Unsharp Mask',
+        reason:'Recover detail lost to noise or motion in low-light',
+        pl:'radius=2 amount=1.0 threshold=5',params:{rad:2,amt:1.0,thr:5},
+        fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});
+
+      return steps;
+    }
   }
-  return d;
-}
+};
 
 // ════════════════════════════════════════════════════════
 //  IMAGE ANALYSIS
@@ -363,139 +523,103 @@ function analyzeImage(data,W,H){
 }
 
 // ════════════════════════════════════════════════════════
-//  PIPELINE BUILDER
-// ════════════════════════════════════════════════════════
-function buildPipeline(m){
-  const steps=[];
-  const isDark=m.brightness<80,isLowC=m.contrast<38;
-  const isNoisy=m.noise>4.5,isVNoisy=m.noise>11;
-  const isBlurry=m.sharpness<10,isSoft=m.sharpness<22&&!isBlurry;
-  const isUneven=m.lightingVar>22;
-  if(isUneven)steps.push({name:'Multi-Scale Retinex',reason:'Uneven lighting → illumination normalization first',pl:'σ = 15·60·120',params:{s1:15,s2:60,s3:120},fn:(s,W,H,p)=>doRetinex(s,W,H,[p.s1,p.s2,p.s3])});
-  if(isDark||isLowC){const clip=isDark?3.5:2.0;steps.push({name:'CLAHE',reason:isDark?'Dark image → adaptive contrast boost':'Flat contrast → local histogram eq.',pl:'clip='+clip+' tile=64px',params:{clip,tile:64},fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)});}
-  if(isNoisy){if(isVNoisy)steps.push({name:'Non-Local Means',reason:'High noise → patch denoising (before sharpening)',pl:'h=0.08 search=5 patch=2',params:{h:.08,sR:5,pR:2},fn:(s,W,H,p)=>doNLM(s,W,H,p.h,p.sR,p.pR)});
-  else steps.push({name:'Bilateral Filter',reason:'Moderate noise → edge-preserving smoothing',pl:'spatial σ=3 range σ=40',params:{sS:3,rS:40},fn:(s,W,H,p)=>doBilateral(s,W,H,p.sS,p.rS)});}
-  if(isBlurry)steps.push({name:'Unsharp Mask',reason:'Blurry image → aggressive sharpening (last step)',pl:'radius=3 amount=1.8 thr=3',params:{rad:3,amt:1.8,thr:3},fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});
-  else if(isSoft||(!isNoisy&&steps.length>0))steps.push({name:'Unsharp Mask',reason:isSoft?'Slightly soft → mild sharpening finish':'Final crispness pass',pl:'radius=1.5 amount=1.0 thr=4',params:{rad:1.5,amt:1.0,thr:4},fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});
-  if(!steps.length){steps.push({name:'CLAHE',reason:'Well-balanced → gentle contrast polish',pl:'clip=1.5 tile=80px',params:{clip:1.5,tile:80},fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)});steps.push({name:'Unsharp Mask',reason:'Mild sharpness enhancement',pl:'radius=1 amount=0.7 thr=5',params:{rad:1,amt:.7,thr:5},fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)});}
-  return steps;
-}
-
-// ════════════════════════════════════════════════════════
-//  SPLIT CANVAS — single canvas, Canvas 2D clipping
-//  Pointer capture = perfectly stable drag on all devices
+//  CANVAS SPLIT VIEW
 // ════════════════════════════════════════════════════════
 const cv=document.getElementById('cv');
 const ctx=cv.getContext('2d');
-const offBefore=document.createElement('canvas'); // original
-const offAfter =document.createElement('canvas'); // enhanced
-let splitPos=.5, hasBefore=false, hasAfter=false;
+const offB=document.createElement('canvas');
+const offA=document.createElement('canvas');
+let splitPos=.5,hasBefore=false,hasAfter=false;
 
 function drawSplit(){
-  if(!hasBefore) return;
+  if(!hasBefore)return;
   const W=cv.width,H=cv.height,sx=Math.round(splitPos*W);
-
-  // Left: original
-  ctx.drawImage(offBefore,0,0);
-
-  // Right: enhanced (clipped)
-  if(hasAfter){
-    ctx.save();
-    ctx.beginPath();ctx.rect(sx,0,W-sx,H);ctx.clip();
-    ctx.drawImage(offAfter,0,0);
-    ctx.restore();
-  }
-
-  // Divider line
-  ctx.save();
-  ctx.shadowColor='rgba(0,212,255,.8)';ctx.shadowBlur=10;
+  ctx.drawImage(offB,0,0);
+  if(hasAfter){ctx.save();ctx.beginPath();ctx.rect(sx,0,W-sx,H);ctx.clip();ctx.drawImage(offA,0,0);ctx.restore();}
+  // Divider
+  ctx.save();ctx.shadowColor='rgba(0,212,255,.8)';ctx.shadowBlur=10;
   ctx.strokeStyle='#00d4ff';ctx.lineWidth=2;
-  ctx.beginPath();ctx.moveTo(sx,0);ctx.lineTo(sx,H);ctx.stroke();
-  ctx.restore();
-
-  // Handle circle
+  ctx.beginPath();ctx.moveTo(sx,0);ctx.lineTo(sx,H);ctx.stroke();ctx.restore();
+  // Handle
   const hy=H/2;
-  ctx.save();
-  ctx.shadowColor='rgba(0,212,255,.6)';ctx.shadowBlur=14;
-  ctx.fillStyle='#00d4ff';
-  ctx.beginPath();ctx.arc(sx,hy,14,0,Math.PI*2);ctx.fill();
-  ctx.restore();
-  ctx.fillStyle='#060a10';ctx.font='bold 11px monospace';
-  ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText('⇔',sx,hy);
-
-  // Labels (drawn on canvas, not DOM — no positioning issues)
-  function label(txt,lx,color,align){
-    const pad=8,fh=13;
+  ctx.save();ctx.shadowColor='rgba(0,212,255,.6)';ctx.shadowBlur=14;
+  ctx.fillStyle='#00d4ff';ctx.beginPath();ctx.arc(sx,hy,14,0,Math.PI*2);ctx.fill();ctx.restore();
+  ctx.fillStyle='#060a10';ctx.font='bold 11px monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('⇔',sx,hy);
+  // Labels
+  function lbl(txt,x,color,align){
     ctx.font='bold 9px monospace';ctx.textAlign=align;
-    const tw=ctx.measureText(txt).width;
-    const bx=align==='left'?lx-pad:lx-tw-pad;
-    ctx.fillStyle='rgba(6,10,16,.8)';
-    ctx.fillRect(bx,8,tw+pad*2,fh+6);
-    ctx.fillStyle=color;ctx.textBaseline='middle';
-    ctx.fillText(txt,align==='left'?lx:lx-pad,8+(fh+6)/2);
+    const tw=ctx.measureText(txt).width,pad=7;
+    const bx=align==='left'?x:x-tw-pad*2;
+    ctx.fillStyle='rgba(6,10,16,.82)';ctx.fillRect(bx,8,tw+pad*2,18);
+    ctx.fillStyle=color;ctx.textBaseline='middle';ctx.fillText(txt,align==='left'?x+pad:x-pad,17);
   }
-  label('◀ ORIGINAL',sx-10,'#5a7a9a','right');
-  if(hasAfter) label('ENHANCED ▶',sx+10,'#00ff88','left');
+  lbl('◀ ORIGINAL',sx-4,'#5a7a9a','right');
+  if(hasAfter)lbl('ENHANCED ▶',sx+4,'#00ff88','left');
 }
 
-// ── Pointer events (stable on mouse + touch + pen) ──
 let pDown=false;
-function spFromEvent(e){
-  const r=cv.getBoundingClientRect();
-  return Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));
-}
-cv.addEventListener('pointerdown',e=>{
-  pDown=true;
-  cv.setPointerCapture(e.pointerId); // locks drag to this element — fixes jitter
-  splitPos=spFromEvent(e);
-  drawSplit();
-  e.preventDefault();
-});
-cv.addEventListener('pointermove',e=>{
-  if(!pDown)return;
-  splitPos=spFromEvent(e);
-  drawSplit();
-  e.preventDefault();
-});
-cv.addEventListener('pointerup',e=>{
-  pDown=false;
-  cv.releasePointerCapture(e.pointerId);
-});
-cv.addEventListener('pointercancel',e=>{
-  pDown=false;
-});
+function spFE(e){const r=cv.getBoundingClientRect();return Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));}
+cv.addEventListener('pointerdown',e=>{pDown=true;cv.setPointerCapture(e.pointerId);splitPos=spFE(e);drawSplit();e.preventDefault();});
+cv.addEventListener('pointermove',e=>{if(!pDown)return;splitPos=spFE(e);drawSplit();e.preventDefault();});
+cv.addEventListener('pointerup',e=>{pDown=false;cv.releasePointerCapture(e.pointerId);});
+cv.addEventListener('pointercancel',()=>pDown=false);
 
 // ════════════════════════════════════════════════════════
 //  STATE
 // ════════════════════════════════════════════════════════
 let origData=null,enhData=null,imgW=0,imgH=0,pipeline=[];
+let currentType=null,currentMetrics=null;
 
 // ════════════════════════════════════════════════════════
-//  DOM REFS
+//  DOM
 // ════════════════════════════════════════════════════════
 const $=id=>document.getElementById(id);
 const uzone=$('uzone'),fin=$('fin');
 const aPanel=$('aPanel'),pPanel=$('pPanel'),mgrid=$('mgrid');
-const pSteps=$('pSteps'),pSum=$('pSum');
-const aLabel=$('aLabel'),pLabel=$('pLabel');
+const pSteps=$('pSteps'),pSum=$('pSum'),pLabel=$('pLabel'),aLabel=$('aLabel');
 const runBtn=$('runBtn'),rstBtn=$('rstBtn'),newBtn=$('newBtn'),dlBtn=$('dlBtn');
 const dhint=$('dhint'),proc=$('proc'),pt=$('pt'),ps=$('ps');
-const ibadge=$('ibadge'),ssStat=$('ss'),spStat=$('sp'),stStat=$('st');
-const toastEl=$('toast');
+const ibadge=$('ibadge'),ssStat=$('ss'),spStat=$('sp'),stStat=$('st'),stypStat=$('styp');
+const toastEl=$('toast'),typeHint=$('typeHint');
+
+// ════════════════════════════════════════════════════════
+//  PHOTO TYPE SELECTION
+// ════════════════════════════════════════════════════════
+document.querySelectorAll('.type-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const type=btn.dataset.type;
+    if(type===currentType) return;
+    document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentType=type;
+    typeHint.textContent=PROFILES[type].hint;
+    stypStat.textContent=PROFILES[type].label;
+    // If image already loaded, rebuild pipeline for new type
+    if(currentMetrics){
+      pipeline=PROFILES[type].build(currentMetrics);
+      renderPipeline(pipeline);
+      // Reset run state
+      enhData=null;hasAfter=false;
+      offA.getContext('2d').putImageData(origData,0,0);
+      drawSplit();
+      dlBtn.disabled=true;stStat.textContent='—';
+      showToast('Pipeline updated for '+PROFILES[type].label+' ✓');
+    }
+  });
+});
 
 // ════════════════════════════════════════════════════════
 //  RENDER ANALYSIS
 // ════════════════════════════════════════════════════════
 function renderAnalysis(m){
   mgrid.innerHTML='';
-  function card(name,val,min,max,tcls,ttxt,full=false){
+  function card(name,val,min,max,tc,tt,full=false){
     const pct=Math.round(Math.max(0,Math.min(100,(val-min)/(max-min)*100)));
-    const col={tw:'#ff6030',to:'#00d4ff',tg:'#00ff88'}[tcls]||'#00d4ff';
+    const col={tw:'#ff6030',to:'#00d4ff',tg:'#00ff88'}[tc]||'#00d4ff';
     const el=document.createElement('div');el.className='mc'+(full?' full':'');
     el.innerHTML=`<div class="mn">${name}</div>
       <div class="mb"><div class="mf" style="width:${pct}%;background:${col}"></div></div>
-      <div class="mr"><span class="mv">${Math.round(val)}</span><span class="mtag ${tcls}">${ttxt}</span></div>`;
+      <div class="mr"><span class="mv">${Math.round(val)}</span><span class="mtag ${tc}">${tt}</span></div>`;
     mgrid.appendChild(el);
   }
   card('Brightness',m.brightness,0,255,m.brightness<80?'tw':m.brightness>185?'tw':'tg',m.brightness<80?'DARK':m.brightness>185?'BRIGHT':'NORMAL');
@@ -507,26 +631,19 @@ function renderAnalysis(m){
 }
 
 // ════════════════════════════════════════════════════════
-//  RENDER PIPELINE STEPS (initial state)
+//  RENDER PIPELINE
 // ════════════════════════════════════════════════════════
 function renderPipeline(steps){
   pSteps.innerHTML='';
-  pLabel.textContent='Auto Pipeline';
-  pLabel.className='sec-label';
+  pLabel.textContent='Auto Pipeline';pLabel.className='sec-label';
   pSum.textContent=steps.length+' step'+(steps.length>1?'s':'')+': '+steps.map(s=>s.name).join(' → ');
   pSum.className='pipe-summary';
   spStat.textContent=steps.length;
   steps.forEach((s,i)=>{
-    const el=document.createElement('div');
-    el.className='sc';el.id='sc'+i;
-    el.innerHTML=`
-      <div class="sc-num" id="sn${i}">${i+1}</div>
-      <div class="sc-spin"></div>
+    const el=document.createElement('div');el.className='sc';el.id='sc'+i;
+    el.innerHTML=`<div class="sc-num" id="sn${i}">${i+1}</div><div class="sc-spin"></div>
       <div class="sc-body">
-        <div class="sc-head">
-          <span class="sc-name">${s.name}</span>
-          <span class="sc-time" id="st${i}"></span>
-        </div>
+        <div class="sc-head"><span class="sc-name">${s.name}</span><span class="sc-time" id="stm${i}"></span></div>
         <div class="sc-reason">${s.reason}</div>
         <div class="sc-params">${s.pl}</div>
         <div class="sc-result" id="sr${i}"></div>
@@ -550,26 +667,33 @@ function loadImage(file){
       const MAX=900;let w=img.width,h=img.height;
       if(Math.max(w,h)>MAX){const sc=MAX/Math.max(w,h);w=Math.round(w*sc);h=Math.round(h*sc);}
       imgW=w;imgH=h;
-      // Setup offscreen canvases
-      [offBefore,offAfter].forEach(o=>{o.width=w;o.height=h;});
+      [offB,offA].forEach(o=>{o.width=w;o.height=h;});
       cv.width=w;cv.height=h;
       const tmp=document.createElement('canvas');tmp.width=w;tmp.height=h;
       tmp.getContext('2d').drawImage(img,0,0,w,h);
       origData=tmp.getContext('2d').getImageData(0,0,w,h);
       enhData=null;
-      offBefore.getContext('2d').putImageData(origData,0,0);
-      offAfter.getContext('2d').putImageData(origData,0,0); // show original on both sides initially
+      offB.getContext('2d').putImageData(origData,0,0);
+      offA.getContext('2d').putImageData(origData,0,0);
       hasBefore=true;hasAfter=false;
       dhint.style.display='none';cv.classList.add('visible');
       drawSplit();
       rstBtn.disabled=false;newBtn.disabled=false;dlBtn.disabled=true;
       ibadge.textContent=img.width+'×'+img.height+' → '+w+'×'+h+' px';
       ssStat.textContent=w+'×'+h;
-      const metrics=analyzeImage(origData.data,w,h);
-      renderAnalysis(metrics);
-      pipeline=buildPipeline(metrics);
+      currentMetrics=analyzeImage(origData.data,w,h);
+      renderAnalysis(currentMetrics);
+      // Use selected type or default to portrait as first suggestion
+      const type=currentType||'portrait';
+      if(!currentType){
+        currentType='portrait';
+        document.querySelector('[data-type="portrait"]').classList.add('active');
+        typeHint.textContent=PROFILES.portrait.hint;
+        stypStat.textContent='Portrait';
+      }
+      pipeline=PROFILES[type].build(currentMetrics);
       renderPipeline(pipeline);
-      showToast('Analysis done — '+pipeline.length+' steps selected ✓');
+      showToast('Analysis done — '+pipeline.length+' steps for '+PROFILES[type].label+' ✓');
     };
     img.src=e.target.result;
   };
@@ -577,57 +701,39 @@ function loadImage(file){
 }
 
 // ════════════════════════════════════════════════════════
-//  RUN PIPELINE — steps stay green with timing after done
+//  RUN PIPELINE
 // ════════════════════════════════════════════════════════
 runBtn.addEventListener('click',async()=>{
   if(!origData||!pipeline.length)return;
   runBtn.disabled=true;dlBtn.disabled=true;
-  hasAfter=false;
-  proc.classList.add('on');
+  hasAfter=false;proc.classList.add('on');
   let cur=new Uint8ClampedArray(origData.data);
   const t0=performance.now();
-  let totalMs=0;
-
   for(let i=0;i<pipeline.length;i++){
     const s=pipeline[i];
-    // Mark active
     $('sc'+i).className='sc active';
     pt.textContent='Step '+(i+1)+'/'+pipeline.length+': '+s.name;
     ps.textContent=s.reason;
     await new Promise(r=>setTimeout(r,60));
-
     const ts=performance.now();
     cur=s.fn(cur,imgW,imgH,s.params);
     const ms=Math.round(performance.now()-ts);
-    totalMs+=ms;
-
-    // Mark done — permanently green with time shown
     $('sc'+i).className='sc done';
     $('sn'+i).textContent='✓';
-    $('st'+i).textContent=ms+'ms';
-    // Show what it contributed
+    $('stm'+i).textContent=ms+'ms';
     $('sr'+i).textContent='→ Applied in '+ms+'ms';
   }
-
-  const totalRound=Math.round(performance.now()-t0);
+  const total=Math.round(performance.now()-t0);
   enhData=new ImageData(cur,imgW,imgH);
-  offAfter.getContext('2d').putImageData(enhData,0,0);
-  hasAfter=true;
-  splitPos=.5; // Reset divider to center
-  drawSplit();
-
-  // Update pipeline header to "Results" — stays permanently
-  pLabel.textContent='✓ Pipeline Results';
-  pLabel.className='sec-label done';
-  pSum.textContent='✓ '+pipeline.length+' steps complete · total '+totalRound+'ms · drag divider to compare';
+  offA.getContext('2d').putImageData(enhData,0,0);
+  hasAfter=true;splitPos=.5;drawSplit();
+  pLabel.textContent='✓ Pipeline Results';pLabel.className='sec-label done';
+  pSum.textContent='✓ '+pipeline.length+' steps · '+total+'ms · drag divider to compare';
   pSum.className='pipe-summary done';
-
-  stStat.textContent=totalRound+'ms';
-  proc.classList.remove('on');
-  runBtn.disabled=false;
-  dlBtn.disabled=false;
-  showToast('Done in '+totalRound+'ms — enhanced image ready ✓');
+  stStat.textContent=total+'ms';
+  proc.classList.remove('on');runBtn.disabled=false;dlBtn.disabled=false;
   setTimeout(()=>pSteps.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+  showToast('Done in '+total+'ms ✓');
 });
 
 // ════════════════════════════════════════════════════════
@@ -636,37 +742,27 @@ runBtn.addEventListener('click',async()=>{
 rstBtn.addEventListener('click',()=>{
   if(!origData)return;
   enhData=null;hasAfter=false;
-  offAfter.getContext('2d').putImageData(origData,0,0);
-  drawSplit();
+  offA.getContext('2d').putImageData(origData,0,0);drawSplit();
   dlBtn.disabled=true;stStat.textContent='—';
-  // Reset step cards back to waiting state
   pLabel.textContent='Auto Pipeline';pLabel.className='sec-label';
   pSum.textContent=pipeline.length+' step'+(pipeline.length>1?'s':'')+': '+pipeline.map(s=>s.name).join(' → ');
   pSum.className='pipe-summary';
-  pipeline.forEach((_,i)=>{
-    $('sc'+i).className='sc';
-    $('sn'+i).textContent=i+1;
-    $('st'+i).textContent='';
-    $('sr'+i).textContent='';
-  });
+  pipeline.forEach((_,i)=>{$('sc'+i).className='sc';$('sn'+i).textContent=i+1;$('stm'+i).textContent='';$('sr'+i).textContent='';});
   showToast('Reset to original');
 });
 
-// ════════════════════════════════════════════════════════
-//  DOWNLOAD
-// ════════════════════════════════════════════════════════
 dlBtn.addEventListener('click',()=>{
   if(!enhData)return;
-  const tmp=document.createElement('canvas');tmp.width=imgW;tmp.height=imgH;
-  tmp.getContext('2d').putImageData(enhData,0,0);
-  const a=document.createElement('a');a.href=tmp.toDataURL('image/png');
-  a.download='pixellab_enhanced_'+Date.now()+'.png';a.click();
-  showToast('Enhanced image saved as PNG ✓');
+  const c=document.createElement('canvas');c.width=imgW;c.height=imgH;
+  c.getContext('2d').putImageData(enhData,0,0);
+  const a=document.createElement('a');a.href=c.toDataURL('image/png');
+  a.download='pixellab_'+currentType+'_'+Date.now()+'.png';a.click();
+  showToast('Saved as PNG ✓');
 });
 newBtn.addEventListener('click',()=>fin.click());
 
 // ════════════════════════════════════════════════════════
-//  UPLOAD EVENTS
+//  UPLOAD
 // ════════════════════════════════════════════════════════
 uzone.addEventListener('dragover',e=>{e.preventDefault();uzone.classList.add('over');});
 uzone.addEventListener('dragleave',()=>uzone.classList.remove('over'));
@@ -676,18 +772,10 @@ $('carea').addEventListener('dragover',e=>e.preventDefault());
 $('carea').addEventListener('drop',e=>{e.preventDefault();loadImage(e.dataTransfer.files[0]);});
 
 // ════════════════════════════════════════════════════════
-//  TOAST
+//  TOAST & SW
 // ════════════════════════════════════════════════════════
-let tt;
-function showToast(m){toastEl.textContent=m;toastEl.style.display='block';clearTimeout(tt);tt=setTimeout(()=>toastEl.style.display='none',2600);}
-
-// ════════════════════════════════════════════════════════
-//  SERVICE WORKER
-// ════════════════════════════════════════════════════════
-if('serviceWorker' in navigator){
-  const sw=`const C='plv4';self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;
-  navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
-}
+let tt;function showToast(m){toastEl.textContent=m;toastEl.style.display='block';clearTimeout(tt);tt=setTimeout(()=>toastEl.style.display='none',2600);}
+if('serviceWorker' in navigator){const sw=`const C='plv5';self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});}
 </script>
 </body>
 </html>
