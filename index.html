@@ -5,98 +5,116 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="theme-color" content="#060a10">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="PixelLab">
-<title>PixelLab — Classical Image Enhancement</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<title>PixelLab — Auto Smart Pipeline</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Exo+2:wght@300;500;700;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#060a10;--bg2:#0c1420;--bg3:#121d2c;
+  --bg:#060a10;--bg2:#0c1420;--bg3:#121d2c;--bg4:#0a1218;
   --border:#1a2e47;--accent:#00d4ff;--accent-dim:#0090b0;
   --accent2:#ff6030;--text:#90aac5;--text-bright:#d8eaf8;
-  --text-dim:#3d5a78;--success:#00ff88;
+  --text-dim:#3d5a78;--ok:#00ff88;--warn:#ffd44d;
   --mono:'Space Mono',monospace;--ui:'Exo 2',sans-serif;
 }
 body{background:var(--bg);color:var(--text);font-family:var(--ui);min-height:100vh;overflow-x:hidden}
 
 /* ── HEADER ── */
 header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 20px;
-  display:flex;align-items:center;gap:20px;position:sticky;top:0;z-index:100}
-.logo{font-family:var(--mono);font-size:17px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;line-height:1}
+  display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100}
+.logo{font-family:var(--mono);font-size:16px;color:var(--accent);letter-spacing:3px;text-transform:uppercase}
 .logo b{color:var(--accent2)}
-.tagline{font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-top:2px}
-.header-badge{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--text-dim);
-  border:1px solid var(--border);padding:3px 8px;border-radius:3px;letter-spacing:1px;white-space:nowrap}
+.tagline{font-size:9px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-top:2px}
+.badge{margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--text-dim);
+  border:1px solid var(--border);padding:3px 8px;border-radius:3px;letter-spacing:1px}
 
 /* ── LAYOUT ── */
-.app{display:grid;grid-template-columns:270px 1fr;min-height:calc(100vh - 53px)}
+.app{display:grid;grid-template-columns:290px 1fr;min-height:calc(100vh - 49px)}
 
 /* ── SIDEBAR ── */
-.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:16px;
-  display:flex;flex-direction:column;gap:16px;overflow-y:auto;max-height:calc(100vh - 53px)}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;gap:0;overflow-y:auto;max-height:calc(100vh - 49px)}
+.panel{padding:14px 16px;border-bottom:1px solid var(--border)}
+.panel:last-child{border-bottom:none}
 .section-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);
-  font-family:var(--mono);display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  font-family:var(--mono);display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
 
 /* Upload */
-.upload-zone{border:2px dashed var(--border);border-radius:6px;padding:18px 12px;text-align:center;
-  cursor:pointer;transition:all .2s;position:relative;background:transparent}
+.upload-zone{border:2px dashed var(--border);border-radius:6px;padding:16px 12px;
+  text-align:center;cursor:pointer;transition:all .2s;position:relative;background:transparent}
 .upload-zone:hover,.upload-zone.drag-over{border-color:var(--accent);background:rgba(0,212,255,.04)}
 .upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.upload-icon{font-size:28px;display:block;margin-bottom:6px;opacity:.6}
-.upload-zone strong{color:var(--accent);font-size:12px;display:block;margin-bottom:3px}
+.upload-icon{font-size:26px;display:block;margin-bottom:6px;opacity:.5}
+.upload-zone strong{color:var(--accent);font-size:11px;display:block;margin-bottom:3px}
 .upload-zone p{font-size:10px;color:var(--text-dim);line-height:1.5}
-.img-badge{font-family:var(--mono);font-size:9px;color:var(--text-dim);text-align:center;margin-top:6px;min-height:14px}
+.img-badge{font-family:var(--mono);font-size:9px;color:var(--text-dim);text-align:center;margin-top:6px;min-height:13px}
 
-/* Algo list */
-.algo-list{display:flex;flex-direction:column;gap:3px}
-.algo-btn{background:transparent;border:1px solid transparent;border-radius:5px;
-  padding:8px 10px;cursor:pointer;text-align:left;color:var(--text);font-family:var(--ui);
-  transition:all .15s;display:flex;flex-direction:column;gap:2px;width:100%}
-.algo-btn:hover{background:var(--bg3);border-color:var(--border);color:var(--text-bright)}
-.algo-btn.active{background:rgba(0,212,255,.07);border-color:var(--accent-dim);color:var(--accent)}
-.algo-name{font-weight:700;font-size:12px;font-family:var(--mono);display:flex;align-items:center;gap:6px}
-.algo-desc{font-size:10px;color:var(--text-dim);line-height:1.3}
-.algo-btn.active .algo-desc{color:var(--accent-dim)}
-.slow-tag{font-size:8px;background:rgba(255,96,48,.12);border:1px solid rgba(255,96,48,.3);
-  color:var(--accent2);padding:1px 4px;border-radius:2px;font-family:var(--mono)}
+/* Analysis metrics */
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.metric-card{background:var(--bg4);border:1px solid var(--border);border-radius:5px;padding:8px}
+.metric-card.full{grid-column:1/-1}
+.metric-name{font-family:var(--mono);font-size:8px;color:var(--text-dim);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:5px}
+.metric-bar-wrap{height:2px;background:var(--border);border-radius:1px;margin-bottom:5px;overflow:hidden}
+.metric-bar-fill{height:100%;border-radius:1px;transition:width .6s ease;width:0}
+.metric-row{display:flex;justify-content:space-between;align-items:center}
+.metric-num{font-family:var(--mono);font-size:10px;color:var(--text-bright)}
+.mtag{font-size:8px;padding:1px 5px;border-radius:2px;font-family:var(--mono);letter-spacing:.5px;white-space:nowrap}
+.mtag-warn{background:rgba(255,96,48,.12);color:var(--accent2);border:1px solid rgba(255,96,48,.25)}
+.mtag-ok  {background:rgba(0,212,255,.08);color:var(--accent);border:1px solid rgba(0,212,255,.2)}
+.mtag-good{background:rgba(0,255,136,.08);color:var(--ok);border:1px solid rgba(0,255,136,.2)}
 
-/* Params */
-.params-panel{display:flex;flex-direction:column;gap:12px}
-.param-item{display:flex;flex-direction:column;gap:5px}
-.param-label{display:flex;justify-content:space-between;align-items:center}
-.param-name{font-size:10px;color:var(--text);font-family:var(--mono);text-transform:uppercase;letter-spacing:1px}
-.param-val{font-size:11px;color:var(--accent);font-family:var(--mono);min-width:44px;text-align:right}
-input[type=range]{-webkit-appearance:none;width:100%;height:2px;background:var(--bg3);
-  border-radius:2px;outline:none;cursor:pointer}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;
-  background:var(--accent);border-radius:50%;cursor:pointer;box-shadow:0 0 8px rgba(0,212,255,.5)}
-input[type=range]::-moz-range-thumb{width:13px;height:13px;background:var(--accent);
-  border-radius:50%;cursor:pointer;border:none}
+/* Pipeline steps */
+.pipeline-steps{display:flex;flex-direction:column;gap:6px}
+.step-card{display:flex;align-items:flex-start;gap:8px;background:var(--bg4);
+  border:1px solid var(--border);border-radius:5px;padding:9px 10px;transition:all .35s}
+.step-card.s-active{border-color:var(--accent);background:rgba(0,212,255,.06);
+  box-shadow:0 0 12px rgba(0,212,255,.08)}
+.step-card.s-done{border-color:var(--ok);background:rgba(0,255,136,.04)}
+.step-card.s-skip{opacity:.4}
+.step-num{width:18px;height:18px;border-radius:50%;background:var(--border);
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+  font-size:8px;color:var(--text-dim);flex-shrink:0;margin-top:1px;transition:all .35s}
+.step-card.s-active .step-num{background:var(--accent);color:var(--bg)}
+.step-card.s-done .step-num{background:var(--ok);color:var(--bg);font-size:10px}
+.step-info{flex:1;min-width:0}
+.step-name{font-family:var(--mono);font-size:11px;color:var(--text-bright);font-weight:700}
+.step-card.s-active .step-name{color:var(--accent)}
+.step-card.s-done .step-name{color:var(--ok)}
+.step-reason{font-size:9px;color:var(--text-dim);line-height:1.4;margin-top:2px}
+.step-params{font-family:var(--mono);font-size:8px;color:var(--text-dim);margin-top:3px;
+  opacity:.7;letter-spacing:.5px}
+.step-spinner{width:14px;height:14px;border:1.5px solid var(--border);border-top-color:var(--accent);
+  border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;margin-top:2px;display:none}
+.step-card.s-active .step-spinner{display:block}
+.step-card.s-active .step-num{display:none}
+
+/* Pipeline summary */
+.pipeline-summary{background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.15);
+  border-radius:5px;padding:8px 10px;margin-bottom:10px;font-size:10px;color:var(--accent-dim);
+  font-family:var(--mono);letter-spacing:.5px;line-height:1.5}
 
 /* Buttons */
-.btn{padding:9px 14px;border-radius:5px;border:none;cursor:pointer;font-family:var(--mono);
+.btn{padding:10px 14px;border-radius:5px;border:none;cursor:pointer;font-family:var(--mono);
   font-size:11px;letter-spacing:1px;text-transform:uppercase;transition:all .15s;width:100%}
-.btn-primary{background:var(--accent);color:var(--bg);font-weight:700}
-.btn-primary:hover{background:#33ddff;box-shadow:0 0 14px rgba(0,212,255,.4)}
-.btn-primary:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
-.btn-secondary{background:transparent;color:var(--text);border:1px solid var(--border)}
-.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
-.btn-secondary:disabled{opacity:.3;cursor:not-allowed}
-.action-row{display:flex;gap:6px}.action-row .btn{flex:1}
-.btn-actions{display:flex;flex-direction:column;gap:6px;margin-top:auto;padding-top:6px}
+.btn-run{background:var(--accent);color:var(--bg);font-weight:700;font-size:12px}
+.btn-run:hover{background:#33ddff;box-shadow:0 0 16px rgba(0,212,255,.4)}
+.btn-run:disabled{opacity:.3;cursor:not-allowed;box-shadow:none}
+.btn-sec{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-sec:hover{border-color:var(--accent);color:var(--accent)}
+.btn-sec:disabled{opacity:.25;cursor:not-allowed}
+.btn-row{display:flex;gap:6px}.btn-row .btn{flex:1}
 
-/* ── MAIN CANVAS AREA ── */
+/* ── MAIN ── */
 .main{display:flex;flex-direction:column;overflow:hidden}
 .canvas-area{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;
   background:radial-gradient(ellipse at 50% 50%,#0d1e30 0%,var(--bg) 70%);
   position:relative;min-height:400px}
 .drop-hint{display:flex;flex-direction:column;align-items:center;gap:14px;color:var(--text-dim)}
-.drop-hint .big-icon{font-size:60px;opacity:.2}
-.drop-hint p{font-size:13px;letter-spacing:2px;text-transform:uppercase;font-family:var(--mono)}
-.drop-hint small{font-size:11px;color:var(--text-dim);opacity:.6}
+.drop-hint .big-icon{font-size:56px;opacity:.18}
+.drop-hint p{font-size:12px;letter-spacing:2px;text-transform:uppercase;font-family:var(--mono)}
+.drop-hint small{font-size:10px;opacity:.5}
 
 /* Split viewer */
 .split-viewer{position:relative;display:none;max-width:100%;cursor:ew-resize;user-select:none}
@@ -106,9 +124,9 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;background:var(--acce
 .split-divider{position:absolute;top:0;bottom:0;width:2px;background:var(--accent);
   box-shadow:0 0 12px rgba(0,212,255,.7);z-index:10;pointer-events:none}
 .split-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  width:32px;height:32px;background:var(--accent);border-radius:50%;
+  width:30px;height:30px;background:var(--accent);border-radius:50%;
   display:flex;align-items:center;justify-content:center;color:var(--bg);
-  font-size:14px;font-weight:700;box-shadow:0 0 16px rgba(0,212,255,.5)}
+  font-size:13px;font-weight:700;box-shadow:0 0 14px rgba(0,212,255,.5)}
 .split-label{position:absolute;top:10px;background:rgba(6,10,16,.85);color:var(--text-dim);
   font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;
   padding:3px 7px;border-radius:3px;border:1px solid var(--border);pointer-events:none}
@@ -117,37 +135,47 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;background:var(--acce
 /* Stats bar */
 .stats-bar{background:var(--bg2);border-top:1px solid var(--border);padding:6px 16px;
   display:flex;gap:20px;align-items:center;font-family:var(--mono);font-size:10px;
-  color:var(--text-dim);flex-wrap:wrap;min-height:34px}
-.stat{display:flex;align-items:center;gap:6px}
+  color:var(--text-dim);flex-wrap:wrap;min-height:33px}
 .stat em{color:var(--accent);font-style:normal}
 
 /* Processing overlay */
-.proc-overlay{position:absolute;inset:0;background:rgba(6,10,16,.88);
+.proc-overlay{position:absolute;inset:0;background:rgba(6,10,16,.9);
   display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:50}
 .proc-overlay.active{display:flex}
-.spinner{width:36px;height:36px;border:2px solid var(--border);border-top-color:var(--accent);
+.spinner-lg{width:40px;height:40px;border:2px solid var(--border);border-top-color:var(--accent);
   border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .proc-text{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:2px;text-transform:uppercase}
+.proc-sub{font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:1px;margin-top:-6px}
 
 /* Toast */
 .toast{position:fixed;bottom:18px;right:18px;background:var(--bg3);border:1px solid var(--accent-dim);
   color:var(--accent);padding:8px 14px;border-radius:5px;font-family:var(--mono);font-size:11px;
   letter-spacing:1px;z-index:1000;display:none;animation:toastIn .2s ease}
-@keyframes toastIn{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes toastIn{from{transform:translateY(14px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* Collapsed sections */
+.collapsible{overflow:hidden;transition:max-height .4s ease,opacity .4s ease;max-height:0;opacity:0}
+.collapsible.open{max-height:800px;opacity:1}
 
 /* Scrollbar */
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-track{background:var(--bg2)}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 
+/* Finish banner */
+.finish-banner{background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);
+  border-radius:5px;padding:8px 10px;font-family:var(--mono);font-size:10px;
+  color:var(--ok);letter-spacing:.5px;display:none;margin-top:8px}
+.finish-banner.show{display:block}
+
 /* Mobile */
 @media(max-width:700px){
-  .app{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .app{grid-template-columns:1fr}
   .sidebar{max-height:none;overflow-y:visible;border-right:none;border-bottom:1px solid var(--border)}
-  .split-viewer canvas{max-height:45vh}
-  .canvas-area{padding:12px;min-height:260px}
-  .header-badge{display:none}
+  .split-viewer canvas{max-height:42vh}
+  .canvas-area{padding:12px;min-height:240px}
+  .badge{display:none}
 }
 </style>
 </head>
@@ -156,41 +184,49 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;background:var(--acce
 <header>
   <div>
     <div class="logo">Pixel<b>Lab</b></div>
-    <div class="tagline">Classical Image Enhancement · Zero AI</div>
+    <div class="tagline">Auto Smart Pipeline · Zero AI · Pure Math</div>
   </div>
-  <div class="header-badge">⬡ 7 Algorithms · Pure JS · No AI</div>
+  <div class="badge">⬡ Image-Adaptive · 7 Algorithms</div>
 </header>
 
 <div class="app">
   <aside class="sidebar">
-    <div>
-      <div class="section-label">Source Image</div>
+
+    <!-- UPLOAD -->
+    <div class="panel">
+      <div class="section-label">Image</div>
       <div class="upload-zone" id="uploadZone">
         <input type="file" id="fileInput" accept="image/*">
         <span class="upload-icon">⬡</span>
         <strong>Drop image here</strong>
-        <p>or click to browse<br>JPG · PNG · WEBP · BMP</p>
+        <p>or click to browse · JPG · PNG · WEBP</p>
       </div>
       <div class="img-badge" id="imgBadge"></div>
     </div>
 
-    <div>
-      <div class="section-label">Algorithm</div>
-      <div class="algo-list" id="algoList"></div>
+    <!-- ANALYSIS (hidden until image loaded) -->
+    <div class="panel collapsible" id="analysisPanel">
+      <div class="section-label">Image Analysis</div>
+      <div class="metrics-grid" id="metricsGrid"></div>
     </div>
 
-    <div>
-      <div class="section-label">Parameters</div>
-      <div class="params-panel" id="paramsPanel"></div>
+    <!-- PIPELINE (hidden until analysis done) -->
+    <div class="panel collapsible" id="pipelinePanel">
+      <div class="section-label">Auto Pipeline</div>
+      <div class="pipeline-summary" id="pipelineSummary"></div>
+      <div class="pipeline-steps" id="pipelineSteps"></div>
+      <div class="finish-banner" id="finishBanner">✓ Pipeline complete — drag divider to compare</div>
     </div>
 
-    <div class="btn-actions">
-      <button class="btn btn-primary" id="applyBtn" disabled>▶ Apply Algorithm</button>
-      <div class="action-row">
-        <button class="btn btn-secondary" id="resetBtn" disabled>↺ Reset</button>
-        <button class="btn btn-secondary" id="downloadBtn" disabled>↓ Save PNG</button>
+    <!-- ACTIONS -->
+    <div class="panel" id="actionsPanel" style="margin-top:auto">
+      <button class="btn btn-run" id="runBtn" disabled>▶ Run Pipeline</button>
+      <div class="btn-row" style="margin-top:6px">
+        <button class="btn btn-sec" id="resetBtn" disabled>↺ Reset</button>
+        <button class="btn btn-sec" id="dlBtn" disabled>↓ Save PNG</button>
       </div>
     </div>
+
   </aside>
 
   <main class="main">
@@ -198,7 +234,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;background:var(--acce
       <div class="drop-hint" id="dropHint">
         <div class="big-icon">⬡</div>
         <p>Upload an image to begin</p>
-        <small>Drag anywhere on this panel</small>
+        <small>Auto-analysis runs instantly · No AI involved</small>
       </div>
       <div class="split-viewer" id="splitViewer">
         <canvas id="beforeCanvas"></canvas>
@@ -210,15 +246,16 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;background:var(--acce
         <div class="split-label label-after">ENHANCED</div>
       </div>
       <div class="proc-overlay" id="procOverlay">
-        <div class="spinner"></div>
-        <div class="proc-text" id="procText">Processing…</div>
+        <div class="spinner-lg"></div>
+        <div class="proc-text" id="procText">Running Pipeline…</div>
+        <div class="proc-sub" id="procSub"></div>
       </div>
     </div>
     <div class="stats-bar">
       <div class="stat">SIZE <em id="sSize">—</em></div>
-      <div class="stat">ALGO <em id="sAlgo">—</em></div>
+      <div class="stat">STEPS <em id="sSteps">—</em></div>
       <div class="stat">TIME <em id="sTime">—</em></div>
-      <div class="stat" style="margin-left:auto;font-size:9px;opacity:.5">⇔ Drag divider to compare</div>
+      <div class="stat" style="margin-left:auto;font-size:9px;opacity:.4">⇔ Drag divider to compare</div>
     </div>
   </main>
 </div>
@@ -229,367 +266,399 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;background:var(--acce
 'use strict';
 
 // ════════════════════════════════════════════════════════════
-//  FAST BLUR PRIMITIVES  (O(n) box blur, 3-pass ≈ Gaussian)
+//  FAST BLUR — O(n) 3-pass box blur approximating Gaussian
 // ════════════════════════════════════════════════════════════
-function boxH_ch(src, W, H, r) {
-  const dst = new Float32Array(src.length);
-  const d = 2 * r + 1;
-  for (let y = 0; y < H; y++) {
-    const b = y * W;
-    let s = (r + 1) * src[b];
-    for (let x = 1; x <= r; x++) s += src[b + Math.min(W - 1, x)];
-    for (let x = 0; x < W; x++) {
-      dst[b + x] = s / d;
-      s += src[b + Math.min(W - 1, x + r + 1)];
-      s -= src[b + Math.max(0, x - r)];
-    }
+function boxH(s,W,H,r){
+  const d=new Float32Array(s.length),dm=2*r+1;
+  for(let y=0;y<H;y++){
+    const b=y*W; let v=(r+1)*s[b];
+    for(let x=1;x<=r;x++) v+=s[b+Math.min(W-1,x)];
+    for(let x=0;x<W;x++){d[b+x]=v/dm;v+=s[b+Math.min(W-1,x+r+1)];v-=s[b+Math.max(0,x-r)];}
   }
-  return dst;
+  return d;
 }
-function boxV_ch(src, W, H, r) {
-  const dst = new Float32Array(src.length);
-  const d = 2 * r + 1;
-  for (let x = 0; x < W; x++) {
-    let s = (r + 1) * src[x];
-    for (let y = 1; y <= r; y++) s += src[Math.min(H - 1, y) * W + x];
-    for (let y = 0; y < H; y++) {
-      dst[y * W + x] = s / d;
-      s += src[Math.min(H - 1, y + r + 1) * W + x];
-      s -= src[Math.max(0, y - r) * W + x];
-    }
+function boxV(s,W,H,r){
+  const d=new Float32Array(s.length),dm=2*r+1;
+  for(let x=0;x<W;x++){
+    let v=(r+1)*s[x];
+    for(let y=1;y<=r;y++) v+=s[Math.min(H-1,y)*W+x];
+    for(let y=0;y<H;y++){d[y*W+x]=v/dm;v+=s[Math.min(H-1,y+r+1)*W+x];v-=s[Math.max(0,y-r)*W+x];}
   }
-  return dst;
+  return d;
 }
-function fastBlurCh(src, W, H, sigma) {
-  const r = Math.max(0, Math.round(sigma));
-  if (r === 0) return src instanceof Float32Array ? src : new Float32Array(src);
-  let t = src instanceof Float32Array ? src : new Float32Array(src);
-  for (let p = 0; p < 3; p++) { t = boxH_ch(t, W, H, r); t = boxV_ch(t, W, H, r); }
+function blurCh(s,W,H,sig){
+  const r=Math.max(0,Math.round(sig));
+  if(!r) return s instanceof Float32Array?s:new Float32Array(s);
+  let t=s instanceof Float32Array?s:new Float32Array(s);
+  for(let p=0;p<3;p++){t=boxH(t,W,H,r);t=boxV(t,W,H,r);}
   return t;
 }
-function fastBlurRGB(src, W, H, sigma) {
-  const n = W * H;
-  const r = Math.max(0, Math.round(sigma));
-  const chs = [new Float32Array(n), new Float32Array(n), new Float32Array(n)];
-  for (let i = 0; i < n; i++) { chs[0][i]=src[i*4]; chs[1][i]=src[i*4+1]; chs[2][i]=src[i*4+2]; }
-  const blurred = chs.map(c => fastBlurCh(c, W, H, r === 0 ? 0 : sigma));
-  const dst = new Uint8ClampedArray(src.length);
-  for (let i = 0; i < n; i++) {
-    dst[i*4]  = blurred[0][i]; dst[i*4+1] = blurred[1][i];
-    dst[i*4+2] = blurred[2][i]; dst[i*4+3] = src[i*4+3];
-  }
-  return dst;
+function blurRGB(src,W,H,sig){
+  const n=W*H,chs=[new Float32Array(n),new Float32Array(n),new Float32Array(n)];
+  for(let i=0;i<n;i++){chs[0][i]=src[i*4];chs[1][i]=src[i*4+1];chs[2][i]=src[i*4+2];}
+  const b=chs.map(c=>blurCh(c,W,H,sig));
+  const d=new Uint8ClampedArray(src.length);
+  for(let i=0;i<n;i++){d[i*4]=b[0][i];d[i*4+1]=b[1][i];d[i*4+2]=b[2][i];d[i*4+3]=src[i*4+3];}
+  return d;
 }
 
 // ════════════════════════════════════════════════════════════
-//  1. CLAHE — Contrast Limited Adaptive Histogram Equalization
+//  ALGORITHMS
 // ════════════════════════════════════════════════════════════
-function applyCLAHE(src, W, H, clipLimit, tileSize) {
-  const dst = new Uint8ClampedArray(src.length);
-  const tX = Math.max(1, Math.ceil(W / tileSize));
-  const tY = Math.max(1, Math.ceil(H / tileSize));
-  const cluts = Array.from({length: tY}, () => Array(tX));
-
-  for (let ty = 0; ty < tY; ty++) {
-    for (let tx = 0; tx < tX; tx++) {
-      const x0=tx*tileSize, y0=ty*tileSize;
-      const x1=Math.min(x0+tileSize,W), y1=Math.min(y0+tileSize,H);
-      const pixels=(x1-x0)*(y1-y0);
-      const hist=new Int32Array(256);
-      for (let y=y0;y<y1;y++) for (let x=x0;x<x1;x++) {
-        const i=(y*W+x)*4;
-        hist[Math.round(.299*src[i]+.587*src[i+1]+.114*src[i+2])]++;
-      }
-      const clip=Math.max(1,Math.round(clipLimit*pixels/256));
-      let excess=0;
-      for (let v=0;v<256;v++){if(hist[v]>clip){excess+=hist[v]-clip;hist[v]=clip;}}
-      const add=Math.floor(excess/256); let rem=excess%256;
-      for (let v=0;v<256;v++){hist[v]+=add; if(rem-->0) hist[v]++;}
-      const clut=new Uint8ClampedArray(256); let cdf=0;
-      for (let v=0;v<256;v++){cdf+=hist[v];clut[v]=Math.round(cdf*255/pixels);}
-      cluts[ty][tx]=clut;
+function doCLAHE(src,W,H,clip,tile){
+  const d=new Uint8ClampedArray(src.length);
+  const tX=Math.max(1,Math.ceil(W/tile)),tY=Math.max(1,Math.ceil(H/tile));
+  const cl=Array.from({length:tY},()=>Array(tX));
+  for(let ty=0;ty<tY;ty++) for(let tx=0;tx<tX;tx++){
+    const x0=tx*tile,y0=ty*tile,x1=Math.min(x0+tile,W),y1=Math.min(y0+tile,H);
+    const px=(x1-x0)*(y1-y0),hist=new Int32Array(256);
+    for(let y=y0;y<y1;y++) for(let x=x0;x<x1;x++){
+      const i=(y*W+x)*4;hist[Math.round(.299*src[i]+.587*src[i+1]+.114*src[i+2])]++;
     }
+    const lim=Math.max(1,Math.round(clip*px/256));
+    let ex=0; for(let v=0;v<256;v++){if(hist[v]>lim){ex+=hist[v]-lim;hist[v]=lim;}}
+    const add=Math.floor(ex/256); let rem=ex%256;
+    for(let v=0;v<256;v++){hist[v]+=add;if(rem-->0)hist[v]++;}
+    const lut=new Uint8ClampedArray(256); let cdf=0;
+    for(let v=0;v<256;v++){cdf+=hist[v];lut[v]=Math.round(cdf*255/px);}
+    cl[ty][tx]=lut;
   }
-  for (let y=0;y<H;y++) for (let x=0;x<W;x++) {
-    const i=(y*W+x)*4;
-    const lum=Math.round(.299*src[i]+.587*src[i+1]+.114*src[i+2]);
-    const fx=(x+.5)/tileSize-.5, fy=(y+.5)/tileSize-.5;
-    const tx0=Math.max(0,Math.min(tX-2,Math.floor(fx)));
-    const ty0=Math.max(0,Math.min(tY-2,Math.floor(fy)));
-    const tx1=Math.min(tX-1,tx0+1), ty1=Math.min(tY-1,ty0+1);
-    const wx=Math.max(0,Math.min(1,fx-tx0)), wy=Math.max(0,Math.min(1,fy-ty0));
-    const v=cluts[ty0][tx0][lum]*(1-wx)*(1-wy)+cluts[ty0][tx1][lum]*wx*(1-wy)
-           +cluts[ty1][tx0][lum]*(1-wx)*wy   +cluts[ty1][tx1][lum]*wx*wy;
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+    const i=(y*W+x)*4,lum=Math.round(.299*src[i]+.587*src[i+1]+.114*src[i+2]);
+    const fx=(x+.5)/tile-.5,fy=(y+.5)/tile-.5;
+    const tx0=Math.max(0,Math.min(tX-2,Math.floor(fx))),ty0=Math.max(0,Math.min(tY-2,Math.floor(fy)));
+    const tx1=Math.min(tX-1,tx0+1),ty1=Math.min(tY-1,ty0+1);
+    const wx=Math.max(0,Math.min(1,fx-tx0)),wy=Math.max(0,Math.min(1,fy-ty0));
+    const v=cl[ty0][tx0][lum]*(1-wx)*(1-wy)+cl[ty0][tx1][lum]*wx*(1-wy)
+            +cl[ty1][tx0][lum]*(1-wx)*wy+cl[ty1][tx1][lum]*wx*wy;
     const sc=lum>0?v/lum:1;
-    dst[i]=Math.min(255,src[i]*sc|0); dst[i+1]=Math.min(255,src[i+1]*sc|0);
-    dst[i+2]=Math.min(255,src[i+2]*sc|0); dst[i+3]=src[i+3];
+    d[i]=Math.min(255,src[i]*sc|0);d[i+1]=Math.min(255,src[i+1]*sc|0);
+    d[i+2]=Math.min(255,src[i+2]*sc|0);d[i+3]=src[i+3];
   }
-  return dst;
+  return d;
 }
-
-// ════════════════════════════════════════════════════════════
-//  2. UNSHARP MASK
-// ════════════════════════════════════════════════════════════
-function applyUnsharpMask(src, W, H, radius, amount, threshold) {
-  const blurred = fastBlurRGB(src, W, H, radius);
-  const dst = new Uint8ClampedArray(src.length);
-  for (let i=0;i<src.length;i+=4) {
-    for (let c=0;c<3;c++) {
-      const diff=src[i+c]-blurred[i+c];
-      dst[i+c]=Math.max(0,Math.min(255,src[i+c]+(Math.abs(diff)>threshold?amount*diff:0)));
-    }
-    dst[i+3]=src[i+3];
+function doUnsharp(src,W,H,rad,amt,thr){
+  const bl=blurRGB(src,W,H,rad),d=new Uint8ClampedArray(src.length);
+  for(let i=0;i<src.length;i+=4){
+    for(let c=0;c<3;c++){const df=src[i+c]-bl[i+c];d[i+c]=Math.max(0,Math.min(255,src[i+c]+(Math.abs(df)>thr?amt*df:0)));}
+    d[i+3]=src[i+3];
   }
-  return dst;
+  return d;
 }
-
-// ════════════════════════════════════════════════════════════
-//  3. BILATERAL FILTER — edge-preserving smoothing
-// ════════════════════════════════════════════════════════════
-function applyBilateral(src, W, H, sSig, rSig) {
-  const dst=new Uint8ClampedArray(src.length);
-  const r=Math.ceil(2*sSig), ss2=2*sSig*sSig, rs2=2*rSig*rSig;
-  for (let y=0;y<H;y++) for (let x=0;x<W;x++) {
-    const ci=(y*W+x)*4;
-    const cR=src[ci],cG=src[ci+1],cB=src[ci+2];
-    let sR=0,sG=0,sB=0,sW=0;
-    for (let dy=-r;dy<=r;dy++) {
-      const ny=Math.max(0,Math.min(H-1,y+dy));
-      for (let dx=-r;dx<=r;dx++) {
-        const nx=Math.max(0,Math.min(W-1,x+dx));
-        const ni=(ny*W+nx)*4;
-        const nR=src[ni],nG=src[ni+1],nB=src[ni+2];
-        const w=Math.exp(-(dx*dx+dy*dy)/ss2-((nR-cR)**2+(nG-cG)**2+(nB-cB)**2)/rs2);
-        sR+=w*nR;sG+=w*nG;sB+=w*nB;sW+=w;
+function doBilateral(src,W,H,sS,rS){
+  const d=new Uint8ClampedArray(src.length),r=Math.ceil(2*sS),ss=2*sS*sS,rs=2*rS*rS;
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+    const ci=(y*W+x)*4,cR=src[ci],cG=src[ci+1],cB=src[ci+2];
+    let aR=0,aG=0,aB=0,aW=0;
+    for(let dy=-r;dy<=r;dy++){const ny=Math.max(0,Math.min(H-1,y+dy));
+      for(let dx=-r;dx<=r;dx++){const nx=Math.max(0,Math.min(W-1,x+dx));
+        const ni=(ny*W+nx)*4,nR=src[ni],nG=src[ni+1],nB=src[ni+2];
+        const w=Math.exp(-(dx*dx+dy*dy)/ss-((nR-cR)**2+(nG-cG)**2+(nB-cB)**2)/rs);
+        aR+=w*nR;aG+=w*nG;aB+=w*nB;aW+=w;
       }
     }
-    dst[ci]=sR/sW|0;dst[ci+1]=sG/sW|0;dst[ci+2]=sB/sW|0;dst[ci+3]=src[ci+3];
+    d[ci]=aR/aW|0;d[ci+1]=aG/aW|0;d[ci+2]=aB/aW|0;d[ci+3]=src[ci+3];
   }
-  return dst;
+  return d;
 }
-
-// ════════════════════════════════════════════════════════════
-//  4. MULTI-SCALE RETINEX — illumination normalization
-// ════════════════════════════════════════════════════════════
-function applyRetinex(src, W, H, scales) {
-  const n=W*H, w=1/scales.length;
-  const dst=new Uint8ClampedArray(src.length);
-  for (let c=0;c<3;c++) {
+function doRetinex(src,W,H,scales){
+  const n=W*H,wt=1/scales.length,d=new Uint8ClampedArray(src.length);
+  for(let c=0;c<3;c++){
     const ch=new Float32Array(n);
-    for (let i=0;i<n;i++) ch[i]=src[i*4+c]+1;
-    const logCh=ch.map(v=>Math.log(v));
-    const out=new Float32Array(n);
-    for (const sig of scales) {
-      const bl=fastBlurCh(ch,W,H,sig);
-      for (let i=0;i<n;i++) out[i]+=w*(logCh[i]-Math.log(Math.max(bl[i],1)));
-    }
+    for(let i=0;i<n;i++) ch[i]=src[i*4+c]+1;
+    const lc=ch.map(v=>Math.log(v)),out=new Float32Array(n);
+    for(const sig of scales){const bl=blurCh(ch,W,H,sig);for(let i=0;i<n;i++) out[i]+=wt*(lc[i]-Math.log(Math.max(bl[i],1)));}
     let mn=Infinity,mx=-Infinity;
-    for (let i=0;i<n;i++){if(out[i]<mn)mn=out[i];if(out[i]>mx)mx=out[i];}
+    for(let i=0;i<n;i++){if(out[i]<mn)mn=out[i];if(out[i]>mx)mx=out[i];}
     const rng=mx-mn||1;
-    for (let i=0;i<n;i++) dst[i*4+c]=(out[i]-mn)/rng*255|0;
+    for(let i=0;i<n;i++) d[i*4+c]=(out[i]-mn)/rng*255|0;
   }
-  for (let i=0;i<n;i++) dst[i*4+3]=src[i*4+3];
-  return dst;
+  for(let i=0;i<n;i++) d[i*4+3]=src[i*4+3];
+  return d;
 }
-
-// ════════════════════════════════════════════════════════════
-//  5. LAPLACIAN SHARPENING — high-frequency boosting
-// ════════════════════════════════════════════════════════════
-function applyLaplacian(src, W, H, strength) {
-  const dst=new Uint8ClampedArray(src.length);
-  const kn=[0,-1,0,-1,4,-1,0,-1,0];
-  for (let y=0;y<H;y++) for (let x=0;x<W;x++) {
-    const ci=(y*W+x)*4;
-    let lR=0,lG=0,lB=0,ki=0;
-    for (let dy=-1;dy<=1;dy++) {
-      const ny=Math.max(0,Math.min(H-1,y+dy));
-      for (let dx=-1;dx<=1;dx++) {
-        const ni=(ny*W+Math.max(0,Math.min(W-1,x+dx)))*4;
-        lR+=kn[ki]*src[ni];lG+=kn[ki]*src[ni+1];lB+=kn[ki]*src[ni+2];ki++;
+function doLaplacian(src,W,H,str){
+  const d=new Uint8ClampedArray(src.length),k=[0,-1,0,-1,4,-1,0,-1,0];
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+    const ci=(y*W+x)*4;let lR=0,lG=0,lB=0,ki=0;
+    for(let dy=-1;dy<=1;dy++){const ny=Math.max(0,Math.min(H-1,y+dy));
+      for(let dx=-1;dx<=1;dx++){const ni=(ny*W+Math.max(0,Math.min(W-1,x+dx)))*4;
+        lR+=k[ki]*src[ni];lG+=k[ki]*src[ni+1];lB+=k[ki]*src[ni+2];ki++;
       }
     }
-    dst[ci]  =Math.max(0,Math.min(255,src[ci]  +strength*lR|0));
-    dst[ci+1]=Math.max(0,Math.min(255,src[ci+1]+strength*lG|0));
-    dst[ci+2]=Math.max(0,Math.min(255,src[ci+2]+strength*lB|0));
-    dst[ci+3]=src[ci+3];
+    d[ci]=Math.max(0,Math.min(255,src[ci]+str*lR|0));
+    d[ci+1]=Math.max(0,Math.min(255,src[ci+1]+str*lG|0));
+    d[ci+2]=Math.max(0,Math.min(255,src[ci+2]+str*lB|0));
+    d[ci+3]=src[ci+3];
   }
-  return dst;
+  return d;
 }
-
-// ════════════════════════════════════════════════════════════
-//  6. NON-LOCAL MEANS — patch similarity denoising
-// ════════════════════════════════════════════════════════════
-function applyNLM(src, W, H, h, sR, pR) {
-  const dst=new Uint8ClampedArray(src.length);
-  const h2=h*h, ps=(2*pR+1)**2;
-  for (let y=0;y<H;y++) for (let x=0;x<W;x++) {
-    const ci=(y*W+x)*4;
-    let sRc=0,sGc=0,sBc=0,sWc=0;
-    for (let sy=-sR;sy<=sR;sy++) {
-      for (let sx=-sR;sx<=sR;sx++) {
-        const ny2=y+sy,nx2=x+sx;
-        if(ny2<0||ny2>=H||nx2<0||nx2>=W) continue;
-        let dist=0;
-        for (let py=-pR;py<=pR;py++) for (let px=-pR;px<=pR;px++) {
-          const ay=Math.max(0,Math.min(H-1,y+py)),ax=Math.max(0,Math.min(W-1,x+px));
-          const by=Math.max(0,Math.min(H-1,ny2+py)),bx=Math.max(0,Math.min(W-1,nx2+px));
-          const ai=(ay*W+ax)*4,bi=(by*W+bx)*4;
-          for (let c=0;c<3;c++){const d=src[ai+c]-src[bi+c];dist+=d*d;}
-        }
-        const w=Math.exp(-dist/(3*ps*65025*h2));
-        const ni=(ny2*W+nx2)*4;
-        sRc+=w*src[ni];sGc+=w*src[ni+1];sBc+=w*src[ni+2];sWc+=w;
+function doNLM(src,W,H,h,sR,pR){
+  const d=new Uint8ClampedArray(src.length),h2=h*h,ps=(2*pR+1)**2;
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+    const ci=(y*W+x)*4;let sRc=0,sGc=0,sBc=0,sW=0;
+    for(let sy=-sR;sy<=sR;sy++) for(let sx=-sR;sx<=sR;sx++){
+      const ny=y+sy,nx=x+sx;
+      if(ny<0||ny>=H||nx<0||nx>=W) continue;
+      let dist=0;
+      for(let py=-pR;py<=pR;py++) for(let px=-pR;px<=pR;px++){
+        const ay=Math.max(0,Math.min(H-1,y+py)),ax=Math.max(0,Math.min(W-1,x+px));
+        const by=Math.max(0,Math.min(H-1,ny+py)),bx=Math.max(0,Math.min(W-1,nx+px));
+        const ai=(ay*W+ax)*4,bi=(by*W+bx)*4;
+        for(let c=0;c<3;c++){const dv=src[ai+c]-src[bi+c];dist+=dv*dv;}
       }
+      const w=Math.exp(-dist/(3*ps*65025*h2));
+      const ni=(ny*W+nx)*4;sRc+=w*src[ni];sGc+=w*src[ni+1];sBc+=w*src[ni+2];sW+=w;
     }
-    dst[ci]=sRc/sWc|0;dst[ci+1]=sGc/sWc|0;dst[ci+2]=sBc/sWc|0;dst[ci+3]=src[ci+3];
+    d[ci]=sRc/sW|0;d[ci+1]=sGc/sW|0;d[ci+2]=sBc/sW|0;d[ci+3]=src[ci+3];
   }
-  return dst;
+  return d;
 }
 
 // ════════════════════════════════════════════════════════════
-//  7. HIGH-PASS FILTER — detail layer extraction
+//  IMAGE ANALYSIS — pure statistics, zero AI
 // ════════════════════════════════════════════════════════════
-function applyHighPass(src, W, H, blurR, boost) {
-  const blurred=fastBlurRGB(src,W,H,blurR);
-  const dst=new Uint8ClampedArray(src.length);
-  for (let i=0;i<src.length;i+=4) {
-    for (let c=0;c<3;c++) dst[i+c]=Math.max(0,Math.min(255,128+boost*(src[i+c]-blurred[i+c])|0));
-    dst[i+3]=src[i+3];
+function analyzeImage(data, W, H) {
+  const n = W * H;
+  // Luminance array
+  const lum = new Float32Array(n);
+  for (let i=0;i<n;i++) lum[i]=.299*data[i*4]+.587*data[i*4+1]+.114*data[i*4+2];
+
+  // Brightness = mean luminance
+  let sumL=0; for(let i=0;i<n;i++) sumL+=lum[i];
+  const brightness = sumL/n;
+
+  // Contrast = std-dev of luminance
+  let sumSq=0; for(let i=0;i<n;i++) sumSq+=(lum[i]-brightness)**2;
+  const contrast = Math.sqrt(sumSq/n);
+
+  // Sharpness = mean absolute Laplacian (focus measure)
+  let lapSum=0, lapCount=0;
+  for(let y=1;y<H-1;y++) for(let x=1;x<W-1;x++){
+    const i=y*W+x;
+    lapSum+=Math.abs(4*lum[i]-lum[i-1]-lum[i+1]-lum[i-W]-lum[i+W]);
+    lapCount++;
   }
-  return dst;
+  const sharpness = lapSum/lapCount;
+
+  // Noise = std-dev of residual after 3x3 mean subtraction
+  let nSum=0,nSq=0,nCount=0;
+  for(let y=1;y<H-1;y++) for(let x=1;x<W-1;x++){
+    let m=0; for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++) m+=lum[(y+dy)*W+(x+dx)];
+    m/=9; const diff=lum[y*W+x]-m; nSum+=diff; nSq+=diff*diff; nCount++;
+  }
+  const noiseMean=nSum/nCount;
+  const noise=Math.sqrt(nSq/nCount-noiseMean**2);
+
+  // Lighting uniformity — compare mean brightness of image quadrants
+  const qMeans=[0,0,0,0],qN=[0,0,0,0],hW=W/2,hH=H/2;
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+    const q=(y>=hH?2:0)+(x>=hW?1:0);
+    qMeans[q]+=lum[y*W+x]; qN[q]++;
+  }
+  for(let q=0;q<4;q++) qMeans[q]/=qN[q];
+  const qM=qMeans.reduce((a,b)=>a+b,0)/4;
+  const lightingVar=Math.sqrt(qMeans.reduce((a,b)=>a+(b-qM)**2,0)/4);
+
+  return {brightness, contrast, sharpness, noise, lightingVar};
 }
 
 // ════════════════════════════════════════════════════════════
-//  ALGORITHM REGISTRY
+//  PIPELINE BUILDER — rule-based decision tree
 // ════════════════════════════════════════════════════════════
-const ALGOS = [
-  {
-    id:'clahe', name:'CLAHE', slow:false,
-    desc:'Adaptive histogram equalization — medical imaging gold standard',
-    params:[
-      {id:'clipLimit',label:'Clip Limit',min:.5,max:12,step:.5,def:2.5},
-      {id:'tileSize', label:'Tile Size', min:16,max:128,step:8,def:64,unit:'px'}
-    ],
-    fn:(d,w,h,p)=>applyCLAHE(d,w,h,p.clipLimit,p.tileSize)
-  },
-  {
-    id:'unsharp', name:'Unsharp Mask', slow:false,
-    desc:'Classic sharpening via subtracted Gaussian blur',
-    params:[
-      {id:'radius',   label:'Blur Radius', min:.5,max:10, step:.5, def:2,   unit:'px'},
-      {id:'amount',   label:'Amount',      min:.1,max:3,  step:.1, def:1.2, unit:'×'},
-      {id:'threshold',label:'Threshold',   min:0, max:30, step:1,  def:3   }
-    ],
-    fn:(d,w,h,p)=>applyUnsharpMask(d,w,h,p.radius,p.amount,p.threshold)
-  },
-  {
-    id:'bilateral', name:'Bilateral Filter', slow:true,
-    desc:'Edge-preserving noise reduction — keeps sharp boundaries',
-    params:[
-      {id:'sSig',label:'Spatial σ', min:1, max:10,  step:.5, def:3 },
-      {id:'rSig',label:'Range σ',   min:10,max:100, step:5,  def:40}
-    ],
-    fn:(d,w,h,p)=>applyBilateral(d,w,h,p.sSig,p.rSig)
-  },
-  {
-    id:'retinex', name:'Multi-Scale Retinex', slow:false,
-    desc:'Illumination normalization via log-domain processing (NASA-developed)',
-    params:[
-      {id:'s1',label:'Scale 1 σ', min:5,  max:30,  step:5,  def:15, unit:'px'},
-      {id:'s2',label:'Scale 2 σ', min:30, max:100, step:10, def:60, unit:'px'},
-      {id:'s3',label:'Scale 3 σ', min:80, max:200, step:20, def:120,unit:'px'}
-    ],
-    fn:(d,w,h,p)=>applyRetinex(d,w,h,[p.s1,p.s2,p.s3])
-  },
-  {
-    id:'laplacian', name:'Laplacian Sharpen', slow:false,
-    desc:'Detail enhancement via high-frequency coefficient boosting',
-    params:[
-      {id:'strength',label:'Strength', min:.1, max:2, step:.1, def:.6}
-    ],
-    fn:(d,w,h,p)=>applyLaplacian(d,w,h,p.strength)
-  },
-  {
-    id:'nlm', name:'Non-Local Means', slow:true,
-    desc:'Patch similarity denoising — like BM3D without FFT',
-    params:[
-      {id:'h',      label:'Filter h',     min:.01,max:.25, step:.01,def:.07},
-      {id:'sR',     label:'Search Radius',min:3,  max:10,  step:1,  def:5,  unit:'px'},
-      {id:'pR',     label:'Patch Radius', min:1,  max:4,   step:1,  def:2,  unit:'px'}
-    ],
-    fn:(d,w,h,p)=>applyNLM(d,w,h,p.h,p.sR,p.pR)
-  },
-  {
-    id:'highpass', name:'High-Pass Filter', slow:false,
-    desc:'Extract and amplify the fine detail layer of the image',
-    params:[
-      {id:'blurR',label:'Detail Scale', min:1, max:20, step:1,  def:5, unit:'px'},
-      {id:'boost',label:'Boost',        min:1, max:6,  step:.1, def:2, unit:'×'}
-    ],
-    fn:(d,w,h,p)=>applyHighPass(d,w,h,p.blurR,p.boost)
+function buildPipeline(m) {
+  const steps = [];
+
+  // Classify each dimension
+  const isDark      = m.brightness < 80;
+  const isBright    = m.brightness > 185;
+  const isLowContr  = m.contrast < 38;
+  const isNoisy     = m.noise > 4.5;
+  const isVeryNoisy = m.noise > 11;
+  const isBlurry    = m.sharpness < 10;
+  const isSoft      = m.sharpness < 22 && !isBlurry;
+  const isUneven    = m.lightingVar > 22;
+
+  // ① Retinex — uneven / inconsistent illumination
+  if (isUneven) {
+    steps.push({
+      id:'retinex', name:'Multi-Scale Retinex',
+      reason:'Uneven lighting across frame → illumination normalization',
+      params:{s1:15,s2:60,s3:120},
+      paramsLabel:'σ = 15 · 60 · 120',
+      fn:(s,W,H,p)=>doRetinex(s,W,H,[p.s1,p.s2,p.s3])
+    });
   }
-];
+
+  // ② CLAHE — dark or low-contrast image
+  if (isDark || isLowContr) {
+    const clip = isDark ? 3.5 : 2.0;
+    steps.push({
+      id:'clahe', name:'CLAHE',
+      reason: isDark ? 'Dark image → adaptive contrast boost' : 'Flat / low-contrast → local histogram eq.',
+      params:{clip,tile:64},
+      paramsLabel:`clip=${clip} tile=64px`,
+      fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)
+    });
+  }
+
+  // ③ Denoising — before sharpening (critical ordering)
+  if (isNoisy) {
+    if (isVeryNoisy) {
+      steps.push({
+        id:'nlm', name:'Non-Local Means',
+        reason:'High noise floor → patch-similarity denoising',
+        params:{h:.08,sR:5,pR:2},
+        paramsLabel:'h=0.08 search=5 patch=2',
+        fn:(s,W,H,p)=>doNLM(s,W,H,p.h,p.sR,p.pR)
+      });
+    } else {
+      steps.push({
+        id:'bilateral', name:'Bilateral Filter',
+        reason:'Moderate noise → edge-preserving smoothing',
+        params:{sS:3,rS:40},
+        paramsLabel:'spatial σ=3 range σ=40',
+        fn:(s,W,H,p)=>doBilateral(s,W,H,p.sS,p.rS)
+      });
+    }
+  }
+
+  // ④ Sharpening — last step (never before denoising)
+  if (isBlurry) {
+    steps.push({
+      id:'unsharp', name:'Unsharp Mask',
+      reason:'Soft/blurry image → aggressive sharpening',
+      params:{rad:3,amt:1.8,thr:3},
+      paramsLabel:'radius=3 amount=1.8 thr=3',
+      fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)
+    });
+  } else if (isSoft || (!isNoisy && steps.length > 0)) {
+    steps.push({
+      id:'unsharp', name:'Unsharp Mask',
+      reason: isSoft ? 'Slightly soft → mild sharpening finish' : 'Final crispness pass',
+      params:{rad:1.5,amt:1.0,thr:4},
+      paramsLabel:'radius=1.5 amount=1.0 thr=4',
+      fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)
+    });
+  }
+
+  // ⑤ Fallback — well-balanced image: gentle all-round boost
+  if (steps.length === 0) {
+    steps.push({
+      id:'clahe', name:'CLAHE',
+      reason:'Well-balanced image → gentle local contrast polish',
+      params:{clip:1.5,tile:80},
+      paramsLabel:'clip=1.5 tile=80px',
+      fn:(s,W,H,p)=>doCLAHE(s,W,H,p.clip,p.tile)
+    });
+    steps.push({
+      id:'unsharp', name:'Unsharp Mask',
+      reason:'Mild sharpness enhancement',
+      params:{rad:1,amt:0.7,thr:5},
+      paramsLabel:'radius=1 amount=0.7 thr=5',
+      fn:(s,W,H,p)=>doUnsharp(s,W,H,p.rad,p.amt,p.thr)
+    });
+  }
+
+  return steps;
+}
 
 // ════════════════════════════════════════════════════════════
 //  STATE
 // ════════════════════════════════════════════════════════════
-let originalData=null, enhancedData=null;
-let imgW=0, imgH=0;
-let currentAlgo=ALGOS[0], currentParams={};
+let origData=null, enhData=null, imgW=0, imgH=0;
+let pipeline=[], metrics=null;
 let splitPos=.5, isDragging=false;
 
 // ════════════════════════════════════════════════════════════
-//  DOM REFS
+//  DOM
 // ════════════════════════════════════════════════════════════
 const $=id=>document.getElementById(id);
-const uploadZone=$('uploadZone'), fileInput=$('fileInput');
-const algoList=$('algoList'), paramsPanel=$('paramsPanel');
-const applyBtn=$('applyBtn'), resetBtn=$('resetBtn'), downloadBtn=$('downloadBtn');
-const splitViewer=$('splitViewer');
-const beforeCanvas=$('beforeCanvas'), afterCanvas=$('afterCanvas');
-const splitDivider=$('splitDivider');
-const dropHint=$('dropHint'), procOverlay=$('procOverlay'), procText=$('procText');
-const imgBadge=$('imgBadge');
-const sSize=$('sSize'), sAlgo=$('sAlgo'), sTime=$('sTime');
-const toast=$('toast');
+const uploadZone=$('uploadZone'),fileInput=$('fileInput');
+const analysisPanel=$('analysisPanel'),pipelinePanel=$('pipelinePanel');
+const metricsGrid=$('metricsGrid'),pipelineSteps=$('pipelineSteps'),pipelineSummary=$('pipelineSummary');
+const runBtn=$('runBtn'),resetBtn=$('resetBtn'),dlBtn=$('dlBtn');
+const splitViewer=$('splitViewer'),beforeCanvas=$('beforeCanvas'),afterCanvas=$('afterCanvas');
+const splitDivider=$('splitDivider'),dropHint=$('dropHint');
+const procOverlay=$('procOverlay'),procText=$('procText'),procSub=$('procSub');
+const imgBadge=$('imgBadge'),sSize=$('sSize'),sSteps=$('sSteps'),sTime=$('sTime');
+const toast=$('toast'),finishBanner=$('finishBanner');
 
 // ════════════════════════════════════════════════════════════
-//  BUILD UI
+//  RENDER ANALYSIS
 // ════════════════════════════════════════════════════════════
-function buildAlgoList() {
-  algoList.innerHTML='';
-  ALGOS.forEach(a=>{
-    const btn=document.createElement('button');
-    btn.className='algo-btn'+(a===currentAlgo?' active':'');
-    btn.innerHTML=`<span class="algo-name">${a.name}${a.slow?'<span class="slow-tag">SLOW</span>':''}</span>
-      <span class="algo-desc">${a.desc}</span>`;
-    btn.onclick=()=>selectAlgo(a);
-    algoList.appendChild(btn);
-  });
+function renderAnalysis(m) {
+  metricsGrid.innerHTML='';
+
+  function metricCard(name, value, min, max, label, tagClass, tagText, full=false) {
+    const pct = Math.round(Math.max(0,Math.min(100,(value-min)/(max-min)*100)));
+    const colors={warn:'#ff6030',ok:'#00d4ff',good:'#00ff88'};
+    const fillColor=colors[tagClass.replace('mtag-','')]||'#00d4ff';
+    const card=document.createElement('div');
+    card.className='metric-card'+(full?' full':'');
+    card.innerHTML=`<div class="metric-name">${name}</div>
+      <div class="metric-bar-wrap"><div class="metric-bar-fill" style="width:${pct}%;background:${fillColor}"></div></div>
+      <div class="metric-row">
+        <span class="metric-num">${Math.round(value)}</span>
+        <span class="mtag ${tagClass}">${tagText}</span>
+      </div>`;
+    metricsGrid.appendChild(card);
+  }
+
+  // Brightness
+  const bTag = m.brightness<80?'mtag-warn':m.brightness>185?'mtag-warn':'mtag-good';
+  const bTxt = m.brightness<80?'DARK':m.brightness>185?'BRIGHT':'NORMAL';
+  metricCard('Brightness', m.brightness, 0, 255, '', bTag, bTxt);
+
+  // Contrast
+  const cTag = m.contrast<38?'mtag-warn':m.contrast>80?'mtag-ok':'mtag-good';
+  const cTxt = m.contrast<38?'LOW':m.contrast>80?'HIGH':'NORMAL';
+  metricCard('Contrast', m.contrast, 0, 100, '', cTag, cTxt);
+
+  // Sharpness
+  const shTag = m.sharpness<10?'mtag-warn':m.sharpness<22?'mtag-warn':'mtag-good';
+  const shTxt = m.sharpness<10?'BLURRY':m.sharpness<22?'SOFT':'SHARP';
+  metricCard('Sharpness', m.sharpness, 0, 60, '', shTag, shTxt);
+
+  // Noise
+  const nTag = m.noise>11?'mtag-warn':m.noise>4.5?'mtag-warn':'mtag-good';
+  const nTxt = m.noise>11?'NOISY':m.noise>4.5?'GRAINY':'CLEAN';
+  metricCard('Noise', m.noise, 0, 20, '', nTag, nTxt);
+
+  // Lighting uniformity (full width)
+  const lTag = m.lightingVar>22?'mtag-warn':'mtag-good';
+  const lTxt = m.lightingVar>22?'UNEVEN':'UNIFORM';
+  metricCard('Lighting Uniformity', m.lightingVar, 0, 60, '', lTag, lTxt, true);
+
+  analysisPanel.classList.add('open');
 }
-function selectAlgo(a) {
-  currentAlgo=a;
-  document.querySelectorAll('.algo-btn').forEach((b,i)=>b.classList.toggle('active',ALGOS[i]===a));
-  buildParams();
-  sAlgo.textContent=a.name;
-}
-function buildParams() {
-  paramsPanel.innerHTML=''; currentParams={};
-  currentAlgo.params.forEach(p=>{
-    currentParams[p.id]=p.def;
-    const div=document.createElement('div');
-    div.className='param-item';
-    div.innerHTML=`<div class="param-label">
-      <span class="param-name">${p.label}</span>
-      <span class="param-val" id="v_${p.id}">${p.def}${p.unit||''}</span>
-    </div>
-    <input type="range" min="${p.min}" max="${p.max}" step="${p.step}" value="${p.def}" id="r_${p.id}">`;
-    paramsPanel.appendChild(div);
-    div.querySelector('input').oninput=function(){
-      currentParams[p.id]=parseFloat(this.value);
-      document.getElementById('v_'+p.id).textContent=this.value+(p.unit||'');
-    };
+
+// ════════════════════════════════════════════════════════════
+//  RENDER PIPELINE
+// ════════════════════════════════════════════════════════════
+function renderPipeline(steps) {
+  pipelineSteps.innerHTML='';
+  finishBanner.classList.remove('show');
+
+  const names=steps.map(s=>s.name).join(' → ');
+  pipelineSummary.textContent=`${steps.length} step${steps.length>1?'s':''}: ${names}`;
+  sSteps.textContent=steps.length;
+
+  steps.forEach((step,i)=>{
+    const card=document.createElement('div');
+    card.className='step-card'; card.id='step-card-'+i;
+    card.innerHTML=`
+      <div class="step-num" id="step-num-${i}">${i+1}</div>
+      <div class="step-spinner"></div>
+      <div class="step-info">
+        <div class="step-name">${step.name}</div>
+        <div class="step-reason">${step.reason}</div>
+        <div class="step-params">${step.paramsLabel}</div>
+      </div>`;
+    pipelineSteps.appendChild(card);
   });
+
+  pipelinePanel.classList.add('open');
+  runBtn.disabled=false;
 }
 
 // ════════════════════════════════════════════════════════════
@@ -601,26 +670,29 @@ function loadImage(file) {
   reader.onload=e=>{
     const img=new Image();
     img.onload=()=>{
-      const MAX=900;
-      let w=img.width,h=img.height;
+      const MAX=900;let w=img.width,h=img.height;
       if(Math.max(w,h)>MAX){const sc=MAX/Math.max(w,h);w=Math.round(w*sc);h=Math.round(h*sc);}
       imgW=w;imgH=h;
-      const oc=document.createElement('canvas');
-      oc.width=w;oc.height=h;
+      const oc=document.createElement('canvas');oc.width=w;oc.height=h;
       oc.getContext('2d').drawImage(img,0,0,w,h);
-      originalData=oc.getContext('2d').getImageData(0,0,w,h);
-      enhancedData=null;
+      origData=oc.getContext('2d').getImageData(0,0,w,h);
+      enhData=null;
       beforeCanvas.width=afterCanvas.width=w;
       beforeCanvas.height=afterCanvas.height=h;
-      beforeCanvas.getContext('2d').putImageData(originalData,0,0);
-      afterCanvas.getContext('2d').putImageData(originalData,0,0);
+      beforeCanvas.getContext('2d').putImageData(origData,0,0);
+      afterCanvas.getContext('2d').putImageData(origData,0,0);
       updateSplit();
       dropHint.style.display='none';
       splitViewer.classList.add('visible');
-      applyBtn.disabled=resetBtn.disabled=false;
+      resetBtn.disabled=false;
       imgBadge.textContent=img.width+'×'+img.height+' → '+w+'×'+h+' px';
       sSize.textContent=w+'×'+h;
-      showToast('Image loaded ✓');
+      // Run analysis
+      metrics=analyzeImage(origData.data,w,h);
+      renderAnalysis(metrics);
+      pipeline=buildPipeline(metrics);
+      renderPipeline(pipeline);
+      showToast('Analysis complete ✓');
     };
     img.src=e.target.result;
   };
@@ -628,115 +700,109 @@ function loadImage(file) {
 }
 
 // ════════════════════════════════════════════════════════════
+//  RUN PIPELINE
+// ════════════════════════════════════════════════════════════
+runBtn.addEventListener('click', async ()=>{
+  if(!origData||!pipeline.length) return;
+  runBtn.disabled=true;
+  resetBtn.disabled=true;
+  dlBtn.disabled=true;
+  finishBanner.classList.remove('show');
+  procOverlay.classList.add('active');
+
+  let currentData=new Uint8ClampedArray(origData.data);
+  const t0=performance.now();
+
+  for(let i=0;i<pipeline.length;i++){
+    const step=pipeline[i];
+    const card=$('step-card-'+i);
+    card.className='step-card s-active';
+    procText.textContent='Step '+(i+1)+'/'+pipeline.length+': '+step.name;
+    procSub.textContent=step.reason;
+    await new Promise(r=>setTimeout(r,60));
+
+    currentData=step.fn(currentData,imgW,imgH,step.params);
+
+    card.className='step-card s-done';
+    $('step-num-'+i).textContent='✓';
+  }
+
+  const ms=Math.round(performance.now()-t0);
+  enhData=new ImageData(currentData,imgW,imgH);
+  afterCanvas.getContext('2d').putImageData(enhData,0,0);
+  updateSplit();
+  sTime.textContent=ms+'ms';
+  procOverlay.classList.remove('active');
+  runBtn.disabled=false;
+  resetBtn.disabled=false;
+  dlBtn.disabled=false;
+  finishBanner.classList.add('show');
+  showToast('Pipeline done in '+ms+'ms ✓');
+});
+
+// ════════════════════════════════════════════════════════════
+//  RESET & DOWNLOAD
+// ════════════════════════════════════════════════════════════
+resetBtn.addEventListener('click',()=>{
+  if(!origData) return;
+  enhData=null;
+  afterCanvas.getContext('2d').putImageData(origData,0,0);
+  updateSplit();
+  dlBtn.disabled=true;
+  sTime.textContent='—';
+  finishBanner.classList.remove('show');
+  pipeline.forEach((_,i)=>{
+    const c=$('step-card-'+i);if(c)c.className='step-card';
+    const n=$('step-num-'+i);if(n)n.textContent=i+1;
+  });
+  showToast('Reset to original');
+});
+dlBtn.addEventListener('click',()=>{
+  if(!enhData) return;
+  const c=document.createElement('canvas');c.width=imgW;c.height=imgH;
+  c.getContext('2d').putImageData(enhData,0,0);
+  const a=document.createElement('a');a.href=c.toDataURL('image/png');
+  a.download=`pixellab_auto_${Date.now()}.png`;a.click();
+  showToast('Saved ✓');
+});
+
+// ════════════════════════════════════════════════════════════
 //  SPLIT VIEWER
 // ════════════════════════════════════════════════════════════
-function updateSplit() {
+function updateSplit(){
   afterCanvas.style.clipPath=`inset(0 0 0 ${splitPos*100}%)`;
   splitDivider.style.left=`${splitPos*100}%`;
 }
-function getPos(e,rect){
-  const cx=e.touches?e.touches[0].clientX:e.clientX;
-  return Math.max(0,Math.min(1,(cx-rect.left)/rect.width));
-}
-splitViewer.addEventListener('mousedown',e=>{isDragging=true;splitPos=getPos(e,splitViewer.getBoundingClientRect());updateSplit();});
-splitViewer.addEventListener('touchstart',e=>{isDragging=true;splitPos=getPos(e,splitViewer.getBoundingClientRect());updateSplit();},{passive:true});
-document.addEventListener('mousemove',e=>{if(!isDragging)return;splitPos=getPos(e,splitViewer.getBoundingClientRect());updateSplit();});
-document.addEventListener('touchmove',e=>{if(!isDragging)return;splitPos=getPos(e,splitViewer.getBoundingClientRect());updateSplit();},{passive:true});
+function gx(e,r){const cx=e.touches?e.touches[0].clientX:e.clientX;return Math.max(0,Math.min(1,(cx-r.left)/r.width));}
+splitViewer.addEventListener('mousedown',e=>{isDragging=true;splitPos=gx(e,splitViewer.getBoundingClientRect());updateSplit();});
+splitViewer.addEventListener('touchstart',e=>{isDragging=true;splitPos=gx(e,splitViewer.getBoundingClientRect());updateSplit();},{passive:true});
+document.addEventListener('mousemove',e=>{if(isDragging){splitPos=gx(e,splitViewer.getBoundingClientRect());updateSplit();}});
+document.addEventListener('touchmove',e=>{if(isDragging){splitPos=gx(e,splitViewer.getBoundingClientRect());updateSplit();}},{passive:true});
 document.addEventListener('mouseup',()=>isDragging=false);
 document.addEventListener('touchend',()=>isDragging=false);
 
 // ════════════════════════════════════════════════════════════
-//  APPLY
-// ════════════════════════════════════════════════════════════
-applyBtn.addEventListener('click', async ()=>{
-  if(!originalData) return;
-  procText.textContent='Running '+currentAlgo.name+'…';
-  procOverlay.classList.add('active');
-  applyBtn.disabled=true;
-  await new Promise(r=>setTimeout(r,60));
-  const src=new Uint8ClampedArray(originalData.data);
-  const t0=performance.now();
-  let result;
-  try { result=currentAlgo.fn(src,imgW,imgH,{...currentParams}); }
-  catch(err){ showToast('Error: '+err.message); procOverlay.classList.remove('active'); applyBtn.disabled=false; return; }
-  const ms=Math.round(performance.now()-t0);
-  enhancedData=new ImageData(result,imgW,imgH);
-  afterCanvas.getContext('2d').putImageData(enhancedData,0,0);
-  updateSplit();
-  sTime.textContent=ms+'ms';
-  downloadBtn.disabled=false;
-  procOverlay.classList.remove('active');
-  applyBtn.disabled=false;
-  showToast('Done in '+ms+'ms ✓');
-});
-
-resetBtn.addEventListener('click',()=>{
-  if(!originalData) return;
-  enhancedData=null;
-  afterCanvas.getContext('2d').putImageData(originalData,0,0);
-  updateSplit();
-  downloadBtn.disabled=true;
-  sTime.textContent='—';
-  showToast('Reset to original');
-});
-
-downloadBtn.addEventListener('click',()=>{
-  if(!enhancedData) return;
-  const c=document.createElement('canvas');
-  c.width=imgW;c.height=imgH;
-  c.getContext('2d').putImageData(enhancedData,0,0);
-  const a=document.createElement('a');
-  a.href=c.toDataURL('image/png');
-  a.download=`pixellab_${currentAlgo.id}_${Date.now()}.png`;
-  a.click();
-  showToast('Saved as PNG ✓');
-});
-
-// ════════════════════════════════════════════════════════════
-//  UPLOAD HANDLERS
+//  UPLOAD
 // ════════════════════════════════════════════════════════════
 uploadZone.addEventListener('dragover',e=>{e.preventDefault();uploadZone.classList.add('drag-over');});
 uploadZone.addEventListener('dragleave',()=>uploadZone.classList.remove('drag-over'));
 uploadZone.addEventListener('drop',e=>{e.preventDefault();uploadZone.classList.remove('drag-over');loadImage(e.dataTransfer.files[0]);});
 fileInput.addEventListener('change',()=>loadImage(fileInput.files[0]));
-document.getElementById('canvasArea').addEventListener('dragover',e=>e.preventDefault());
-document.getElementById('canvasArea').addEventListener('drop',e=>{e.preventDefault();loadImage(e.dataTransfer.files[0]);});
+$('canvasArea').addEventListener('dragover',e=>e.preventDefault());
+$('canvasArea').addEventListener('drop',e=>{e.preventDefault();loadImage(e.dataTransfer.files[0]);});
 
 // ════════════════════════════════════════════════════════════
-//  TOAST
+//  TOAST & SERVICE WORKER
 // ════════════════════════════════════════════════════════════
-let toastTimer;
-function showToast(msg){
-  toast.textContent=msg;toast.style.display='block';
-  clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.style.display='none',2200);
-}
+let tt;
+function showToast(msg){toast.textContent=msg;toast.style.display='block';clearTimeout(tt);tt=setTimeout(()=>toast.style.display='none',2400);}
 
-// ════════════════════════════════════════════════════════════
-//  SERVICE WORKER (PWA offline support)
-// ════════════════════════════════════════════════════════════
 if('serviceWorker' in navigator){
-  const sw=`
-    const C='pixellab-v1';
-    self.addEventListener('install',()=>self.skipWaiting());
-    self.addEventListener('activate',e=>e.waitUntil(clients.claim()));
-    self.addEventListener('fetch',e=>e.respondWith(
-      caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{
-        const cl=res.clone();
-        caches.open(C).then(c=>c.put(e.request,cl));
-        return res;
-      }))
-    ));
-  `;
-  const blob=new Blob([sw],{type:'application/javascript'});
-  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+  const sw=`const C='pixellab-v2';self.addEventListener('install',()=>self.skipWaiting());
+  self.addEventListener('activate',e=>e.waitUntil(clients.claim()));
+  self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;
+  navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
 }
-
-// ════════════════════════════════════════════════════════════
-//  INIT
-// ════════════════════════════════════════════════════════════
-buildAlgoList();
-buildParams();
-sAlgo.textContent=currentAlgo.name;
 </script>
 </body>
 </html>
