@@ -223,10 +223,26 @@ input[type=range]::-moz-range-thumb{width:12px;height:12px;background:var(--acce
   letter-spacing:1px;z-index:200;display:none;white-space:nowrap}
 
 @media(max-width:700px){
-  .app{grid-template-columns:1fr;grid-template-rows:auto 1fr;height:auto;overflow:auto}
-  .sidebar{height:auto;overflow:visible}.sidebar-scroll{overflow:visible}
-  .main{height:55vh}.hbadge{display:none}body{overflow:auto}
+  .app{grid-template-columns:1fr;display:flex;flex-direction:column;height:auto}
+  .sidebar{height:auto;overflow:visible;flex-shrink:0}
+  .sidebar-scroll{overflow:visible;max-height:none}
+  .sidebar-footer{position:sticky;bottom:0;z-index:50;box-shadow:0 -8px 24px rgba(0,0,0,.6)}
+  .main{height:50vh;min-height:280px;flex-shrink:0}
+  .hbadge{display:none}
+  body{overflow:auto}
+  .float-run-btn{bottom:10px;font-size:11px;padding:9px 22px}
 }
+
+/* Floating run button on canvas — always visible after image loads */
+.float-run-btn{
+  position:absolute;bottom:18px;left:50%;transform:translateX(-50%);
+  background:var(--accent);color:var(--bg);border:none;border-radius:24px;
+  font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;padding:11px 28px;cursor:pointer;z-index:10;
+  box-shadow:0 0 24px rgba(0,212,255,.4);transition:all .2s;white-space:nowrap}
+.float-run-btn:hover{background:#33ddff;box-shadow:0 0 32px rgba(0,212,255,.6)}
+.float-run-btn.done{background:var(--ok);box-shadow:0 0 24px rgba(0,255,136,.3);color:#000}
+
 </style>
 </head>
 <body>
@@ -333,6 +349,9 @@ input[type=range]::-moz-range-thumb{width:12px;height:12px;background:var(--acce
       </div>
       <canvas id="cv"></canvas>
       <div class="canvas-label" id="canvasLabel"></div>
+      <button class="float-run-btn" id="floatRunBtn" style="display:none" onclick="document.getElementById('runBtn').click()">
+        ▶ Run Pipeline
+      </button>
       <div class="proc" id="proc">
         <div class="spinner"></div>
         <div class="proc-t" id="pt">Processing…</div>
@@ -502,7 +521,7 @@ const $=id=>document.getElementById(id);
 const uzone=$('uzone'),fin=$('fin');
 const aPanel=$('aPanel'),pPanel=$('pPanel'),mgrid=$('mgrid');
 const pSteps=$('pSteps'),pSum=$('pSum'),pLabel=$('pLabel');
-const runBtn=$('runBtn'),rstBtn=$('rstBtn'),newBtn=$('newBtn'),dlBtn=$('dlBtn');
+const runBtn=$('runBtn'),rstBtn=$('rstBtn'),newBtn=$('newBtn'),dlBtn=$('dlBtn'),spStat=null;
 const rstBtnInd=$('rstBtnInd'),newBtnInd=$('newBtnInd');
 const dhint=$('dhint'),proc=$('proc'),pt=$('pt'),ps=$('ps');
 const ibadge=$('ibadge'),ssStat=$('ss'),smodeStat=$('smode'),sactiveStat=$('sactive'),stStat=$('st');
@@ -677,7 +696,7 @@ function renderPipeline(steps){
   pLabel.textContent='Auto Pipeline';pLabel.className='sec-label';
   pSum.textContent=steps.length+' step'+(steps.length>1?'s':'')+': '+steps.map(s=>s.name).join(' → ');
   pSum.className='pipe-summary';
-  spStat&&(spStat.textContent=steps.length);
+  // steps count shown in summary line
   steps.forEach((s,i)=>{
     const el=document.createElement('div');el.className='sc';el.id='sc'+i;
     el.innerHTML=`<div class="sc-num" id="sn${i}">${i+1}</div><div class="sc-spin"></div>
@@ -691,6 +710,8 @@ function renderPipeline(steps){
   });
   pPanel.classList.add('open');
   runBtn.disabled=false;
+  const fb=document.getElementById('floatRunBtn');
+  if(fb){fb.style.display='block';fb.textContent='▶ Run Pipeline · '+steps.length+' step'+(steps.length>1?'s':'');fb.className='float-run-btn';}
   setTimeout(()=>pPanel.scrollIntoView({behavior:'smooth',block:'nearest'}),200);
 }
 
@@ -774,6 +795,8 @@ runBtn.addEventListener('click',async()=>{
   canvasLabel.className='canvas-label show';
   stStat.textContent=total+'ms';sactiveStat.textContent='Auto ('+pipeline.length+' steps)';
   proc.classList.remove('on');runBtn.disabled=false;dlBtn.disabled=false;
+  const fb2=document.getElementById('floatRunBtn');
+  if(fb2){fb2.textContent='✓ Enhanced · ↓ Download';fb2.className='float-run-btn done';fb2.onclick=()=>dlBtn.click();}
   showToast('Done in '+total+'ms ✓');
 });
 
@@ -806,6 +829,8 @@ function resetToOriginal(){
   pSum.textContent=pipeline.length+' step'+(pipeline.length>1?'s':'')+': '+pipeline.map(s=>s.name).join(' → ');
   pSum.className='pipe-summary';
   pipeline.forEach((_,i)=>{$('sc'+i).className='sc';$('sn'+i).textContent=i+1;$('stm'+i).textContent='';$('sr'+i).textContent='';});
+  const fb3=document.getElementById('floatRunBtn');
+  if(fb3){fb3.style.display='none';}
   showToast('Reset to original');
 }
 rstBtn.addEventListener('click',resetToOriginal);
